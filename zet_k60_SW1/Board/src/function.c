@@ -124,7 +124,7 @@ void Motor_Out(void)
       speed_PWM -=50;
     }
   }*/
-  uint8 speed_Ki=17;
+  uint8 speed_Ki=19;
   float speed_Kd=0.0;
   float speed_Kp=0.0;
   /*if(Overtake2==1||buff[1]==2)
@@ -181,20 +181,28 @@ void Motor_Out(void)
                 speed_goal_R=6500;
               speed_goal_L=6500;
             }*/
-           if(All_Black>2&&All_Black<16)
+           ///直道入弯道提前转弯
+           if(Cross_Flag==1)
            {
-             speed_goal_R=3500;
-              speed_goal_L=3500;
-           }
+             speed_goal_R=4900;
+             speed_goal_L=4900;             
+           }           
+           ///弯道低速
+           else if(All_Black>4&&All_Black<16)
+           {
+             speed_goal_R=4400;
+              speed_goal_L=4400;
+           } 
            else if(Bend_Right==1||Bend_Lift==1||(All_Black>=16&&All_Black<40))
            {
-             speed_goal_R=4100;
-             speed_goal_L=4100;             
+             speed_goal_R=4900;
+             speed_goal_L=4900;             
            }
+           //直道高速
            else
            {
-              speed_goal_R=5300;
-              speed_goal_L=5300;
+              speed_goal_R=5800;
+              speed_goal_L=5800;
               
            }
            
@@ -203,8 +211,8 @@ void Motor_Out(void)
            speed_err_L = speed_goal_L-speed_get_L*10;
            speed_increment_R=speed_Ki*speed_err_R/10;
            speed_increment_L=speed_Ki*speed_err_L/10;
-           speed_PWM_R=6000+speed_increment_R;
-           speed_PWM_L=6000+speed_increment_L;
+           speed_PWM_R=6100+speed_increment_R;
+           speed_PWM_L=6100+speed_increment_L;
          }
        }
   //}
@@ -236,13 +244,13 @@ void Motor_Out(void)
        }
       if(speed_PWM_R<0)
         speed_PWM_R=0;
-        if(speed_PWM_R>8700)
-          speed_PWM_R=8700;
+        if(speed_PWM_R>8800)
+          speed_PWM_R=8800;
         
       if(speed_PWM_L<0)
         speed_PWM_L=0;
-        if(speed_PWM_L>8700)
-          speed_PWM_L=8700;
+        if(speed_PWM_L>8800)
+          speed_PWM_L=8800;
         
    ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
    ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
