@@ -151,11 +151,17 @@ void Motor_Out(void)
         {speed_PWM=0;}
        else
        {
-         if(speed_get_R<100||speed_get_L<100)
+         if(speed_get_R<20||speed_get_L<20)
+         {           
+           speed_PWM_R = 0;
+           speed_PWM_L = 0;
+         }
+         else if(speed_get_R<100||speed_get_L<100)
          {
            speed_PWM_R = 7000;
            speed_PWM_L = 7000;
          }
+         
          else
          {
             /*if(All_Black>2&&All_Black<40)
@@ -190,8 +196,8 @@ void Motor_Out(void)
            ///ÍäµÀµÍËÙ
            else if(All_Black>4&&All_Black<16)
            {
-             speed_goal_R=4400;
-              speed_goal_L=4400;
+             speed_goal_R=4600;
+              speed_goal_L=4600;
            } 
            else if(Bend_Right==1||Bend_Lift==1||(All_Black>=16&&All_Black<40))
            {

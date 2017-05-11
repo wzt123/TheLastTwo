@@ -336,33 +336,20 @@ void Servo_control(void)
       else
       {
         Kp = 45;
-        Kd = 0;
+        Kd = 5;
       }
     }
-    else if(All_Black<6)
+    else if(All_Black<12)
     {
       if(error<0)
       {
         Kp = 35;
-        Kd = 10;
+        Kd = 30;
       }
       else
       {
         Kp = 35;
-        Kd = 10;
-      }
-    }
-    else if(All_Black<10)
-    {
-      if(error<0)
-      {
-        Kp = 35;
-        Kd = 10;
-      }
-      else
-      {
-        Kp = 35;
-        Kd = 10;
+        Kd = 33;
       }
     }
     
@@ -376,7 +363,7 @@ void Servo_control(void)
       else
       {
         Kp = 30;
-        Kd=10;
+        Kd=15;
       }
     }
     else if(All_Black<25)
@@ -389,7 +376,7 @@ void Servo_control(void)
       else
       {
         Kp=40;
-        Kd =25;
+        Kd =28;
       }
     }
     
@@ -403,7 +390,7 @@ void Servo_control(void)
       else
       {
         Kp=50;
-        Kd =25;
+        Kd =28;
       }
     }
     else if(All_Black<41)
@@ -416,7 +403,7 @@ void Servo_control(void)
       else
       {
         Kp = 55;
-        Kd = 30;
+        Kd = 33;
       }
     }
     else
@@ -429,7 +416,7 @@ void Servo_control(void)
       else
       {
         Kp=100;
-        Kd =35;
+        Kd =38;
       }
     }
     Servo_temp=Kp*error/10+Kd*errorerror/10;
