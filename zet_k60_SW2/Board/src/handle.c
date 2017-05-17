@@ -737,15 +737,12 @@ void filter_Middle(uint8 *Array)
 }*/
 }
 //yuanhuan
-uint8 ring_num=0;
-uint8 a=1;
-uint8 b=79;
 void Ring()
 {
   uint8 ring_flag=0,i,j;
-  a=1;
-  b=79;
-  ring_num=0;
+  uint8 ring_num=0;
+  uint8 a=1;
+  uint8 b=79;
   uint8 a_f=0,b_f=0,c_f=0;
   for(i=Row_Ptr; i>Row_Ptr-3; i--)
   {
