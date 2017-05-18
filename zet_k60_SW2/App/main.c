@@ -72,7 +72,7 @@ void  main(void)
      //设置 PORTE 的中断服务函数为 PORTE_VECTORn
      //enable_irq(PORTC_PORTD_IRQn);
      int a=nrf_link_check();
-   while(a)
+   while(1)
     {
         pit_time_start(PIT1);
         camera_get_img();                                   //摄像头获取图像
@@ -129,6 +129,10 @@ void  main(void)
           stop_Car();
         
         }*/
+        if(gpio_get(PTE10)&&gpio_get(PTE9))             //PTC8，PTC9触发中断
+        {
+          stop_Car();
+        }
         if(stop_Flag !=1)
         {  
           Motor_Out();
@@ -157,8 +161,8 @@ void  main(void)
         OLED_Print_Num1(88, 1, All_Black);
         OLED_Print_Num1(88, 2, error);
         OLED_Print_Num1(88, 3, errorerror);
-        OLED_Print_Num1(88, 4, ABDistance);
-        OLED_Print_Num1(88, 5, Ring_First_Row);
+        OLED_Print_Num1(88, 4, gpio_get(PTE10));
+        OLED_Print_Num1(88, 5, gpio_get(PTE9));
         //wzt_bluetooth(); 
        
   

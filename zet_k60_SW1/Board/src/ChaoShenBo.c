@@ -37,6 +37,15 @@ A29
 */
 void PORTE_IRQHandler(void)
 {
+  uint32 flag;
+  flag = PORTE_ISFR;
+  /*if((flag & (1 << 9)||flag & (1 << 10))&&Car==1)                                 //PTE9,PTE10触发中断
+  {
+    if(gpio_get(PTE10)&&gpio_get(PTE9)&&stop_Flag!=1)             //PTC8，PTC9触发中断
+    {
+      //stop_Car();
+    }
+  }*/
   PORTE_ISFR|= 0xFFFFFFFFu;   //清除标志位 
   if(gpio_get(PTE27))//检测到IO口是高电平，那么就是上升沿
   {//如果是上升沿中断
