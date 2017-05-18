@@ -18,6 +18,7 @@
 #include "include.h"
 #include "handle.h"
 uint8 imgbuff[CAMERA_SIZE];                             //定义存储接收图像的数组
+uint8 stopline_num = 0;                         ////第一次检测到起跑线不算，第二次才是停车
 //uint8 img[CAMERA_W*CAMERA_H];
 
 //函数声明
@@ -129,9 +130,12 @@ void  main(void)
           stop_Car();
         
         }*/
-        if(gpio_get(PTE10)&&gpio_get(PTE9))             //PTC8，PTC9触发中断
-        {
-          stop_Car();
+        if(gpio_get(PTE10)&&gpio_get(PTE9)&&stop_Flag!=1)             //PTC8，PTC9触发中断
+        {          
+          if(stopline_num>0)
+            stop_Car();
+          else
+            stopline_num++;
         }
         if(stop_Flag !=1)
         {  
@@ -161,8 +165,8 @@ void  main(void)
         OLED_Print_Num1(88, 1, All_Black);
         OLED_Print_Num1(88, 2, error);
         OLED_Print_Num1(88, 3, errorerror);
-        OLED_Print_Num1(88, 4, gpio_get(PTE10));
-        OLED_Print_Num1(88, 5, gpio_get(PTE9));
+        OLED_Print_Num1(88, 4, speed_get_L);
+        OLED_Print_Num1(88, 5, speed_get_R);
         //wzt_bluetooth(); 
        
   
