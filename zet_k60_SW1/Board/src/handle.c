@@ -797,7 +797,7 @@ void Search_Line(void)
   uint8 Cut_Width=10;
   int8 LEnd=0;
   int8 REnd=79;
-  
+  uint8 Cross_flag=0;
   Left_Cnt=0;
   Right_Cnt=0;
   Left_cnt=0;
@@ -1000,23 +1000,24 @@ void Search_Line(void)
       }
     }//结束for_搜右边
     
-    if(img[Row_Ptr][Road_Right[Row_Ptr+1]]==255&&Right_Flag[Row_Ptr+1]==3)
+    if(Cross_flag<2)
     {
-      Road_Right[Row_Ptr]=Road_Right[Row_Ptr+1];
-      Right_Flag[Row_Ptr]=3;
-    }
-    if(img[Row_Ptr][Road_Left[Row_Ptr+1]]==255&&Left_Flag[Row_Ptr+1]==3)
-    {
-      Road_Left[Row_Ptr]=Road_Left[Row_Ptr+1];
-      Left_Flag[Row_Ptr]=3;
+      if(img[Row_Ptr][Road_Right[Row_Ptr+1]]==255&&Right_Flag[Row_Ptr+1]==3)
+      {
+        Road_Right[Row_Ptr]=Road_Right[Row_Ptr+1];
+        Right_Flag[Row_Ptr]=3;
+      }
+      if(img[Row_Ptr][Road_Left[Row_Ptr+1]]==255&&Left_Flag[Row_Ptr+1]==3)
+      {
+        Road_Left[Row_Ptr]=Road_Left[Row_Ptr+1];
+        Left_Flag[Row_Ptr]=3;
+      }
     }
     if(Col_Ptr==REnd && img[Row_Ptr][39] ==0 && img[Row_Ptr][40]==0 && img[Row_Ptr][41]==0) Right_Flag[Row_Ptr]=2;//在搜线范围内没找到_全黑行
     if(Col_Ptr==REnd&& img[Row_Ptr][39]==255 && img[Row_Ptr][40]==255 && img[Row_Ptr][41]==255) Right_Flag[Row_Ptr]=3;//在搜线范围内没找到_全白行
     if(Row_Ptr==30&&Col_Ptr==REnd&&img[Row_Ptr][70]==255) Right_sign=1;
     Road_Width[Row_Ptr]=Road_Right[Row_Ptr]-Road_Left[Row_Ptr];
-    if((Left_Flag[Row_Ptr]==2 && Right_Flag[Row_Ptr]==2) && (Left_Flag[Row_Ptr+1]==2 && Right_Flag[Row_Ptr+1]==2) &&(Left_Flag[Row_Ptr+2]==2 && Right_Flag
-
-[Row_Ptr+2]==2) )
+    if((Left_Flag[Row_Ptr]==2 && Right_Flag[Row_Ptr]==2) && (Left_Flag[Row_Ptr+1]==2 && Right_Flag[Row_Ptr+1]==2) &&(Left_Flag[Row_Ptr+2]==2 && Right_Flag[Row_Ptr+2]==2) )
     {
       Black_Cnt++;//统计所有的全黑行
       if(Black_Cnt==1)
@@ -1081,6 +1082,7 @@ void Search_Line(void)
     {
       Cross_Flag=1;
       // Cross_Flag_Last=Cross_Flag;
+      Cross_flag++;
       if(Left_Flag[Row_Ptr-1]==1 && Right_Flag[Row_Ptr-1]==1)
         StopRow=Row_Ptr-1;
       else if(Left_Flag[Row_Ptr-2]==1 && Right_Flag[Row_Ptr-2]==1)

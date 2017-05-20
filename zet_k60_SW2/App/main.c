@@ -164,14 +164,13 @@ void  main(void)
         dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
         OLED_Print_Num1(88, 1, All_Black);
         OLED_Print_Num1(88, 2, error);
-        OLED_Print_Num1(88, 3, errorerror);
+       // OLED_Print_Num1(88, 3, errorerror);
+        OLED_Print_Num1(88, 3, Cross_Flag);
         OLED_Print_Num1(88, 4, speed_get_L);
         OLED_Print_Num1(88, 5, speed_get_R);
         //OLED_Print_Num1(88, 4, gpio_get(PTE10));
         //OLED_Print_Num1(88, 5, gpio_get(PTE9));
         //wzt_bluetooth(); 
-       
-  
         time1 = pit_time_get(PIT1)*100/(9*1024*1024);
         pit_close(PIT1);
         
