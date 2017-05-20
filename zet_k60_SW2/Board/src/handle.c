@@ -39,9 +39,9 @@ uint8 Change_Flag;
 uint8 CrossRow=0;
 
 
-uint16 Servomiddle=8500;
-uint32 Servo_max=8638;
-uint32 Servo_min=8348;
+uint16 Servomiddle=8508;
+uint32 Servo_max=8645;
+uint32 Servo_min=8345;
 float CenterLineSlope=0;
 
 int16 error=0;

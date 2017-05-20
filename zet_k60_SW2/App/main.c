@@ -48,7 +48,7 @@ uint16 speed_rember_L[3] = {0};
 void  main(void)
 {
      //zet_bluetooth();
-  uint16 send_data[3] = {0};
+     uint16 send_data[3] = {0};
      int time1=0;
      char nrf_data=0;
       uint8 Edge_R[3]= {0};
