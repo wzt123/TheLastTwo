@@ -349,7 +349,7 @@ void Servo_control(void)
       else
       {
         Kp = 35;
-        Kd = 33;
+        Kd = 38;
       }
     }
     
@@ -835,6 +835,9 @@ void Search_Line(void)
     Left_Flag[Row_Ptr]=0;
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
+    
+    //从左到右检测起跑线
+    
     //内层for开始 从中心向左边
     for(Col_Ptr=60; Col_Ptr>0; Col_Ptr--)
     {
@@ -872,6 +875,7 @@ void Search_Line(void)
   Road_Width[57]=Road_Right[57]-Road_Left[57];
   //其余行搜索
   //if(Left_Cnt>0 || Right_Cnt>0)
+  
   
   for(Row_Ptr=56; Row_Ptr>2&&Row_Ptr>All_Black; Row_Ptr--)
   {

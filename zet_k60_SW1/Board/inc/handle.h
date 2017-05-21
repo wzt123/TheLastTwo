@@ -64,6 +64,9 @@ extern uint8 Bend_Lift;
 extern float repair_slope;
 extern uint8 Cross_Flag_Last;
 extern uint8 Ring_First_Row;
+extern uint8 startline_num[3]; 
+extern uint8 Bend_Right_Last;
+extern uint8 Bend_Lift_Last;
 /////////////////////////////////////////
 //extern int32 All_Black;
 extern uint16 Servo_value;
