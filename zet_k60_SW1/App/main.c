@@ -50,7 +50,7 @@ void  main(void)
   //zet_bluetooth();
   uint16 send_data[3] = {0};
   uint8 time1=0;
-  uint32 sum_time = 0;
+  sum_time = 0;
   char nrf_data=0;
   uint8 Edge_R[3]= {0};
   uint8 Edge_L[3]= {0};
@@ -134,7 +134,7 @@ void  main(void)
     IR2_last = IR2;
     IR2 = gpio_get(PTE9);///隔一下再读另一边的红外对管
     
-    if(IR1&&IR2&&stop_Flag!=1&&(sum_time>12600||sum_time==0))             //PTC8，PTC9触发中断
+    /*if(IR1&&IR2&&stop_Flag!=1&&(sum_time>12600||sum_time==0))             //PTC8，PTC9触发中断
     {      
       if(stopline_num>0)
         stop_Car();
@@ -155,7 +155,7 @@ void  main(void)
     {
       uart_putchar(UART5,'B');//右
       uart_putchar(UART5,'\n');
-    }
+    }*/
     if(stop_Flag !=1)
     {  
       Motor_Out();
@@ -190,13 +190,13 @@ void  main(void)
     OLED_Print_Num1(88, 1, All_Black);
     OLED_Print_Num1(88, 2, error);
     OLED_Print_Num1(88, 3, errorerror);
-    OLED_Print_Num1(88, 4, IR1);
-    OLED_Print_Num1(88, 5, IR2);
+    OLED_Print_Num1(88, 4, Kp);
+    OLED_Print_Num1(88, 5, stop_line_num);
     //wzt_bluetooth(); 
     
     
     time1 = pit_time_get(PIT1)*100/(9*1024*1024);
-    if(stopline_num>=1)
+    if(Stop_Flag==1)
     {
       sum_time +=time1; 
     }    

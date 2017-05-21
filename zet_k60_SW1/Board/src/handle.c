@@ -91,9 +91,10 @@ float repair_slope_R = 0;/////右边线补线斜率
 float repair_slope_L = 0;/////左边线补线斜率
 uint8 Ring_First_Row = 0;
 uint8 Cross_Flag_Last=0;
-
+uint8 start_line_num = 0;
+uint8 stop_line_num = 0;
 //uint8 Ring_Flag=0;
-
+uint32 sum_time = 0;
 uint8 weight_num_Cross [60]=
 {
   10,10,10,10,10,
@@ -215,8 +216,6 @@ void Calculate_Slope()
 */
 void Servo_control(void)
 {
-  
-  
   uint8 Row_Ptr=0;
   error=0;
   error1=0;
@@ -235,7 +234,7 @@ void Servo_control(void)
     Lastline=2;
   }
   l = 59-Lastline;
-  if(Cross_Flag==1)
+  /*if(Cross_Flag==1)
   {
     //speed_PWM=6750+150;
     for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
@@ -269,43 +268,7 @@ void Servo_control(void)
     Servo_temp=Kp*error/10+Kd*errorerror/10;
     Servo_value=Servomiddle+Servo_temp;
   }
-  /*else if(Cross_Flag==3)
-  {
-  for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
-  {
-  error+=Road_Center[Row_Ptr]-40;
-}
-  error = error/l;
-  for(Row_Ptr=59; Row_Ptr>59-l/2; Row_Ptr--)
-  {
-  error1+=Road_Center[Row_Ptr]-40;
-}
-  for(Row_Ptr=59-l/2; Row_Ptr>Lastline; Row_Ptr--)
-  {
-  error2+=Road_Center[Row_Ptr]-40;
-}
-  
-  error1 = error1*2/l;
-  error2 = error2/(59-l/2-Lastline);
-  errorerror = error2-error1;
-  
-  //////判断如果位于圆环的入口处，进行停车
-  
-  //////
-  if(Ring_First_Row>20)
-  {
-  if(errorerror<0)
-  {
-  Servo_value = Servo_max;
-}
-  else
-  {
-  Servo_value=Servo_min;
-}
-  
-} 
-  
-}*/
+
   else if(Bend_Right==1||Bend_Lift==1)
   {
     
@@ -349,7 +312,7 @@ void Servo_control(void)
       else
       {
         Kp = 35;
-        Kd = 38;
+        Kd = 33;
       }
     }
     
@@ -472,16 +435,126 @@ void Servo_control(void)
       Servo_value = Servo_max;
     }
   }
+  */
+  for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
+    {
+      error+=(Road_Center[Row_Ptr]-40);
+    }
+    error = error/l;
+    for(Row_Ptr=59; Row_Ptr>59-l/2; Row_Ptr--)
+    {
+      error1+=(Road_Center[Row_Ptr]-40);
+    }
+    for(Row_Ptr=59-l/2; Row_Ptr>Lastline; Row_Ptr--)
+    {
+      error2+=(Road_Center[Row_Ptr]-40);
+    }
+    
+    error1 = error1*2/l;
+    error2 = error2/(59-l/2-Lastline);
+    errorerror = error2-error1;
+    Kp =720*error*error/10000 +22;
+    
+    /*if(All_Black==0)
+    {
+      if(error<0)
+      {
+       
+        Kd = 0;
+      }
+      else
+      {
+        
+        Kd = 5;
+      }
+    }
+    else if(All_Black<12)
+    {
+      if(error<0)
+      {
+        
+        Kd = 30;
+      }
+      else
+      {
+        
+        Kd = 33;
+      }
+    }
+    
+    else if(All_Black<17)
+    {
+      if(error<0)
+      {
+        
+        Kd = 10;
+      }
+      else
+      {
+        
+        Kd=15;
+      }
+    }
+    else if(All_Black<25)
+    {
+      if(error<0)
+      {
+        
+        Kd=25;
+      }
+      else
+      {
+        
+        Kd =28;
+      }
+    }
+    
+    else if(All_Black<32)
+    {
+      if(error<0)
+      {
+        
+        Kd=25;
+      }
+      else
+      {
+        
+        Kd =28;
+      }
+    }
+    else if(All_Black<41)
+    {
+      if(error<0)
+      {
+        
+        Kd = 30;
+      }
+      else
+      {
+        
+        Kd = 33;
+      }
+    }
+    else
+    {
+      if(error<0)
+      {
+        
+        Kd=35;
+      }
+      else
+      {
+        
+        Kd =38;
+      }
+    }*/
+      
+    Servo_temp=Kp*error/10+Kd*errorerror/10;
+    Servo_value=Servomiddle+Servo_temp;
   if(Servo_value<Servo_min)
     Servo_value = Servo_min;
   if(Servo_value>Servo_max)
     Servo_value = Servo_max;
-  /* OLED_Print_Num1(88, 1p, All_Black);
-  OLED_Print_Num1(88, 2, error);
-  OLED_Print_Num1(88, 3, errorerror);
-  OLED_Print_Num1(88, 4, Servo_value);
-  */
-  
   ftm_pwm_duty(FTM0,FTM_CH3,Servo_value);
 }
 //NRF
@@ -813,7 +886,7 @@ void Search_Line(void)
   Road_Change=0;
   CrossRow=59;
   StopRow=0;
-  Stop_Flag=0;
+  //Stop_Flag=0;
   //a=0;
   Left_sign=0;
   Right_sign=0;
@@ -827,6 +900,11 @@ void Search_Line(void)
   Right_r_in=0;
   Right_r_out=0;
   
+  //////////////////////
+  start_line_num = 0;
+  stop_line_num = 0;
+  ///////////////
+  
   //前三行搜线开始
   for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
   {
@@ -837,6 +915,27 @@ void Search_Line(void)
     Road_Center[Row_Ptr]=0;
     
     //从左到右检测起跑线
+    start_line_num = 0;
+    for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
+    {      
+        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 && img[Row_Ptr][Col_Ptr+2]==0&&
+           img[Row_Ptr][Col_Ptr+3]==255&& img[Row_Ptr][Col_Ptr+4]==255&& img[Row_Ptr][Col_Ptr+5]==255)
+        {
+          start_line_num ++;
+        }      
+    }
+    if(start_line_num>6)
+    {
+      stop_line_num++;
+    }
+    if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0&&sum_time>8000)
+    {
+      stop_Car();
+    }
+    else if(stop_line_num>=3&&Stop_Flag==0)
+    {
+      Stop_Flag=1;
+    }
     
     //内层for开始 从中心向左边
     for(Col_Ptr=60; Col_Ptr>0; Col_Ptr--)
@@ -876,6 +975,10 @@ void Search_Line(void)
   //其余行搜索
   //if(Left_Cnt>0 || Right_Cnt>0)
   
+  /*for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
+  {
+    
+  }*/
   
   for(Row_Ptr=56; Row_Ptr>2&&Row_Ptr>All_Black; Row_Ptr--)
   {
