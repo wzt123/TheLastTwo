@@ -72,7 +72,7 @@ void  main(void)
      
      //设置 PORTE 的中断服务函数为 PORTE_VECTORn
      //enable_irq(PORTC_PORTD_IRQn);
-     int a=nrf_link_check();
+     //int a=nrf_link_check();
    while(1)
     {
         pit_time_start(PIT1);
@@ -149,9 +149,9 @@ void  main(void)
         send_data[0] = speed_get_L;
         send_data[1] = speed_get_R;
         //send_data[2] = Cross_Flag*500;
-        vcan_sendware((uint8_t *)send_data, sizeof(send_data));
+       // vcan_sendware((uint8_t *)send_data, sizeof(send_data));
         
-        nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
+        //nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
         nrf_data = buff[0];
         ////////////////后车检测到超声波信号，发来一个1，表明超车成功
         /*if(buff[1]==1)
@@ -160,7 +160,7 @@ void  main(void)
           stop_Flag=0;
         }*/
         
-        Overtake_judge();
+        //Overtake_judge();
         dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
         OLED_Print_Num1(88, 1, All_Black);
         OLED_Print_Num1(88, 2, error);
