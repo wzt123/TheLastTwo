@@ -795,66 +795,7 @@ void filter_Middle(uint8 *Array)
   Array[Row_Ptr] = Array[Row_Ptr+1];
 }*/
 }
-//yuanhuan
-void Ring()
-{
-  uint8 ring_flag=0,i,j;
-  uint8 ring_num=0;
-  uint8 a=1;
-  uint8 b=79;
-  uint8 a_f=0,b_f=0,c_f=0;
-  for(i=Row_Ptr; i>Row_Ptr-3; i--)
-  {
-    ring_flag=0;
-    for(j=Road_Left[i]; j<Road_Right[i]-2; j++)
-    {
-      if(img[i][j]==255&&img[i][j+1]==255&&img[i][j+2]==255&&ring_flag==0) ring_flag=1;
-      else if(img[i][j]==0&&img[i][j+1]==0&&img[i][j+2]==0&&ring_flag==1) 
-      {
-        a=j;
-        ring_flag=2;
-      }
-      else if(img[i][j]==255&&img[i][j+1]==255&&img[i][j+2]==255&&ring_flag==2)
-      {
-        b=j-1;
-        ring_num++;
-        Ring_First_Row=i;
-        break;
-      }
-    }        
-  }
-  
-  if(ring_num==3)
-  {
-    for(i=Row_Ptr-3;i>0;i--)
-    {
-      if(img[i][a]==255&&img[i+1][a]==255)
-        a_f=1;
-      if(img[i][b]==255&&img[i+1][b]==255)
-        b_f=1;
-      if(img[i][(a+b)/2]==255&&img[i+1][(a+b)/2]==255)
-        c_f=1;
-      if(a_f==1&&b_f==1&&c_f==1)
-      {
-        if(Car ==1)
-        {
-          Cross_Flag=3;
-          Cross_Flag_Last=3;////////只在有圆环的时候才等于3，在超车成功后，继续变为0的时候
-          break;
-        }
-        /*else if(Car ==2)
-        {
-          Cross_Flag=4;
-          Cross_Flag_Last=4;////////只在有圆环的时候才等于3，在超车成功后，继续变为0的时候
-          break;
-        }*/
-      }
-    }
-    
-    //Cross_Flag_Last=Cross_Flag;
-  }
-  
-}
+//
 //寻边线
 void Search_Line(void)
 {
@@ -870,7 +811,15 @@ void Search_Line(void)
   uint8 Cut_Width=10;
   int8 LEnd=0;
   int8 REnd=79;
+  
   uint8 Cross_flag=0;
+  uint8 ring_flag=0,j;
+  uint8 ring_num=0;
+  uint8 a=1;
+  uint8 b=79;
+  uint8 i;
+  uint8 a_f=0,b_f=0,c_f=0;
+  
   Left_Cnt=0;
   Right_Cnt=0;
   Left_cnt=0;
@@ -1220,10 +1169,43 @@ void Search_Line(void)
       Bend_Right = 1;
     }
     //if(  (Row_Ptr>All_Black+6)&&(Cross_Flag!=3||Cross_Flag!=4))
-    if(  (Row_Ptr>All_Black+6)&&Cross_Flag!=3)
-    
+    ring_flag=0;
+    for(j=Road_Left[Row_Ptr]; j<Road_Right[Row_Ptr]-3; j++)
     {
-      Ring();
+      if(ring_flag==0&&img[Row_Ptr][j]==255&&img[Row_Ptr][j+1]==255&&img[Row_Ptr][j+2]==0&&img[Row_Ptr][j+3]==0) 
+      {
+        ring_flag=1;
+        a=j+2;
+      }
+      else if(ring_flag==1&&img[Row_Ptr][j]==0&&img[Row_Ptr][j+1]==0&&img[Row_Ptr][j+2]==255&&img[Row_Ptr][j+3]==255) 
+      {
+        b=j;
+        ring_flag=2;
+        ring_num++;
+        if(ring_num==1) Ring_First_Row=Row_Ptr;
+        break;
+      }
+    }
+    if(ring_flag!=2) ring_num=0;
+    a_f=0;b_f=0;c_f=0;
+    if(ring_num>3&&Ring_First_Row>20&&Row_Ptr>(All_Black+6)&&Cross_Flag!=3)
+    {    
+      for(i=Row_Ptr-ring_num;i>0;i--)
+      {
+        if(img[i][a]==255&&img[i+1][a]==255)
+          a_f=1;
+        if(img[i][b]==255&&img[i+1][b]==255)
+          b_f=1;
+        if(img[i][(a+b)/2]==255&&img[i+1][(a+b)/2]==255)
+          c_f=1;
+        if(a_f==1&&b_f==1&&c_f==1)
+        {
+          
+          Cross_Flag=3;
+          Cross_Flag_Last=3;//只在有圆环的时候才等于3，在超车成功后，继续变为0的时候
+          break;          
+        }
+      }   
     }
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])
     {
