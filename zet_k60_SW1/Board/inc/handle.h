@@ -70,6 +70,7 @@ extern uint8 Bend_Lift_Last;
 extern uint8 start_line_num;
 extern uint8 stop_line_num;
 extern uint32 sum_time;
+extern int16 Servo_temp;
 /////////////////////////////////////////
 //extern int32 All_Black;
 extern uint16 Servo_value;

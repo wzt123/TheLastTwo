@@ -212,8 +212,6 @@ void Calculate_Slope()
 */
 void Servo_control(void)
 {
-  
-  
   uint8 Row_Ptr=0;
   error=0;
   error1=0;
@@ -232,81 +230,8 @@ void Servo_control(void)
     Lastline=2;
   }
   l = 59-Lastline;
-  if(Cross_Flag==1)
-  {
-    //speed_PWM=6750+150;
-    for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
-    {
-      error+=(Road_Center[Row_Ptr]-40)*weight_num_Cross[Row_Ptr]/100;
-    }
-    error = error/l;
-    for(Row_Ptr=59; Row_Ptr>59-l/2; Row_Ptr--)
-    {
-      error1+=(Road_Center[Row_Ptr]-40)*weight_num_Cross[Row_Ptr]/100;
-    }
-    for(Row_Ptr=59-l/2; Row_Ptr>Lastline; Row_Ptr--)
-    {
-      error2+=(Road_Center[Row_Ptr]-40)*weight_num_Cross[Row_Ptr]/100;
-    }
-    
-    error1 = error1*2/l;
-    error2 = error2/(59-l/2-Lastline);
-    errorerror = error2-error1;
-    if(error<0)
-    {
-      Kp=80;
-      Kd=0;
-    }
-    else
-    {
-      Kp=80;
-      Kd =0;
-    }
-    
-    Servo_temp=Kp*error/10+Kd*errorerror/10;
-    Servo_value=Servomiddle+Servo_temp;
-  }
-  /*else if(Cross_Flag==3)
-  {
+
   for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
-  {
-  error+=Road_Center[Row_Ptr]-40;
-}
-  error = error/l;
-  for(Row_Ptr=59; Row_Ptr>59-l/2; Row_Ptr--)
-  {
-  error1+=Road_Center[Row_Ptr]-40;
-}
-  for(Row_Ptr=59-l/2; Row_Ptr>Lastline; Row_Ptr--)
-  {
-  error2+=Road_Center[Row_Ptr]-40;
-}
-  
-  error1 = error1*2/l;
-  error2 = error2/(59-l/2-Lastline);
-  errorerror = error2-error1;
-  
-  //////判断如果位于圆环的入口处，进行停车
-  
-  //////
-  if(Ring_First_Row>20)
-  {
-  if(errorerror<0)
-  {
-  Servo_value = Servo_max;
-}
-  else
-  {
-  Servo_value=Servo_min;
-}
-  
-} 
-  
-}*/
-  else if(Bend_Right==1||Bend_Lift==1)
-  {
-    
-    for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
     {
       error+=(Road_Center[Row_Ptr]-40);
     }
@@ -323,175 +248,48 @@ void Servo_control(void)
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
-    if(All_Black==0)
+    Kp =880*error*error/10000 +18;
+    if(error*errorerror>=0)
     {
-      if(error<0)
+      if(All_Black<2)
       {
-        Kp = 45;
         Kd = 0;
       }
+      else if(All_Black<10)
+      {
+        if(error<0)
+        {
+          Kd = 25;
+        }
+        else
+          Kd = 28;
+      }
+      else if(All_Black<18)
+      {
+        if(error<0)
+          Kd = 18;
+        else
+          Kd = 15;
+      }
       else
       {
-        Kp = 45;
-        Kd = 0;
+        if(error<0)
+          Kd = 28;
+        else
+          Kd = 25;
       }
     }
-    else if(All_Black<6)
+    else 
     {
-      if(error<0)
-      {
-        Kp = 35;
-        Kd = 10;
-      }
-      else
-      {
-        Kp = 35;
-        Kd = 10;
-      }
-    }
-    else if(All_Black<10)
-    {
-      if(error<0)
-      {
-        Kp = 35;
-        Kd = 10;
-      }
-      else
-      {
-        Kp = 35;
-        Kd = 10;
-      }
-    }
-    
-    else if(All_Black<17)
-    {
-      if(error<0)
-      {
-        Kp = 30;
-        Kd = 10;
-      }
-      else
-      {
-        Kp = 30;
-        Kd=10;
-      }
-    }
-    else if(All_Black<25)
-    {
-      if(error<0)
-      {
-        Kp=40;
-        Kd=25;
-      }
-      else
-      {
-        Kp=40;
-        Kd =25;
-      }
-    }
-    
-    else if(All_Black<32)
-    {
-      if(error<0)
-      {
-        Kp=50;
-        Kd=25;
-      }
-      else
-      {
-        Kp=50;
-        Kd =25;
-      }
-    }
-    else if(All_Black<41)
-    {
-      if(error<0)
-      {
-        Kp = 55;
-        Kd = 30;
-      }
-      else
-      {
-        Kp = 55;
-        Kd = 30;
-      }
-    }
-    else
-    {
-      if(error<0)
-      {
-        Kp=100;
-        Kd=35;
-      }
-      else
-      {
-        Kp=100;
-        Kd =35;
-      }
+      Kp = Kp+20;
+      Kd =0;
     }
     Servo_temp=Kp*error/10+Kd*errorerror/10;
     Servo_value=Servomiddle+Servo_temp;
-    if(Servo_value<Servo_min)
-      Servo_value = Servo_min;
-    if(Servo_value>Servo_max)
-      Servo_value = Servo_max;
-  }
-  
-  else
-  {
-    for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
-    {
-      error+=(Road_Center[Row_Ptr]-40);//*weight_num[Row_Ptr]/100;
-    }
-    error = error/l;
-    for(Row_Ptr=59; Row_Ptr>59-l/2; Row_Ptr--)
-    {
-      error1+=(Road_Center[Row_Ptr]-40);//*weight_num[Row_Ptr]/100;
-    }
-    for(Row_Ptr=59-l/2; Row_Ptr>Lastline; Row_Ptr--)
-    {
-      error2+=(Road_Center[Row_Ptr]-40);//*weight_num[Row_Ptr]/100;
-    }
-    
-    error1 = error1*2/l;
-    error2 = error2/(59-l/2-Lastline);
-    errorerror = error2-error1;
-    if(error<0)
-    {
-      Kp = 35;
-      Kd = 15;
-    }
-    else
-    {
-      Kp = 35;
-      Kd=15;
-    }
-    
-    Servo_temp=Kp*error/10+Kd*errorerror/10;
-    Servo_value=Servomiddle+Servo_temp;
-  }
-  
-  if(All_Black>=36)
-  {
-    if(error<0)
-    {
-      Servo_value = Servo_min;
-    }
-    else
-    { 
-      Servo_value = Servo_max;
-    }
-  }
   if(Servo_value<Servo_min)
     Servo_value = Servo_min;
   if(Servo_value>Servo_max)
     Servo_value = Servo_max;
-  /* OLED_Print_Num1(88, 1p, All_Black);
-  OLED_Print_Num1(88, 2, error);
-  OLED_Print_Num1(88, 3, errorerror);
-  OLED_Print_Num1(88, 4, Servo_value);
-  */
-  
   ftm_pwm_duty(FTM0,FTM_CH3,Servo_value);
 }
 //NRF

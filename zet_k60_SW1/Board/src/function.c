@@ -172,13 +172,18 @@ void Motor_Out(void)
          {
            
            ///直道入弯道提前转弯
-           /*if(Cross_Flag==1)
+           if(Cross_Flag==1)
            {
-             speed_goal_R=5000;
-             speed_goal_L=5000;             
+             speed_goal_R=5300;
+             speed_goal_L=5300;             
            }           
            ///弯道低速
-           else if(All_Black>4&&All_Black<16)
+           else if(All_Black>5&&All_Black<=8)
+           {
+             speed_goal_R=5000;
+             speed_goal_L=5000;
+           }
+           else if(All_Black>8&&All_Black<16)
            {
              speed_goal_R=5000;
               speed_goal_L=5000;
@@ -195,9 +200,7 @@ void Motor_Out(void)
               speed_goal_L=5300;
               
            }
-           */
-           speed_goal_R=5000;
-           speed_goal_L=5000;
+           
               
            
            speed_err_R=speed_goal_R-speed_get_R*10;
