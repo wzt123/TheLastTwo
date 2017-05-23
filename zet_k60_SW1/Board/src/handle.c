@@ -252,7 +252,7 @@ void Servo_control(void)
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
-    Kp =880*error*error/10000 +18;
+    Kp =560*error*error/10000 +36;
     if(error*errorerror>=0)
     {
       if(All_Black<2)

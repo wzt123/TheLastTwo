@@ -58,6 +58,7 @@ void PIT0_IRQHandler(void)
 void Init_All(void)
 {
   Car=2;
+  Stop_Flag=0;
   Motor_Init();
   OLED_Init();
   ov7725_eagle_init(imgbuff);
@@ -87,13 +88,13 @@ void Motor_Init(void)
     gpio_set(PTC3,1);
     gpio_set(PTC2,0);
     
-    ftm_pwm_init(FTM2,FTM_CH0,15000,0);//驱动B2FTM初始化
+    ftm_pwm_init(FTM2,FTM_CH0,15000,7000);//驱动B2FTM初始化
     gpio_init(PTB17,GPO,0);//驱动正向使能初始化
     gpio_init(PTB16,GPO,0);//驱动反向使能初始化
     gpio_set(PTB17,0);
     gpio_set(PTB16,1);
     
-    ftm_pwm_init(FTM0,FTM_CH3,100,0);
+    ftm_pwm_init(FTM0,FTM_CH3,100,7000);
     //DELAY_MS(10);
     
     ftm_pwm_duty(FTM0, FTM_CH3, 8508);
@@ -120,32 +121,32 @@ void Motor_Out(void)
         {speed_PWM=0;}
        else
        {
-         if(speed_get_R<10||speed_get_L<10)
+         /*if(speed_get_R<10||speed_get_L<10)
          {
            speed_PWM_R = 0;
            speed_PWM_L = 0;
          }
-         else if(speed_get_R<100||speed_get_L<100)
+         else */if(speed_get_R<100||speed_get_L<100)
          {
            speed_PWM_R = 7000;
            speed_PWM_L = 7000;
          }
          else
          {
-           if(All_Black>2&&All_Black<16)
+           if(All_Black>2&&All_Black<10)
            {
-             speed_goal_R=4300;
-              speed_goal_L=4300;
+             speed_goal_R=4600;
+              speed_goal_L=4600;
            }
            else if(Bend_Right==1||Bend_Lift==1||(All_Black>=16&&All_Black<40))
            {
-             speed_goal_R=4500;
-             speed_goal_L=4500;             
+             speed_goal_R=5000;
+             speed_goal_L=5000;             
            }
            else
            {
-              speed_goal_R=5300;
-              speed_goal_L=5300;
+              speed_goal_R=5600;
+              speed_goal_L=5600;
               
            }
            
@@ -159,8 +160,8 @@ void Motor_Out(void)
          }
        }
        
-       speed_PWM_R = speed_PWM_R - error*abs(error)/8;
-       speed_PWM_L = speed_PWM_L + error*abs(error)/8;
+       //speed_PWM_R = speed_PWM_R - error*abs(error)/8;
+       //speed_PWM_L = speed_PWM_L + error*abs(error)/8;
        
        
       if(speed_PWM_R<0)

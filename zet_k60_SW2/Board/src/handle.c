@@ -91,9 +91,14 @@ uint8 Bend_Lift = 0;
 float repair_slope_R = 0;/////右边线补线斜率
 float repair_slope_L = 0;/////左边线补线斜率
 uint8 Ring_First_Row = 0;
+uint8 Ring_width = 0;
+uint8 Ring_width_1 = 0;
+uint8 Ring_width_2 = 0;
 uint8 Cross_Flag_Last=0;
-
+uint32 sum_time = 0;
 //uint8 Ring_Flag=0;
+uint8 start_line_num = 0;
+uint8 stop_line_num = 0;
 
 uint8 weight_num_Cross [60]=
 {
@@ -248,21 +253,22 @@ void Servo_control(void)
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
-    Kp =880*error*error/10000 +18;
+    
+    Kp =560*error*error/10000 +36;
     if(error*errorerror>=0)
     {
       if(All_Black<2)
       {
         Kd = 0;
       }
-      else if(All_Black<10)
+      else if(All_Black<12)
       {
         if(error<0)
         {
-          Kd = 25;
+          Kd = 30;
         }
         else
-          Kd = 28;
+          Kd = 33;
       }
       else if(All_Black<18)
       {
@@ -279,10 +285,14 @@ void Servo_control(void)
           Kd = 25;
       }
     }
-    else 
+    else if(All_Black<10)
     {
-      Kp = Kp+20;
+      Kp = Kp+10;
       Kd =0;
+    }
+    else
+    {      
+      Kd =18;
     }
     Servo_temp=Kp*error/10+Kd*errorerror/10;
     Servo_value=Servomiddle+Servo_temp;
@@ -533,9 +543,7 @@ void filter_Middle(uint8 *Array)
 //寻边线
 void Search_Line(void)
 {
-  Ring_First_Row=0;
-  Bend_Lift =0;
-  Bend_Right = 0;
+  
   Row_Ptr=0;
   Col_Ptr=0;
   uint8 LFlag=0;
@@ -547,8 +555,7 @@ void Search_Line(void)
   int8 REnd=79;
   
   uint8 Cross_flag=0;
-  uint8 ring_flag=0,j;
-  uint8 ring_num=0;
+  
   uint8 a=1;
   uint8 b=79;
   uint8 i;
@@ -569,7 +576,7 @@ void Search_Line(void)
   Road_Change=0;
   CrossRow=59;
   StopRow=0;
-  Stop_Flag=0;
+ // Stop_Flag=0;
   //a=0;
   Left_sign=0;
   Right_sign=0;
@@ -582,7 +589,17 @@ void Search_Line(void)
   Left_r_out=0;
   Right_r_in=0;
   Right_r_out=0;
-
+  //////////////////////////
+  stop_line_num = 0;
+  Ring_width_1 = 0;
+  Ring_width_2 = 0;
+  Ring_width =0;
+  Ring_First_Row=0;
+  Bend_Lift =0;
+  Bend_Right = 0;
+  uint8 ring_flag=0,j;
+  uint8 ring_num=0;
+  ///////////////////////
   //前三行搜线开始
   for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
   {
@@ -591,6 +608,33 @@ void Search_Line(void)
     Left_Flag[Row_Ptr]=0;
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
+    
+    //从左到右检测起跑线
+    start_line_num = 0;
+    for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
+    {      
+        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 && img[Row_Ptr][Col_Ptr+2]==0&&
+           img[Row_Ptr][Col_Ptr+3]==255&& img[Row_Ptr][Col_Ptr+4]==255&& img[Row_Ptr][Col_Ptr+5]==255)
+        {
+          start_line_num ++;
+        }      
+    }
+    if(start_line_num>6)
+    {
+      stop_line_num++;
+    }
+    if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
+    {
+      if(sum_time>8000)
+      {
+        Stop_Flag=2;
+      }
+    }
+    else if(stop_line_num>=3&&Stop_Flag==0)
+    {
+      Stop_Flag=1;
+    }
+    
     //内层for开始 从中心向左边
     for(Col_Ptr=60; Col_Ptr>0; Col_Ptr--)
     {
@@ -874,6 +918,7 @@ void Search_Line(void)
       if(ring_flag==0&&img[Row_Ptr][j]==255&&img[Row_Ptr][j+1]==255&&img[Row_Ptr][j+2]==0&&img[Row_Ptr][j+3]==0) 
       {
         ring_flag=1;
+        Ring_width_1 = j+3;
         a=j+2;
       }
       else if(ring_flag==1&&img[Row_Ptr][j]==0&&img[Row_Ptr][j+1]==0&&img[Row_Ptr][j+2]==255&&img[Row_Ptr][j+3]==255) 
@@ -881,8 +926,13 @@ void Search_Line(void)
         b=j;
         ring_flag=2;
         ring_num++;
+        Ring_width_2 = j+1;
         if(ring_num==1) Ring_First_Row=Row_Ptr;
         break;
+      }
+      if(Ring_width_2-Ring_width_1>Ring_width)
+      {
+        Ring_width = Ring_width_2-Ring_width_1;
       }
     }
     if(ring_flag!=2) ring_num=0;
@@ -897,13 +947,23 @@ void Search_Line(void)
           b_f=1;
         if(img[i][(a+b)/2]==255&&img[i+1][(a+b)/2]==255)
           c_f=1;
-        if(a_f==1&&b_f==1&&c_f==1)
+        if(Ring_width>15)
         {
-          
-          Cross_Flag=3;
-          Cross_Flag_Last=3;//只在有圆环的时候才等于3，在超车成功后，继续变为0的时候
-          break;          
+          if(a_f==1&&b_f==1&&c_f==1)
+          {
+            
+            Cross_Flag=3;
+            Cross_Flag_Last=3;//只在有圆环的时候才等于3，在超车成功后，继续变为0的时候
+            break;          
+          }
+          else
+          {
+            Ring_width_1 = 0;
+            Ring_width_2 = 0;
+            Ring_width =0;
+          }
         }
+        
       }   
     }
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])
