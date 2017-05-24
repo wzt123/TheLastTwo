@@ -47,137 +47,166 @@ uint16 speed_rember_L[3] = {0};
   
 void  main(void)
 {
-     //zet_bluetooth();
-     uint16 send_data[3] = {0};
-     int time1=0;
-     char nrf_data=0;
-      uint8 Edge_R[3]= {0};
-     uint8 Edge_L[3]= {0};
-     //uint32 time2 = 0;
-     DisableInterrupts;
-     NVIC_SetPriority(PORTA_IRQn,1);
-     NVIC_SetPriority(DMA0_IRQn,2);
-     
-     Init_All();
-     DELAY_MS(1000);
-     
-     EnableInterrupts;
-     
-     //set_vector_handler(PORTC_PORTD_VECTORn ,PORTC_PORTD_IRQHandler);
-     
-     set_vector_handler(PORTA_VECTORn , PORTA_IRQHandler);  
-     set_vector_handler(DMA0_VECTORn , DMA0_IRQHandler);    
-     //set_vector_handler(PIT1_VECTORn , PIT1_IRQHandler);    
-    // enable_irq (PIT1_IRQn);
-     
-     //设置 PORTE 的中断服务函数为 PORTE_VECTORn
-     //enable_irq(PORTC_PORTD_IRQn);
-     //int a=nrf_link_check();
-   while(1)
-    {
-        pit_time_start(PIT1);
-        camera_get_img();                                   //摄像头获取图像
-        img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
-        Search_Line();
-        Find_Middle();
+    //zet_bluetooth();
+  uint16 send_data[3] = {0};
+  uint8 time1=0;
+  sum_time = 0;
+  char nrf_data=0;
+  uint8 Edge_R[3]= {0};
+  uint8 Edge_L[3]= {0};
+  uint8 IR1_last = 0;
+  uint8 IR2_last = 0;
+  
+  //uint32 time2 = 0;
+  DisableInterrupts;
+  NVIC_SetPriority(PORTA_IRQn,1);
+  NVIC_SetPriority(DMA0_IRQn,2);
+  
+  Init_All();
+  DELAY_MS(1000);
+  
+  EnableInterrupts;
+  
+  //set_vector_handler(PORTC_PORTD_VECTORn ,PORTC_PORTD_IRQHandler);
+  
+  set_vector_handler(PORTA_VECTORn , PORTA_IRQHandler);  
+  set_vector_handler(DMA0_VECTORn , DMA0_IRQHandler);    
+  //set_vector_handler(PIT1_VECTORn , PIT1_IRQHandler);    
+  // enable_irq (PIT1_IRQn);
+  
+  //设置 PORTE 的中断服务函数为 PORTE_VECTORn
+  //enable_irq(PORTC_PORTD_IRQn);
+  //int a=nrf_link_check();
+  uint8 IR1=0,IR2=0;
+  while(1)
+  {
+    pit_time_start(PIT1);
+    camera_get_img();                                   //摄像头获取图像
+    img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+    Search_Line();
+    Find_Middle();
+    
+    Servo_control();
+    IR1_last = IR1;
+    IR1 = gpio_get(PTE10);///读一边的红外对管
+    
+    speed_get_L = abs(ftm_quad_get(FTM1));          //获取FTM 正交解码 的脉冲数(负数表示反方向)
+    if(Edge_L[0]!=0){
+      if(abs(speed_get_L-speed_rember_L[2])<20)
+      {
+        speed_rember_L[0] = speed_rember_L[1];
+        speed_rember_L[1] = speed_rember_L[2];
+        speed_rember_L[2] = speed_get_L;
         
-        Servo_control();
-        
-        
-       speed_get_L = abs(ftm_quad_get(FTM1));          //获取FTM 正交解码 的脉冲数(负数表示反方向)
-       if(Edge_L[0]!=0){
-         if(abs(speed_get_L-speed_rember_L[2])<20)
-         {
-           speed_rember_L[0] = speed_rember_L[1];
-           speed_rember_L[1] = speed_rember_L[2];
-           speed_rember_L[2] = speed_get_L;
-           
-           Edge_L[0]=speed_rember_L[0];
-           Edge_L[1]=speed_rember_L[1];
-           Edge_L[2]=speed_rember_L[2];          
-           speed_get_L=GetMedianNum(Edge_L,3);////左编码器滤波
-         }
-         else
-         {
-           speed_get_L = speed_rember_L[2];
-         }
-           
-       }
-       speed_get_R = lptmr_pulse_get();
-       if(Edge_R[0]!=0)
-       {
-         if(abs(speed_get_R-speed_rember_R[2])<20)
-         {
-           speed_rember_R[0] = speed_rember_R[1];
-           speed_rember_R[1] = speed_rember_R[2];
-           speed_rember_R[2] = speed_get_R;
-           
-           Edge_R[0]=speed_rember_R[0];
-           Edge_R[1]=speed_rember_R[1];
-           Edge_R[2]=speed_rember_R[2];          
-           speed_get_R=GetMedianNum(Edge_R,3);////右编码器滤波          
-         }
-         else
-         {
-           speed_get_R = speed_rember_R[2];
-         }
-           
-       }
-        ftm_quad_clean(FTM1);
-        lptmr_pulse_clean();
-        /*if(Cross_Flag==3&&stop_Flag !=1&&Ring_First_Row<=20&&Car==1)
-        {
-          stop_Car();
-        
-        }*/
-        /*if(gpio_get(PTE10)&&gpio_get(PTE9)&&stop_Flag!=1)             //PTC8，PTC9触发中断
-        {          
-          if(stopline_num>0)
-            stop_Car();
-          else
-            stopline_num++;
-        }*/
-        if(stop_Flag !=1)
-        {  
-          Motor_Out();
-        }
-        if(stop_Flag==1)
-        {
-          race[3]=1;///告诉后车遇到圆环且停好车了，准备超车，
-        }
-        ///蓝牙传送编码器的值
-        send_data[0] = speed_get_L;
-        send_data[1] = speed_get_R;
-        //send_data[2] = Cross_Flag*500;
-       // vcan_sendware((uint8_t *)send_data, sizeof(send_data));
-        
-        //nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
-        nrf_data = buff[0];
-        ////////////////后车检测到超声波信号，发来一个1，表明超车成功
-        /*if(buff[1]==1)
-        {
-          Car=1;
-          stop_Flag=0;
-        }*/
-        
-        //Overtake_judge();
-        dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-        OLED_Print_Num1(88, 1, All_Black);
-        OLED_Print_Num1(88, 2, error);
-       // OLED_Print_Num1(88, 3, errorerror);
-        OLED_Print_Num1(88, 3, Cross_Flag);
-        OLED_Print_Num1(88, 4, speed_get_L);
-        OLED_Print_Num1(88, 5, speed_get_R);
-        //OLED_Print_Num1(88, 4, gpio_get(PTE10));
-        //OLED_Print_Num1(88, 5, gpio_get(PTE9));
-        //wzt_bluetooth(); 
-        time1 = pit_time_get(PIT1)*100/(9*1024*1024);
-        pit_close(PIT1);
-        
-        OLED_Print_Num1(88, 6, time1);
-        
-        //OLED_Print_Num1(88, 6, nrf_data);
+        Edge_L[0]=speed_rember_L[0];
+        Edge_L[1]=speed_rember_L[1];
+        Edge_L[2]=speed_rember_L[2];          
+        speed_get_L=GetMedianNum(Edge_L,3);////左编码器滤波
+      }
+      else
+      {
+        speed_get_L = speed_rember_L[2];
+      } 
+      
     }
+    speed_get_R = lptmr_pulse_get();
+    if(Edge_R[0]!=0)
+    {
+      if(abs(speed_get_R-speed_rember_R[2])<20)
+      {
+        speed_rember_R[0] = speed_rember_R[1];
+        speed_rember_R[1] = speed_rember_R[2];
+        speed_rember_R[2] = speed_get_R;
+        
+        Edge_R[0]=speed_rember_R[0];
+        Edge_R[1]=speed_rember_R[1];
+        Edge_R[2]=speed_rember_R[2];          
+        speed_get_R=GetMedianNum(Edge_R,3);////右编码器滤波          
+      }
+      else
+      {
+        speed_get_R = speed_rember_R[2];
+      }
+      
+    }
+    ftm_quad_clean(FTM1);
+    lptmr_pulse_clean();
+    IR2_last = IR2;
+    IR2 = gpio_get(PTE9);///隔一下再读另一边的红外对管
+    
+    /*if(IR1&&IR2&&stop_Flag!=1&&(sum_time>12600||sum_time==0))             //PTC8，PTC9触发中断
+    {      
+      if(stopline_num>0)
+        stop_Car();
+      else
+        stopline_num++;
+      if(stopline_num==1)
+      {
+        sum_time=0;
+      }      
+    }
+    if(IR1)
+    {      
+      uart_putchar(UART5,'A');//左
+      uart_putchar(UART5,'\n');
+      
+    }
+    if(IR2)
+    {
+      uart_putchar(UART5,'B');//右
+      uart_putchar(UART5,'\n');
+    }*/
+    if(stop_Flag !=1)
+    {  
+      Motor_Out();
+    }
+    /*if(Cross_Flag==0&&Bend_Lift!=1&&Bend_Right!=1&&Car==1)
+    {
+    stop_Car();
+    
+  }*/
+    
+    if(Stop_Flag==2)
+    {
+      race[3]=1;///告诉后车遇到圆环且停好车了，准备超车，
+      stop_Car();
+    }
+    ///蓝牙传送编码器的值
+    send_data[0] = speed_get_L;
+    send_data[1] = speed_get_R;
+    //send_data[2] = Cross_Flag*500;
+    //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
+    
+    nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
+    nrf_data = buff[0];
+    ////////////////后车检测到超声波信号，发来一个1，表明超车成功
+    /*if(buff[1]==1)
+    {
+    Car=1;
+    stop_Flag=0;
+  }*/
+    
+    //Overtake_judge();
+    dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
+    OLED_Print_Num1(88, 1, All_Black);
+    OLED_Print_Num1(88, 2, error);
+    OLED_Print_Num1(88, 3, errorerror);
+    OLED_Print_Num1(88, 4, Kp);
+    OLED_Print_Num1(88, 5, Kd);
+    //wzt_bluetooth(); 
+    
+    
+    time1 = pit_time_get(PIT1)*100/(9*1024*1024);
+    if(Stop_Flag==1)
+    {
+      sum_time +=time1; 
+    }    
+    pit_close(PIT1);
+    
+    OLED_Print_Num1(88, 6, Stop_Flag);
+    
+    //OLED_Print_Num1(88, 6, nrf_data);
+  }
 }
 
 /*!
