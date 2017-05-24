@@ -47,7 +47,8 @@ int16 error=0;
 int32 error1=0;
 int32 error2=0;
 int16 errorerror=0;
-
+uint8 Flag_L=0;
+uint8 Flag_R=0;
 
 uint8 Stop_Flag=0;
 uint8 StopRow=0;
@@ -95,6 +96,7 @@ uint8 start_line_num = 0;
 uint8 stop_line_num = 0;
 //uint8 Ring_Flag=0;
 uint32 sum_time = 0;
+uint8 Cross_Cnt=0;
 uint8 weight_num_Cross [60]=
 {
   10,10,10,10,10,
@@ -658,7 +660,59 @@ void Find_Middle()
   //filter_Middle(Road_Center);
   if(Cross_Flag==1&&StopRow>All_Black)
   {
-    Calculate_Slope();
+    if(Cross_Cnt==0) Cross_Cnt=1;//一个十字路口
+    else if(Cross_Cnt==1) Cross_Cnt=2;
+    else if(Cross_Cnt>2) Cross_Cnt=1;
+  }
+  else if(Cross_Flag==0)
+  {
+    if(Cross_Cnt==2) Cross_Cnt=3;//第一个十字路口结束
+    else if(Cross_Cnt==3) Cross_Cnt=4;
+    else if(Cross_Cnt==4) Cross_Cnt=5;
+  }
+  if(Cross_Cnt==5&&error>10) Cross_Cnt=6;//右转
+  else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
+  if(Cross_Cnt==6)
+  {
+    for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
+    {
+      if(Road_Left[Row_Ptr]<Road_Left[Row_Ptr+1]&&
+         Road_Left[Row_Ptr+1]<Road_Left[Row_Ptr+2]&&
+           Road_Left[Row_Ptr+2]<Road_Left[Row_Ptr+3]&&
+             Road_Left[Row_Ptr-1]>=Road_Left[Row_Ptr]&&
+               Road_Left[Row_Ptr-2]>=Road_Left[Row_Ptr-1])
+      {
+        Cross_Flag=2;
+        Flag_L++;
+        break;
+      }
+    }
+    if(Flag_L>0&&Cross_Flag!=2)
+    {
+      Flag_L=0;
+      Cross_Cnt=0;
+    }
+  }
+  else if(Cross_Cnt==7)
+  {
+    for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
+    {
+      if(Road_Right[Row_Ptr]>Road_Right[Row_Ptr+1]&&
+         Road_Right[Row_Ptr+1]>Road_Right[Row_Ptr+2]&&
+           Road_Right[Row_Ptr+2]>Road_Right[Row_Ptr+3]&&
+             Road_Right[Row_Ptr-1]<=Road_Right[Row_Ptr]&&
+               Road_Right[Row_Ptr-2]<=Road_Right[Row_Ptr-1])
+      {
+        Cross_Flag=4;
+        Flag_R++;
+        break;
+      }
+    }
+    if(Flag_R>0&&Cross_Flag!=4)
+    {
+      Flag_R=0;
+      Cross_Cnt=0;
+    }
   }
   for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
   {
@@ -720,7 +774,7 @@ void Find_Middle()
     if(Road_Center[Row_Ptr]>79) Road_Center[Row_Ptr]=79;
   }//结束for
   
-  for(Row_Ptr=59; Row_Ptr>2; Row_Ptr--)
+  for(Row_Ptr=59; Row_Ptr>All_Black; Row_Ptr--)
   {
     Edge[0]=Road_Center[Row_Ptr];
     Edge[1]=Road_Center[Row_Ptr-1];
