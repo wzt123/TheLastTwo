@@ -300,6 +300,12 @@ uint8 Row_Ptr=0;
     }
     Servo_temp=Kp*error/10+Kd*errorerror/10;
     Servo_value=Servomiddle+Servo_temp;
+    
+    if(Cross_Flag==2)
+      Servo_value = Servo_value+60;
+    if(Cross_Flag==4)
+      Servo_value = Servo_value-60;
+    
   if(Servo_value<Servo_min)
     Servo_value = Servo_min;
   if(Servo_value>Servo_max)

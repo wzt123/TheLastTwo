@@ -28,7 +28,7 @@ uint8 White_cnt=0;//全白行计数_连续的
 uint8 White_Cnt=0;//全白行计数_所有的
 uint8 White_Ren=0;
 
-uint16 Servo_value=8500;//舵机输出pwm值
+uint16 Servo_value=8508;//舵机输出pwm值
 
 
 uint8 Hinder_Start=0;
@@ -298,6 +298,11 @@ void Servo_control(void)
     }
     Servo_temp=Kp*error/10+Kd*errorerror/10;
     Servo_value=Servomiddle+Servo_temp;
+    
+    if(Cross_Flag==2)
+      Servo_value = Servo_value+60;
+    if(Cross_Flag==4)
+      Servo_value = Servo_value-60;
   if(Servo_value<Servo_min)
     Servo_value = Servo_min;
   if(Servo_value>Servo_max)
