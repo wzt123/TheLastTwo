@@ -219,7 +219,7 @@ void Calculate_Slope()
 */
 void Servo_control(void)
 {
-  uint8 Row_Ptr=0;
+uint8 Row_Ptr=0;
   error=0;
   error1=0;
   error2=0;
@@ -255,6 +255,7 @@ void Servo_control(void)
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
+    
     Kp =560*error*error/10000 +36;
     if(error*errorerror>=0)
     {
@@ -262,23 +263,38 @@ void Servo_control(void)
       {
         Kd = 0;
       }
-      else if(All_Black<10)
+      else if(All_Black<12)
       {
-        Kd = 25;
+        if(error<0)
+        {
+          Kd = 26;
+        }
+        else
+          Kd = 28;
       }
       else if(All_Black<18)
       {
-        Kd = 15;
+        if(error<0)
+          Kd = 20;
+        else
+          Kd = 23;
       }
       else
       {
-        Kd = 25;
+        if(error<0)
+          Kd = 28;
+        else
+          Kd = 25;
       }
     }
-    else 
+    else if(All_Black<10)
     {
-      Kp = Kp+20;
+      Kp = Kp+10;
       Kd =0;
+    }
+    else
+    {      
+      Kd =18;
     }
     Servo_temp=Kp*error/10+Kd*errorerror/10;
     Servo_value=Servomiddle+Servo_temp;
