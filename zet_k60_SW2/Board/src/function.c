@@ -108,8 +108,8 @@ void Motor_Init(void)
 */
 void Motor_Out(void)
 {
-  speed_PWM=6950;
-  uint8 speed_Ki=17;
+  speed_PWM=8900;
+  uint8 speed_Ki=30;
   float speed_Kd=0.0;
   float speed_Kp=0.0;
        gpio_set(PTC3,1);
@@ -135,13 +135,13 @@ void Motor_Out(void)
          {
            if(All_Black>2&&All_Black<10)
            {
-             speed_goal_R=4600;
-              speed_goal_L=4600;
+             speed_goal_R=5000;
+              speed_goal_L=5000;
            }
            else if(Bend_Right==1||Bend_Lift==1||(All_Black>=16&&All_Black<40))
            {
-             speed_goal_R=5000;
-             speed_goal_L=5000;             
+             speed_goal_R=5300;
+             speed_goal_L=5300;             
            }
            else
            {

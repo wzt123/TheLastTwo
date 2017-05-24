@@ -97,7 +97,7 @@ uint8 Ring_width_2 = 0;
 uint8 Cross_Flag_Last=0;
 uint32 sum_time = 0;
 //uint8 Ring_Flag=0;
-uint8 start_line_num = 0;
+uint8 start_line_num[3] = {0};
 uint8 stop_line_num = 0;
 
 uint8 weight_num_Cross [60]=
@@ -265,17 +265,17 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kd = 30;
+          Kd = 26;
         }
         else
-          Kd = 33;
+          Kd = 28;
       }
       else if(All_Black<18)
       {
         if(error<0)
-          Kd = 18;
+          Kd = 20;
         else
-          Kd = 15;
+          Kd = 23;
       }
       else
       {
@@ -405,13 +405,18 @@ void Find_Middle()
   {
     Calculate_Slope();
   }
-  for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
-  {
-    Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
-  }
+  
+    for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
+    {
+      if(start_line_num[Row_Ptr-57]<7)
+        Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
+      else
+        Road_Center[Row_Ptr] = 40;
+    }
+  
   for(Row_Ptr=56; Row_Ptr>All_Black; Row_Ptr--)
   {
-    if(Cross_Flag==3&&Ring_First_Row>4)
+    /*if(Cross_Flag==3&&Ring_First_Row>4)
     {
       if(Row_Ptr>50)
         Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-30;
@@ -424,7 +429,7 @@ void Find_Middle()
       else
         Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-5;
       race[3]=1;
-    }
+    }*/
     /*else if(Cross_Flag==4&&buff[3]==1&&Ring_First_Row>16)
     {
        if(Row_Ptr>50)
@@ -437,8 +442,8 @@ void Find_Middle()
         Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-10;
       else
         Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-5;
-    }*/
-    else if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
+    }
+    else*/ if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
     {
       Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
     }
@@ -461,11 +466,18 @@ void Find_Middle()
     {
       Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
     }
+    
+    ////排除中线跳变
+    if(Road_Center[Row_Ptr]-Road_Center[Row_Ptr+1]>13&&Cross_Flag==0)
+    {
+      Road_Center[Row_Ptr] = Road_Center[Row_Ptr+1]+Road_Center[Row_Ptr+1]-Road_Center[Row_Ptr+2];
+    }
+    
     if(Road_Center[Row_Ptr]<0) Road_Center[Row_Ptr]=0;
     if(Road_Center[Row_Ptr]>79) Road_Center[Row_Ptr]=79;
   }//结束for
   
-  for(Row_Ptr=59; Row_Ptr>2; Row_Ptr--)
+  for(Row_Ptr=59; Row_Ptr>All_Black; Row_Ptr--)
   {
     Edge[0]=Road_Center[Row_Ptr];
     Edge[1]=Road_Center[Row_Ptr-1];
@@ -610,16 +622,16 @@ void Search_Line(void)
     Road_Center[Row_Ptr]=0;
     
     //从左到右检测起跑线
-    start_line_num = 0;
+    start_line_num[Row_Ptr-57] = 0;
     for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
     {      
         if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 && img[Row_Ptr][Col_Ptr+2]==0&&
            img[Row_Ptr][Col_Ptr+3]==255&& img[Row_Ptr][Col_Ptr+4]==255&& img[Row_Ptr][Col_Ptr+5]==255)
         {
-          start_line_num ++;
+          start_line_num[Row_Ptr-57] ++;
         }      
     }
-    if(start_line_num>6)
+    if(start_line_num[Row_Ptr-57]>6)
     {
       stop_line_num++;
     }
@@ -636,7 +648,7 @@ void Search_Line(void)
     }
     
     //内层for开始 从中心向左边
-    for(Col_Ptr=60; Col_Ptr>0; Col_Ptr--)
+    for(Col_Ptr=60; Col_Ptr>2; Col_Ptr--)
     {
       if(img[Row_Ptr][Col_Ptr-2]==0 && img[Row_Ptr][Col_Ptr-1]==0&&
          img[Row_Ptr][Col_Ptr]==255&& img[Row_Ptr][Col_Ptr+1]==255)
@@ -648,7 +660,7 @@ void Search_Line(void)
       }
     }//结束内层for
     //内层for开始从中心向右
-    for(Col_Ptr=20; Col_Ptr<80; Col_Ptr++)
+    for(Col_Ptr=20; Col_Ptr<77; Col_Ptr++)
     {
       if(img[Row_Ptr][Col_Ptr-1]==255 && img[Row_Ptr][Col_Ptr]==255&&
          img[Row_Ptr][Col_Ptr+1]==0&& img[Row_Ptr][Col_Ptr+2]==0)
@@ -715,8 +727,8 @@ void Search_Line(void)
     }
     
     if(Col_Ptr>Road_Right[Row_Ptr+1]) Col_Ptr=Road_Right[Row_Ptr+1];//防止越界
-    if(Col_Ptr>78) Col_Ptr=78;
-    if(LEnd<1) LEnd=1;//for开始搜索左边
+    if(Col_Ptr>76) Col_Ptr=76;
+    if(LEnd<3) LEnd=3;//for开始搜索左边
     for(; Col_Ptr>LEnd; Col_Ptr--)
     {
       if(img[Row_Ptr][Col_Ptr-2]==0 && img[Row_Ptr][Col_Ptr-1]==0&&
@@ -777,8 +789,8 @@ void Search_Line(void)
     
     
     if(Col_Ptr<Road_Left[Row_Ptr+1]) Col_Ptr=Road_Left[Row_Ptr+1];//防止越界
-    if(Col_Ptr<1) Col_Ptr=1;
-    if(REnd>79) REnd=78;//for开始_搜
+    if(Col_Ptr<3) Col_Ptr=3;
+    if(REnd>76) REnd=76;//for开始_搜
     
     for(; Col_Ptr<REnd; Col_Ptr++)
     {
@@ -939,6 +951,8 @@ void Search_Line(void)
     a_f=0;b_f=0;c_f=0;
     if(ring_num>3&&Ring_First_Row>20&&Row_Ptr>(All_Black+6)&&Cross_Flag!=3)
     {    
+      if(Ring_width>27)
+      {
       for(i=Row_Ptr-ring_num;i>0;i--)
       {
         if(img[i][a]==255&&img[i+1][a]==255)
@@ -947,13 +961,14 @@ void Search_Line(void)
           b_f=1;
         if(img[i][(a+b)/2]==255&&img[i+1][(a+b)/2]==255)
           c_f=1;
-        if(Ring_width>15)
-        {
+        
           if(a_f==1&&b_f==1&&c_f==1)
           {
             
-            Cross_Flag=3;
-            Cross_Flag_Last=3;//只在有圆环的时候才等于3，在超车成功后，继续变为0的时候
+              Cross_Flag_Last = Cross_Flag;
+              Cross_Flag=3;
+            
+            //Cross_Flag_Last=3;//只在有圆环的时候才等于3，在超车成功后，继续变为0的时候
             break;          
           }
           else
@@ -962,9 +977,11 @@ void Search_Line(void)
             Ring_width_2 = 0;
             Ring_width =0;
           }
-        }
+        
         
       }   
+      }
+      
     }
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])
     {

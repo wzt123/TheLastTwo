@@ -158,7 +158,7 @@ void  main(void)
     }*/
     if(stop_Flag !=1)
     {  
-      //Motor_Out();
+      Motor_Out();
     }
     /*if(Cross_Flag==0&&Bend_Lift!=1&&Bend_Right!=1&&Car==1)
     {
@@ -203,7 +203,7 @@ void  main(void)
     }    
     pit_close(PIT1);
     
-    OLED_Print_Num1(88, 6, Ring_width);
+    OLED_Print_Num1(88, 6, Stop_Flag);
     
     //OLED_Print_Num1(88, 6, nrf_data);
   }
