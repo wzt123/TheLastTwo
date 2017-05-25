@@ -218,7 +218,7 @@ void Calculate_Slope()
 舵机控制
 */
 void Servo_control(void)
-{
+{  
   uint8 Row_Ptr=0;
   error=0;
   error1=0;
@@ -301,13 +301,35 @@ void Servo_control(void)
     
     if(Cross_Flag==2)
       Servo_value = Servo_value+60;
-    if(Cross_Flag==4)
+    else if(Cross_Flag==4)
       Servo_value = Servo_value-60;
+    else if(Cross_Flag==3)
+    {
+      if(Car == 1)
+      {
+        if(error2>0)
+          Servo_temp=Kp*error/10+Kd*errorerror/10+Ring_First_Row*7;
+        else
+          Servo_temp=Kp*error/10+Kd*errorerror/10-Ring_First_Row*7;
+      }
+      else
+      {
+        if(error2>0)
+          Servo_temp=Kp*error/10+Kd*errorerror/10-Ring_First_Row*7;
+        else
+          Servo_temp=Kp*error/10+Kd*errorerror/10+Ring_First_Row*7;
+      }
+      
+      Servo_value=Servomiddle+Servo_temp;
+    }
   if(Servo_value<Servo_min)
     Servo_value = Servo_min;
   if(Servo_value>Servo_max)
     Servo_value = Servo_max;
   ftm_pwm_duty(FTM0,FTM_CH3,Servo_value);
+  
+ 
+  
 }
 //NRF
 void Overtake_judge()
@@ -316,11 +338,11 @@ void Overtake_judge()
   {
     if(Cross_Flag==3)
     {
-        race[0]=1;
-        nrf_tx(race,4);
-        while(nrf_tx_state() == NRF_TXING);//等待发送完成
-        race[0]=0;
-        //Car=2;
+      race[0]=1;
+      nrf_tx(race,4);
+      while(nrf_tx_state() == NRF_TXING);//等待发送完成
+      race[0]=0;
+      //Car=2;
     }
   }
   else if(Car==2) 
@@ -400,7 +422,7 @@ void Find_Middle()
   FirstBlackinCenter=0;
   Overtake=0;
   //
-
+  
   /////
   uint8 repair_R[60]= {0}; /////右边丢失的求斜率的数组
   uint8 repair_L[60]= {0}; /////左边丢失的求斜率的数组
@@ -466,43 +488,43 @@ void Find_Middle()
     }
   }
   
-    for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
-    {
-      if(start_line_num[Row_Ptr-57]<7)
-        Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
-      else
-        Road_Center[Row_Ptr] = 40;
-    }
+  for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
+  {
+    if(start_line_num[Row_Ptr-57]<7)
+      Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
+    else
+      Road_Center[Row_Ptr] = 40;
+  }
   
   for(Row_Ptr=56; Row_Ptr>All_Black; Row_Ptr--)
   {
     /*if(Cross_Flag==3&&Ring_First_Row>4)
     {
-      if(Row_Ptr>50)
-        Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-30;
+    if(Row_Ptr>50)
+    Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-30;
       else if(Row_Ptr>40)
-        Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-25;
+    Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-25;
       else if(Row_Ptr>30)
-        Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-18;
+    Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-18;
       else if(Row_Ptr>20)
-        Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-10;
+    Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-10;
       else
-        Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-5;
-      race[3]=1;
-    }*/
+    Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-5;
+    race[3]=1;
+  }*/
     /*else if(Cross_Flag==4&&buff[3]==1&&Ring_First_Row>16)
     {
-       if(Row_Ptr>50)
-        Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-30;
+    if(Row_Ptr>50)
+    Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-30;
       else if(Row_Ptr>40)
-        Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-25;
+    Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-25;
       else if(Row_Ptr>30)
-        Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-18;
+    Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-18;
       else if(Row_Ptr>20)
-        Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-10;
+    Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-10;
       else
-        Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-5;
-    }
+    Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-5;
+  }
     else*/ if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
     {
       Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
@@ -648,7 +670,7 @@ void Search_Line(void)
   Road_Change=0;
   CrossRow=59;
   StopRow=0;
- // Stop_Flag=0;
+  // Stop_Flag=0;
   //a=0;
   Left_sign=0;
   Right_sign=0;
@@ -685,11 +707,11 @@ void Search_Line(void)
     start_line_num[Row_Ptr-57] = 0;
     for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
     {      
-        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 && img[Row_Ptr][Col_Ptr+2]==0&&
-           img[Row_Ptr][Col_Ptr+3]==255&& img[Row_Ptr][Col_Ptr+4]==255&& img[Row_Ptr][Col_Ptr+5]==255)
-        {
-          start_line_num[Row_Ptr-57] ++;
-        }      
+      if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 && img[Row_Ptr][Col_Ptr+2]==0&&
+         img[Row_Ptr][Col_Ptr+3]==255&& img[Row_Ptr][Col_Ptr+4]==255&& img[Row_Ptr][Col_Ptr+5]==255)
+      {
+        start_line_num[Row_Ptr-57] ++;
+      }      
     }
     if(start_line_num[Row_Ptr-57]>6)
     {
@@ -1011,22 +1033,22 @@ void Search_Line(void)
     a_f=0;b_f=0;c_f=0;
     if(ring_num>3&&Ring_First_Row>20&&Row_Ptr>(All_Black+6)&&Cross_Flag!=3)
     {    
-      if(Ring_width>27)
-      {
-      for(i=Row_Ptr-ring_num;i>0;i--)
-      {
-        if(img[i][a]==255&&img[i+1][a]==255)
-          a_f=1;
-        if(img[i][b]==255&&img[i+1][b]==255)
-          b_f=1;
-        if(img[i][(a+b)/2]==255&&img[i+1][(a+b)/2]==255)
-          c_f=1;
-        
+      //if(Ring_width>27)
+      //{
+        for(i=Row_Ptr-ring_num;i>0;i--)
+        {
+          if(img[i][a]==255&&img[i+1][a]==255)
+            a_f=1;
+          if(img[i][b]==255&&img[i+1][b]==255)
+            b_f=1;
+          if(img[i][(a+b)/2]==255&&img[i+1][(a+b)/2]==255)
+            c_f=1;
+          
           if(a_f==1&&b_f==1&&c_f==1)
           {
             
-              Cross_Flag_Last = Cross_Flag;
-              Cross_Flag=3;
+            Cross_Flag_Last = Cross_Flag;
+            Cross_Flag=3;
             
             //Cross_Flag_Last=3;//只在有圆环的时候才等于3，在超车成功后，继续变为0的时候
             break;          
@@ -1037,10 +1059,10 @@ void Search_Line(void)
             Ring_width_2 = 0;
             Ring_width =0;
           }
-        
-        
-      }   
-      }
+          
+          
+        }   
+      //}
       
     }
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])
