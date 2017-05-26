@@ -188,11 +188,11 @@ void  main(void)
     
     //Overtake_judge();
     dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-    OLED_Print_Num1(88, 1, Ring_First_Row);
+    OLED_Print_Num1(88, 1, cross_num);
     OLED_Print_Num1(88, 2, error);
-    OLED_Print_Num1(88, 3, error2);
-    OLED_Print_Num1(88, 4, Kp);
-    OLED_Print_Num1(88, 5, Servo_temp);
+    OLED_Print_Num1(88, 3, errorerror);
+    OLED_Print_Num1(88, 4, speed_get_L);
+    OLED_Print_Num1(88, 5, speed_get_R);
     //wzt_bluetooth(); 
     
     

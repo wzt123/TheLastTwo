@@ -67,7 +67,9 @@ extern uint8 Ring_First_Row;
 extern int16 Servo_temp;
 extern uint32 sum_time;
 extern uint8 Ring_width;
+extern int32 error1;
 extern int32 error2;
+extern uint8 cross_num;
 /////////////////////////////////////////
 //extern int32 All_Black;
 extern uint16 Servo_value;

@@ -101,7 +101,7 @@ uint32 sum_time = 0;
 //uint8 Ring_Flag=0;
 uint8 start_line_num[3] = {0};
 uint8 stop_line_num = 0;
-
+uint8 cross_num = 0;
 uint8 weight_num_Cross [60]=
 {
   10,10,10,10,10,
@@ -228,13 +228,27 @@ void Servo_control(void)
   Servo_temp=0;
   uint8 l=0;
   // buff[0]=1;
-  if(All_Black>2)
+  if(Cross_Flag==2||Cross_Flag==4)
   {
-    Lastline=All_Black;
+    if(cross_num>10)
+    {
+      Lastline=cross_num;
+    }
+    else
+    {
+      Lastline=10;
+    }
   }
   else
   {
-    Lastline=2;
+    if(All_Black>2)
+    {
+      Lastline=All_Black;
+    }
+    else
+    {
+      Lastline=2;
+    }
   }
   l = 59-Lastline;
 
@@ -256,7 +270,7 @@ void Servo_control(void)
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
     
-    Kp =560*error*error/10000 +36;
+    
     /*if(error*errorerror>=0)
     {
       if(All_Black<2)
@@ -296,13 +310,19 @@ void Servo_control(void)
     {      
       Kd =18;
     }*/
-    Servo_temp=Kp*error/10+Kd*errorerror/10;
-    Servo_value=Servomiddle+Servo_temp;
+    
+    
     
     if(Cross_Flag==2)
-      Servo_value = Servo_value+120;
+    {
+      Kp =560*error*error/10000 +56;
+      Servo_temp=Kp*error/10;
+    }
     else if(Cross_Flag==4)
-      Servo_value = Servo_value-120;
+    {
+      Kp =560*error1*error1/10000 +56;
+      Servo_temp=Kp*error1/10;
+    }
     else if(Cross_Flag==3)
     {
       if(Car == 1)
@@ -316,6 +336,14 @@ void Servo_control(void)
       
       Servo_value=Servomiddle+Servo_temp;
     }
+    else
+    {
+      Kp =560*error*error/10000 +36;
+      Servo_temp=Kp*error/10+Kd*errorerror/10;
+    }
+    
+    Servo_value=Servomiddle+Servo_temp;
+    
   if(Servo_value<Servo_min)
     Servo_value = Servo_min;
   if(Servo_value>Servo_max)
@@ -413,6 +441,7 @@ void Find_Middle()
   uint8 CutPos=0;//中线断开位置
   uint8 Var=0;
   Road_area=0;
+  cross_num =0;
   FirstBlackinCenter=0;
   Overtake=0;
   //
@@ -446,10 +475,12 @@ void Find_Middle()
       if(Road_Left[Row_Ptr]<Road_Left[Row_Ptr+1]&&
          Road_Left[Row_Ptr+1]<Road_Left[Row_Ptr+2]&&
            Road_Left[Row_Ptr+2]<Road_Left[Row_Ptr+3]&&
-             Road_Left[Row_Ptr-1]>=Road_Left[Row_Ptr]&&
-               Road_Left[Row_Ptr-2]>=Road_Left[Row_Ptr-1])
+              (Road_Left[Row_Ptr-1]>=Road_Left[Row_Ptr]&&
+               Road_Left[Row_Ptr-2]>=Road_Left[Row_Ptr-1]&&
+               Road_Left[Row_Ptr-3]>=Road_Left[Row_Ptr-2]))
       {
         Cross_Flag=2;
+        cross_num = Row_Ptr;
         Flag_L++;
         break;
       }
@@ -467,10 +498,12 @@ void Find_Middle()
       if(Road_Right[Row_Ptr]>Road_Right[Row_Ptr+1]&&
          Road_Right[Row_Ptr+1]>Road_Right[Row_Ptr+2]&&
            Road_Right[Row_Ptr+2]>Road_Right[Row_Ptr+3]&&
-             Road_Right[Row_Ptr-1]<=Road_Right[Row_Ptr]&&
-               Road_Right[Row_Ptr-2]<=Road_Right[Row_Ptr-1])
+              (Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
+               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
+               Road_Left[Row_Ptr-3]<=Road_Left[Row_Ptr-2]))
       {
-        Cross_Flag=4;
+        Cross_Flag=4;        
+        cross_num = Row_Ptr;
         Flag_R++;
         break;
       }

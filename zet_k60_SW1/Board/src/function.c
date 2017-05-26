@@ -23,7 +23,7 @@ uint8 Status=0;
 uint16 var;
 uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
-uint32 Distance = 1200;
+uint32 Distance = 2500;
 uint16 send_data[3][8] = { { 0 }, { 0 }, { 0 } };
 /*uint8 Edge_R[3]= {0};
 uint8 Edge_L[3]= {0};   
@@ -111,8 +111,8 @@ void Motor_Init(void)
 */
 void Motor_Out(void)
 {
-  /*speed_PWM=6950;
-  if(Car==2)
+  speed_PWM=6550;
+  /*if(Car==2)
   {
     if(ABDistance<Distance-100)
       speed_PWM -=100;
@@ -170,45 +170,17 @@ void Motor_Out(void)
          
          else
          {
-           
-           ///直道入弯道提前转弯
-           if(Cross_Flag==1)
-           {
-             speed_goal_R=5300;
-             speed_goal_L=5300;             
-           }           
-           ///弯道低速
-           else if(All_Black>5&&All_Black<=8)
-           {
-             speed_goal_R=5000;
-             speed_goal_L=5000;
-           }
-           else if(All_Black>8&&All_Black<16)
-           {
-             speed_goal_R=5000;
-              speed_goal_L=5000;
-           } 
-           else if(Bend_Right==1||Bend_Lift==1||(All_Black>=16&&All_Black<40))
-           {
-             speed_goal_R=5000;
-             speed_goal_L=5000;             
-           }
-           //直道高速
-           else
-           {
-              speed_goal_R=5300;
-              speed_goal_L=5300;
-              
-           }
-           
-              
-           
-           speed_err_R=speed_goal_R-speed_get_R*10;
-           speed_err_L = speed_goal_L-speed_get_L*10;
-           speed_increment_R=speed_Ki*speed_err_R/10;
-           speed_increment_L=speed_Ki*speed_err_L/10;
-           speed_PWM_R=6100+speed_increment_R;
-           speed_PWM_L=6100+speed_increment_L;
+         
+         
+         speed_goal_R=3600;
+         speed_goal_L=3600;
+         
+         speed_err_R=speed_goal_R-speed_get_R*10;
+         speed_err_L = speed_goal_L-speed_get_L*10;
+         speed_increment_R=speed_Ki*speed_err_R/10;
+         speed_increment_L=speed_Ki*speed_err_L/10;
+         speed_PWM_R=6100+speed_increment_R;
+         speed_PWM_L=6100+speed_increment_L;
          }
        }
   //}
@@ -225,19 +197,7 @@ void Motor_Out(void)
            speed_PWM_L = speed_goal_L+100;
          }
        }
-       else 
-       {
-         if(buff[2]==1)
-         {
-           speed_PWM_R = speed_goal_R+50;
-           speed_PWM_L = speed_goal_L+50;
-         }
-         else if(buff[2]==2)
-         {
-           speed_PWM_R = speed_goal_R-150;
-           speed_PWM_L = speed_goal_L-150;
-         }
-       }
+       
       if(speed_PWM_R<0)
         speed_PWM_R=0;
         if(speed_PWM_R>8800)
