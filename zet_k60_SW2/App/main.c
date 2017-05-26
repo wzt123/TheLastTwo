@@ -191,7 +191,7 @@ void  main(void)
     OLED_Print_Num1(88, 1, Ring_First_Row);
     OLED_Print_Num1(88, 2, error);
     OLED_Print_Num1(88, 3, error2);
-    OLED_Print_Num1(88, 4, Cross_Flag);
+    OLED_Print_Num1(88, 4, Kp);
     OLED_Print_Num1(88, 5, Servo_temp);
     //wzt_bluetooth(); 
     

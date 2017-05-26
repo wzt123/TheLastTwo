@@ -220,8 +220,8 @@ void Calculate_Slope()
 舵机控制
 */
 void Servo_control(void)
-{
-uint8 Row_Ptr=0;
+{  
+  uint8 Row_Ptr=0;
   error=0;
   error1=0;
   error2=0;
@@ -259,7 +259,7 @@ uint8 Row_Ptr=0;
     errorerror = error2-error1;
     
     Kp =560*error*error/10000 +36;
-    if(error*errorerror>=0)
+    /*if(error*errorerror>=0)
     {
       if(All_Black<2)
       {
@@ -297,20 +297,35 @@ uint8 Row_Ptr=0;
     else
     {      
       Kd =18;
-    }
+    }*/
     Servo_temp=Kp*error/10+Kd*errorerror/10;
     Servo_value=Servomiddle+Servo_temp;
     
     if(Cross_Flag==2)
-      Servo_value = Servo_value+60;
-    if(Cross_Flag==4)
-      Servo_value = Servo_value-60;
-    
+      Servo_value = Servo_value+120;
+    else if(Cross_Flag==4)
+      Servo_value = Servo_value-120;
+    else if(Cross_Flag==3)
+    {
+      if(Car == 1)
+      {        
+          Servo_temp=-Ring_First_Row*55/10;
+      }
+      else
+      {
+          Servo_temp=Ring_First_Row*55/10;
+      }
+      
+      Servo_value=Servomiddle+Servo_temp;
+    }
   if(Servo_value<Servo_min)
     Servo_value = Servo_min;
   if(Servo_value>Servo_max)
     Servo_value = Servo_max;
   ftm_pwm_duty(FTM0,FTM_CH3,Servo_value);
+  
+ 
+  
 }
 //NRF
 void Overtake_judge()
@@ -1014,24 +1029,24 @@ void Search_Line(void)
     }
     if(ring_flag!=2) ring_num=0;
     a_f=0;b_f=0;c_f=0;
-    if(ring_num>3&&Ring_First_Row>20&&Row_Ptr>(All_Black+6)&&Cross_Flag!=3)
+    if(ring_num>3&&Row_Ptr>(All_Black+6)&&Cross_Flag!=3)
     {    
-      if(Ring_width>27)
-      {
-      for(i=Row_Ptr-ring_num;i>0;i--)
-      {
-        if(img[i][a]==255&&img[i+1][a]==255)
-          a_f=1;
-        if(img[i][b]==255&&img[i+1][b]==255)
-          b_f=1;
-        if(img[i][(a+b)/2]==255&&img[i+1][(a+b)/2]==255)
-          c_f=1;
-        
+      //if(Ring_width>27)
+      //{
+        for(i=Row_Ptr-ring_num;i>0;i--)
+        {
+          if(img[i][a]==255&&img[i+1][a]==255)
+            a_f=1;
+          if(img[i][b]==255&&img[i+1][b]==255)
+            b_f=1;
+          if(img[i][(a+b)/2]==255&&img[i+1][(a+b)/2]==255)
+            c_f=1;
+          
           if(a_f==1&&b_f==1&&c_f==1)
           {
             
-              Cross_Flag_Last = Cross_Flag;
-              Cross_Flag=3;
+            Cross_Flag_Last = Cross_Flag;
+            Cross_Flag=3;
             
             //Cross_Flag_Last=3;//只在有圆环的时候才等于3，在超车成功后，继续变为0的时候
             break;          
@@ -1042,10 +1057,10 @@ void Search_Line(void)
             Ring_width_2 = 0;
             Ring_width =0;
           }
-        
-        
-      }   
-      }
+          
+          
+        }   
+      //}
       
     }
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])

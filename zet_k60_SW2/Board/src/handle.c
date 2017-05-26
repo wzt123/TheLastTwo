@@ -257,7 +257,7 @@ void Servo_control(void)
     errorerror = error2-error1;
     
     Kp =560*error*error/10000 +36;
-    if(error*errorerror>=0)
+    /*if(error*errorerror>=0)
     {
       if(All_Black<2)
       {
@@ -295,29 +295,23 @@ void Servo_control(void)
     else
     {      
       Kd =18;
-    }
+    }*/
     Servo_temp=Kp*error/10+Kd*errorerror/10;
     Servo_value=Servomiddle+Servo_temp;
     
     if(Cross_Flag==2)
-      Servo_value = Servo_value+60;
+      Servo_value = Servo_value+120;
     else if(Cross_Flag==4)
-      Servo_value = Servo_value-60;
+      Servo_value = Servo_value-120;
     else if(Cross_Flag==3)
     {
       if(Car == 1)
-      {
-        if(error2>0)
-          Servo_temp=Kp*error/10+Kd*errorerror/10+Ring_First_Row*7;
-        else
-          Servo_temp=Kp*error/10+Kd*errorerror/10-Ring_First_Row*7;
+      {        
+          Servo_temp=-Ring_First_Row*55/10;
       }
       else
       {
-        if(error2>0)
-          Servo_temp=Kp*error/10+Kd*errorerror/10-Ring_First_Row*7;
-        else
-          Servo_temp=Kp*error/10+Kd*errorerror/10+Ring_First_Row*7;
+          Servo_temp=Ring_First_Row*55/10;
       }
       
       Servo_value=Servomiddle+Servo_temp;
@@ -1031,7 +1025,7 @@ void Search_Line(void)
     }
     if(ring_flag!=2) ring_num=0;
     a_f=0;b_f=0;c_f=0;
-    if(ring_num>3&&Ring_First_Row>20&&Row_Ptr>(All_Black+6)&&Cross_Flag!=3)
+    if(ring_num>3&&Row_Ptr>(All_Black+6)&&Cross_Flag!=3)
     {    
       //if(Ring_width>27)
       //{
@@ -1065,6 +1059,7 @@ void Search_Line(void)
       //}
       
     }
+    
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])
     {
       Road_Left[Row_Ptr]=Road_Left[Row_Ptr+1];

@@ -108,8 +108,8 @@ void Motor_Init(void)
 */
 void Motor_Out(void)
 {
-  speed_PWM=8900;
-  uint8 speed_Ki=30;
+  speed_PWM=6800;
+  /*uint8 speed_Ki=30;
   float speed_Kd=0.0;
   float speed_Kp=0.0;
        gpio_set(PTC3,1);
@@ -121,12 +121,7 @@ void Motor_Out(void)
         {speed_PWM=0;}
        else
        {
-         /*if(speed_get_R<10||speed_get_L<10)
-         {
-           speed_PWM_R = 0;
-           speed_PWM_L = 0;
-         }
-         else */if(speed_get_R<100||speed_get_L<100)
+         if(speed_get_R<100||speed_get_L<100)
          {
            speed_PWM_R = 7000;
            speed_PWM_L = 7000;
@@ -159,7 +154,7 @@ void Motor_Out(void)
            speed_PWM_L=6000+speed_increment_L;
          }
        }
-       
+   */    
        //speed_PWM_R = speed_PWM_R - error*abs(error)/8;
        //speed_PWM_L = speed_PWM_L + error*abs(error)/8;
        
@@ -174,12 +169,17 @@ void Motor_Out(void)
       if(speed_PWM_L>8500)
          speed_PWM_L=8500;
         
-   ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
-   ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
-   /*
+      if(speed_get_R<10||speed_get_L<10)
+         {
+           speed_PWM_R = 0;
+           speed_PWM_L = 0;
+         }
+   //ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
+   //ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
+   
   
     ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM);//B2左电机
-   ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM);//B1右电机*/
+   ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM);//B1右电机
    
 }
 
