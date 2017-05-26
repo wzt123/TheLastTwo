@@ -170,6 +170,11 @@ void  main(void)
     {
       race[3]=1;///告诉后车遇到圆环且停好车了，准备超车，
     }
+    
+    if(Stop_Flag==2)
+    {      
+      stop_Car();
+    }
     ///蓝牙传送编码器的值
     send_data[0] = speed_get_L;
     send_data[1] = speed_get_R;
@@ -191,7 +196,7 @@ void  main(void)
     OLED_Print_Num1(88, 2, error);
     OLED_Print_Num1(88, 3, errorerror);
     OLED_Print_Num1(88, 4, speed_get_L);
-    OLED_Print_Num1(88, 5, speed_get_R);
+    OLED_Print_Num1(88, 5, Stop_Flag);
     //wzt_bluetooth(); 
     
     

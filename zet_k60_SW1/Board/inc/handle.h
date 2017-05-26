@@ -67,7 +67,7 @@ extern uint8 Ring_First_Row;
 extern uint8 startline_num[3]; 
 extern uint8 Bend_Right_Last;
 extern uint8 Bend_Lift_Last;
-extern uint8 start_line_num[3] ;
+extern uint8 start_line_num[60] ;
 extern uint8 stop_line_num;
 extern uint32 sum_time;
 extern int16 Servo_temp;

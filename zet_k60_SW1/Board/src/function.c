@@ -172,8 +172,8 @@ void Motor_Out(void)
          {
          
          
-         speed_goal_R=3600;
-         speed_goal_L=3600;
+         speed_goal_R=3000;
+         speed_goal_L=3000;
          
          speed_err_R=speed_goal_R-speed_get_R*10;
          speed_err_L = speed_goal_L-speed_get_L*10;
