@@ -630,6 +630,7 @@ void Find_Middle()
     Edge[0]=Road_Center[Row_Ptr];
     Edge[1]=Road_Center[Row_Ptr-1];
     Edge[2]=Road_Center[Row_Ptr-2];
+    
     Road_Center[Row_Ptr]=GetMedianNum(Edge,3);
     int a=Road_Center[Row_Ptr];
     //if(Status==0)
