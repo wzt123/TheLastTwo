@@ -25,8 +25,12 @@ uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
 uint32 Distance = 2500;
 uint16 send_data[3][8] = { { 0 }, { 0 }, { 0 } };
-   
-
+/*uint8 Edge_R[3]= {0};
+uint8 Edge_L[3]= {0};   
+uint8 stopline_num = 0;
+uint16 speed_rember_R[3] = {0};
+uint16 speed_rember_L[3] = {0};
+*/
 void xx_bluetooth();
 void uart3_handler(void);
 extern uint8 imgbuff[CAMERA_SIZE];
@@ -35,30 +39,28 @@ void xx_bluetooth();
 void uart5_handler(void);
 void chaoShenBo_init(void);
 void stopLine_init(void);
+
 void PIT0_IRQHandler(void)
 {
-
-    //int16 val;
-    //speed_get = ftm_quad_get(FTM1);          //获取FTM 正交解码 的脉冲数(负数表示反方向)
-  if(stop_Flag !=1)
-  {  
-    //Motor_Out();
-  }
+  
+  
   if(Cross_Flag==3&&stop_Flag !=1&&stop_Place==1)
   {
     //stop_Car();
   }
-    ftm_quad_clean(FTM1);
-   // Search_Line();
-    //Find_Middle();
-    //Servo_control();
+  //ftm_quad_clean(FTM1);
+  // Search_Line();
+  //Find_Middle();
+  //Servo_control();
     //zf_oled( val);
     PIT_Flag_Clear(PIT0);       //清中断标志位
 }
+
+
+
 void Init_All(void)
 {
-  Car=2;
-  Stop_Flag=0;
+  Car=1;
   Motor_Init();
   OLED_Init();
   ov7725_eagle_init(imgbuff);
@@ -71,6 +73,8 @@ void Init_All(void)
   //while(!nrf_init());
   set_vector_handler(PORTC_VECTORn ,PORTC_IRQHandler);                //设置 PORTE 的中断服务函数为 PORTE_VECTORn
   chaoShenBo_init();
+  //rtc_init();
+  //rtc_set_time(0);
   enable_irq(PORTC_IRQn);
   enable_irq (PIT0_IRQn);                                //使能PIT0中断
 }
@@ -85,8 +89,7 @@ void Motor_Init(void)
     ftm_pwm_init(FTM2,FTM_CH1,15000,0);//驱动B1FTM初始化
     gpio_init(PTC3,GPO,0);//驱动正向使能初始化
     gpio_init(PTC2,GPO,0);//驱动反向使能初始化
-    gpio_set(PTC3,1);
-    gpio_set(PTC2,0);
+    
     
     ftm_pwm_init(FTM2,FTM_CH0,15000,0);//驱动B2FTM初始化
     gpio_init(PTB17,GPO,0);//驱动正向使能初始化
@@ -108,10 +111,43 @@ void Motor_Init(void)
 */
 void Motor_Out(void)
 {
-  speed_PWM=6900;
-  uint8 speed_Ki=30;
+  speed_PWM=6550;
+  /*if(Car==2)
+  {
+    if(ABDistance<Distance-100)
+      speed_PWM -=100;
+    else if(ABDistance>Distance+100)
+      speed_PWM +=100;
+  }
+  else 
+  {
+    if(buff[2]==1)
+    {
+      speed_PWM +=50;
+    }
+    else if(buff[2]==2)
+    {
+      speed_PWM -=50;
+    }
+  }*/
+  uint8 speed_Ki=19;
   float speed_Kd=0.0;
   float speed_Kp=0.0;
+  /*if(Overtake2==1||buff[1]==2)
+  {
+          if(buff[1]==2&&Car==2)
+            DELAY_MS(500);
+          gpio_init(PTC1,GPO,0);
+          gpio_init(PTC2,GPO,1);
+          speed_PWM=62;
+          if(speed_get<=5)
+          {
+            speed_PWM=0;
+            Turn_Left=0;
+          }
+  }
+  else
+  {*/
        gpio_set(PTC3,1);
        gpio_set(PTC2,0);
        gpio_set(PTB17,0);
@@ -120,53 +156,83 @@ void Motor_Out(void)
        if(All_Black>=40)
         {speed_PWM=0;}
        else
+       { 
+         speed_goal_R=3600;
+         speed_goal_L=3600;
+         
+         speed_err_R=speed_goal_R-speed_get_R*10;
+         speed_err_L = speed_goal_L-speed_get_L*10;
+         speed_increment_R=speed_Ki*speed_err_R/10;
+         speed_increment_L=speed_Ki*speed_err_L/10;
+         speed_PWM_R=6100+speed_increment_R;
+         speed_PWM_L=6100+speed_increment_L;
+         
+       }
+  //}
+       if(Car==2)
        {
-         if(speed_get_R<100||speed_get_L<100)
+         if(ABDistance<Distance-200)
+         {
+           speed_PWM_R = speed_goal_R-200;
+           speed_PWM_L = speed_goal_L-200;
+         }
+         else if(ABDistance>Distance+200)
+         {
+           speed_PWM_R = speed_goal_R+100;
+           speed_PWM_L = speed_goal_L+100;
+         }
+       }
+       if(speed_get_L<20||speed_get_R<20)
+       {
+         if(speed_get_L<20)
+         { 
+           speed_PWM_L = 0;
+         }
+         if(speed_get_R<20)
+         {
+           speed_PWM_R = 0;
+         }
+       }
+         else if(speed_get_R<100||speed_get_L<100)
          {
            speed_PWM_R = 7000;
            speed_PWM_L = 7000;
          }
-         else
-         {           
-           speed_goal_R=5200;
-           speed_goal_L=5200;
-           speed_err_R=speed_goal_R-speed_get_R*10;
-           speed_err_L = speed_goal_L-speed_get_L*10;
-           speed_increment_R=speed_Ki*speed_err_R/10;
-           speed_increment_L=speed_Ki*speed_err_L/10;
-           speed_PWM_R=6000+speed_increment_R;
-           speed_PWM_L=6000+speed_increment_L;
-         }
-       }
-      
-       //speed_PWM_R = speed_PWM_R - error*abs(error)/8;
-       //speed_PWM_L = speed_PWM_L + error*abs(error)/8;
-       
        
       if(speed_PWM_R<0)
         speed_PWM_R=0;
-        if(speed_PWM_R>8900)
-          speed_PWM_R=8900;
+        if(speed_PWM_R>8800)
+          speed_PWM_R=8800;
         
       if(speed_PWM_L<0)
         speed_PWM_L=0;
-      if(speed_PWM_L>8900)
-         speed_PWM_L=8900;
+        if(speed_PWM_L>8800)
+          speed_PWM_L=8800;
         
-      /*if(speed_get_R<10||speed_get_L<10)
-         {
-           speed_PWM_R = 0;
-           speed_PWM_L = 0;
-         }*/
    ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
    ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
    
-  
-    //ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM);//B2左电机
-   //ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM);//B1右电机
-   
 }
 
+
+/*
+*点刹
+*/
+void stop(void)
+{
+  gpio_set(PTC3,0);//驱动反向使能
+  gpio_set(PTC2,1);//驱动反向使能
+  gpio_set(PTB17,1);//驱动反向使能
+  gpio_set(PTB16,0);//驱动反向使能
+  ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
+  DELAY_MS(1);
+  gpio_set(PTC3,1);//驱动反向使能
+  gpio_set(PTC2,0);//驱动反向使能
+  gpio_set(PTB17,0);//驱动反向使能
+  gpio_set(PTB16,1);//驱动反向使能
+  
+}
 /*
 *停车
 */
@@ -176,9 +242,10 @@ void stop_Car(void)
   gpio_set(PTC2,1);//驱动反向使能
   gpio_set(PTB17,1);//驱动反向使能
   gpio_set(PTB16,0);//驱动反向使能
-  ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM);//B2
-  ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM);//B1
-  DELAY_MS(250);
+  ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
+  ftm_pwm_duty(FTM0, FTM_CH3, 8508);
+  DELAY_MS(100);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
   stop_Flag  = 1;
@@ -225,10 +292,11 @@ void PORTC_IRQHandler()
     PORTC_ISFR  = ~0;                                   //清中断标志位
 
     n = 0;
-    if(flag & (1 << n))                                 //PTE27触发中断
+    if(flag & (1 << n))                                 //PTC0触发中断
     {
         nrf_handler();
     }
+    
 }
 
 
@@ -256,6 +324,7 @@ void chaoShenBo_init(void)
   {
     gpio_init(PTE25,GPO,1);//前车发送
     gpio_init(PTE24,GPO,1);//前车发送
+     
   }
   else
   {

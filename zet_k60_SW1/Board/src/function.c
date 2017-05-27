@@ -157,7 +157,7 @@ void Motor_Out(void)
         {speed_PWM=0;}
        else
        {
-         if(speed_get_R<20||speed_get_L<20)
+         if(speed_get_L<20)
          {           
            speed_PWM_R = 0;
            speed_PWM_L = 0;
@@ -243,7 +243,8 @@ void stop_Car(void)
   gpio_set(PTB16,0);//驱动反向使能
   ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
-  DELAY_MS(250);
+  ftm_pwm_duty(FTM0, FTM_CH3, 8561);
+  DELAY_MS(100);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
   stop_Flag  = 1;

@@ -1,18 +1,18 @@
 /*!
- *     COPYRIGHT NOTICE
- *     Copyright (c) 2013,山外科技
- *     All rights reserved.
- *     技术讨论：山外论坛 http://www.vcan123.com
- *
- *     除注明出处外，以下所有内容版权均属山外科技所有，未经允许，不得用于商业用途，
- *     修改内容时必须保留山外科技的版权声明。
- *
- * @file       main.c
- * @brief      山外K60 平台主程序
- * @author     山外科技
- * @version    v5.0
- * @date       2013-08-28
- */
+*     COPYRIGHT NOTICE
+*     Copyright (c) 2013,山外科技
+*     All rights reserved.
+*     技术讨论：山外论坛 http://www.vcan123.com
+*
+*     除注明出处外，以下所有内容版权均属山外科技所有，未经允许，不得用于商业用途，
+*     修改内容时必须保留山外科技的版权声明。
+*
+* @file       main.c
+* @brief      山外K60 平台主程序
+* @author     山外科技
+* @version    v5.0
+* @date       2013-08-28
+*/
 
 #include "common.h"
 #include "include.h"
@@ -38,16 +38,16 @@ uint16 speed_rember_L[3] = {0};
 //void img_extract(uint8 *dst, uint8 *src, uint32 srclen);
 
 /*!
- *  @brief      main函数
- *  @since      v5.3
- *  @note       山外摄像头 LCD 测试实验
-   
-   */
-   
-  
+*  @brief      main函数
+*  @since      v5.3
+*  @note       山外摄像头 LCD 测试实验
+
+*/
+
+
 void  main(void)
 {
-    //zet_bluetooth();
+  //zet_bluetooth();
   uint16 send_data[3] = {0};
   uint8 time1=0;
   sum_time = 0;
@@ -133,42 +133,19 @@ void  main(void)
     lptmr_pulse_clean();
     IR2_last = IR2;
     IR2 = gpio_get(PTE9);///隔一下再读另一边的红外对管
-    
-    /*if(IR1&&IR2&&stop_Flag!=1&&(sum_time>12600||sum_time==0))             //PTC8，PTC9触发中断
-    {      
-      if(stopline_num>0)
-        stop_Car();
-      else
-        stopline_num++;
-      if(stopline_num==1)
-      {
-        sum_time=0;
-      }      
-    }
-    if(IR1)
-    {      
-      uart_putchar(UART5,'A');//左
-      uart_putchar(UART5,'\n');
-      
-    }
-    if(IR2)
-    {
-      uart_putchar(UART5,'B');//右
-      uart_putchar(UART5,'\n');
-    }*/
+        
     if(stop_Flag !=1)
     {  
       Motor_Out();
+    }    
+    
+    if(stop_Flag==1)
+    {
+      race[3]=1;///告诉后车遇到圆环且停好车了，准备超车，
     }
-    /*if(Cross_Flag==0&&Bend_Lift!=1&&Bend_Right!=1&&Car==1)
-    {
-    stop_Car();
     
-  }*/
-    
-    if(Stop_Flag==2)
-    {
-      //race[3]=1;///告诉后车遇到圆环且停好车了，准备超车，
+    if(Stop_Flag==2&&stop_Flag!=1)
+    {      
       stop_Car();
     }
     ///蓝牙传送编码器的值
@@ -191,8 +168,8 @@ void  main(void)
     OLED_Print_Num1(88, 1, cross_num);
     OLED_Print_Num1(88, 2, error);
     OLED_Print_Num1(88, 3, errorerror);
-    OLED_Print_Num1(88, 4, speed_get_L);
-    OLED_Print_Num1(88, 5, speed_get_R);
+    OLED_Print_Num1(88, 4, Kp);
+    OLED_Print_Num1(88, 5, Kd);
     //wzt_bluetooth(); 
     
     
@@ -203,47 +180,47 @@ void  main(void)
     }    
     pit_close(PIT1);
     
-    OLED_Print_Num1(88, 6, Servo_value);
+    OLED_Print_Num1(88, 6, Servo_temp);
     
     //OLED_Print_Num1(88, 6, nrf_data);
   }
 }
 
 /*!
- *  @brief      PORTA中断服务函数
- *  @since      v5.0
- */
+*  @brief      PORTA中断服务函数
+*  @since      v5.0
+*/
 void PORTA_IRQHandler()
 {
-    uint8  n;    //引脚号
-    uint32 flag;
-
-    while(!PORTA_ISFR);
-    flag = PORTA_ISFR;
-    PORTA_ISFR  = ~0;                                   //清中断标志位
-
-    n = 25;                                             //场中断
-    if(flag & (1 << n))                                 //PTA29触发中断
-    {
-        camera_vsync();
-    }
+  uint8  n;    //引脚号
+  uint32 flag;
+  
+  while(!PORTA_ISFR);
+  flag = PORTA_ISFR;
+  PORTA_ISFR  = ~0;                                   //清中断标志位
+  
+  n = 25;                                             //场中断
+  if(flag & (1 << n))                                 //PTA29触发中断
+  {
+    camera_vsync();
+  }
 #if ( CAMERA_USE_HREF == 1 )                            //使用行中断
-    n = 28;
-    if(flag & (1 << n))                                 //PTA28触发中断
-    {
-        camera_href();
-    }
+  n = 28;
+  if(flag & (1 << n))                                 //PTA28触发中断
+  {
+    camera_href();
+  }
 #endif
-
-
+  
+  
 }
 
 /*!
- *  @brief      DMA0中断服务函数
- *  @since      v5.0
- */
+*  @brief      DMA0中断服务函数
+*  @since      v5.0
+*/
 void DMA0_IRQHandler()
 {
-    camera_dma();
+  camera_dma();
 }
 

@@ -39,7 +39,7 @@ uint8 Change_Flag;
 uint8 CrossRow=0;
 
 uint16 Servomiddle=8561;
-uint32 Servo_max=8723;
+uint32 Servo_max=8705;
 uint32 Servo_min=8385;
 float CenterLineSlope=0;
 
@@ -222,7 +222,7 @@ void Calculate_Slope()
 */
 void Servo_control(void)
 {  
- uint8 Row_Ptr=0;
+  uint8 Row_Ptr=0;
   error=0;
   error1=0;
   error2=0;
@@ -231,16 +231,9 @@ void Servo_control(void)
   Servo_temp=0;
   uint8 l=0;
   // buff[0]=1;
-  if(Cross_Flag==2||Cross_Flag==4)
+  if(cross_num>15)
   {
-    if(cross_num>10)
-    {
       Lastline=cross_num;
-    }
-    else
-    {
-      Lastline=10;
-    }
   }
   else
   {
@@ -274,48 +267,95 @@ void Servo_control(void)
     errorerror = error2-error1;
     
     
-    if(error*errorerror>=0)
-    {
-      if(All_Black<2)
+    
+      if(abs(error)<4)
       {
-        Kd = 0;
+        Kd = 5;
       }
-      else if(All_Black<12)
+      else if(abs(error)<6)
       {
         if(error<0)
-        {
-          Kd = 26;
-        }
+          Kd = 9;
         else
-          Kd = 28;
+          Kd = 7;
       }
-      else if(All_Black<18)
+      else if(abs(error)<8)
       {
         if(error<0)
-          Kd = 20;
+          Kd = 6;
         else
-          Kd = 23;
+          Kd = 7;
+      }
+      else if(abs(error)<10)
+      {
+        if(error<0)
+          Kd = 6;
+        else
+          Kd = 7;
+      }
+      else if(abs(error)<12)
+      {
+        if(error<0)
+          Kd = 8;
+        else
+          Kd = 10;
+      }
+      else if(abs(error)<14)
+      {
+        if(error<0)
+          Kd = 11;
+        else
+          Kd = 12;
+      }
+      else if(abs(error)<16)
+      {
+        if(error<0)
+          Kd = 12;
+        else
+          Kd = 12;
+      }
+      else if(abs(error)<18)
+      {
+        if(error<0)
+          Kd = 12;
+        else
+          Kd = 12;
+      }      
+      else if(abs(error)<20)
+      {
+        if(error<0)
+          Kd = 14;
+        else
+          Kd = 14;
+      }      
+      else if(abs(error)<22)
+      {
+        if(error<0)
+          Kd = 18;
+        else
+          Kd = 18;
+      }
+      else if(abs(error)<24)
+      {
+        if(error<0)
+          Kd = 18;
+        else
+          Kd = 18;
+      }
+      else if(abs(error)<26)
+      {
+        if(error<0)
+          Kd = 18;
+        else
+          Kd = 18;
       }
       else
       {
         if(error<0)
-          Kd = 28;
+          Kd = 40;
         else
-          Kd = 25;
-      }
-    }
-    else if(All_Black<10)
-    {
-      Kp = Kp+10;
-      Kd =0;
-    }
-    else
-    {      
-      Kd =18;
-    }
-    
-    
-    
+          Kd = 40;
+      }   
     if(Cross_Flag==2)
     {
       Kp =560*error*error/10000 +56;
@@ -323,8 +363,8 @@ void Servo_control(void)
     }
     else if(Cross_Flag==4)
     {
-      Kp =560*error1*error1/10000 +56;
-      Servo_temp=Kp*error1/10;
+      Kp =560*error*error/10000 +56;
+      Servo_temp=Kp*error/10;
     }
     else if(Cross_Flag==3)
     {
@@ -343,6 +383,14 @@ void Servo_control(void)
     {
       Kp =560*error*error/10000 +36;
       Servo_temp=Kp*error/10+Kd*errorerror/10;
+    }
+    
+    if(cross_num>15)
+    {
+      if(error<0)
+        Servo_temp = Servo_temp-cross_num;
+      else
+        Servo_temp = Servo_temp+cross_num;
     }
     
     Servo_value=Servomiddle+Servo_temp;
@@ -475,9 +523,9 @@ void Find_Middle()
       if(Road_Left[Row_Ptr]<Road_Left[Row_Ptr+1]&&
          Road_Left[Row_Ptr+1]<Road_Left[Row_Ptr+2]&&
            Road_Left[Row_Ptr+2]<Road_Left[Row_Ptr+3]&&
-              (Road_Left[Row_Ptr-1]>=Road_Left[Row_Ptr]&&
-               Road_Left[Row_Ptr-2]>=Road_Left[Row_Ptr-1]&&
-               Road_Left[Row_Ptr-3]>=Road_Left[Row_Ptr-2]))
+              Road_Left[Row_Ptr-4]>=Road_Left[Row_Ptr-3]&&
+               Road_Left[Row_Ptr-5]>Road_Left[Row_Ptr-4]&&
+               Road_Left[Row_Ptr-6]>Road_Left[Row_Ptr-5]&&Row_Ptr>cross_num)
       {
         Cross_Flag=2;
         cross_num = Row_Ptr;
@@ -498,9 +546,9 @@ void Find_Middle()
       if(Road_Right[Row_Ptr]>Road_Right[Row_Ptr+1]&&
          Road_Right[Row_Ptr+1]>Road_Right[Row_Ptr+2]&&
            Road_Right[Row_Ptr+2]>Road_Right[Row_Ptr+3]&&
-              (Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
-               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
-               Road_Left[Row_Ptr-3]<=Road_Left[Row_Ptr-2]))
+              Road_Left[Row_Ptr-4]<=Road_Left[Row_Ptr-3]&&
+               Road_Left[Row_Ptr-5]<Road_Left[Row_Ptr-4]&&
+               Road_Left[Row_Ptr-6]<Road_Left[Row_Ptr-5]&&Row_Ptr>cross_num)
       {
         Cross_Flag=4;        
         cross_num = Row_Ptr;
@@ -525,34 +573,7 @@ void Find_Middle()
   
   for(Row_Ptr=56; Row_Ptr>All_Black; Row_Ptr--)
   {
-    /*if(Cross_Flag==3&&Ring_First_Row>4)
-    {
-      if(Row_Ptr>50)
-        Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-30;
-      else if(Row_Ptr>40)
-        Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-25;
-      else if(Row_Ptr>30)
-        Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-18;
-      else if(Row_Ptr>20)
-        Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-10;
-      else
-        Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-5;
-      race[3]=1;
-    }*/
-    /*else if(Cross_Flag==4&&buff[3]==1&&Ring_First_Row>16)
-    {
-       if(Row_Ptr>50)
-        Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-30;
-      else if(Row_Ptr>40)
-        Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-25;
-      else if(Row_Ptr>30)
-        Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-18;
-      else if(Row_Ptr>20)
-        Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-10;
-      else
-        Road_Center[Row_Ptr]=Road_Left[Row_Ptr]-5;
-    }
-    else*/ if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
+    if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
     {
       Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
     }
@@ -576,10 +597,27 @@ void Find_Middle()
       Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
     }
     
+    if(Road_Left[Row_Ptr]<Road_Left[Row_Ptr+1]&&
+         Road_Left[Row_Ptr+1]<Road_Left[Row_Ptr+2]&&
+           Road_Left[Row_Ptr+2]<Road_Left[Row_Ptr+3]&&
+              Road_Left[Row_Ptr-4]>=Road_Left[Row_Ptr-3]&&
+               Road_Left[Row_Ptr-5]>Road_Left[Row_Ptr-4]&&
+               Road_Left[Row_Ptr-6]>Road_Left[Row_Ptr-5]&&Row_Ptr>cross_num)
+      {        
+        cross_num = Row_Ptr;
+      }
+    if(Road_Right[Row_Ptr]>Road_Right[Row_Ptr+1]&&
+         Road_Right[Row_Ptr+1]>Road_Right[Row_Ptr+2]&&
+           Road_Right[Row_Ptr+2]>Road_Right[Row_Ptr+3]&&
+              Road_Left[Row_Ptr-4]<=Road_Left[Row_Ptr-3]&&
+               Road_Left[Row_Ptr-5]<Road_Left[Row_Ptr-4]&&
+               Road_Left[Row_Ptr-6]<Road_Left[Row_Ptr-5]
+       &&Row_Ptr>cross_num)
+    cross_num = Row_Ptr;
     ////排除中线跳变
-    if(Road_Center[Row_Ptr]-Road_Center[Row_Ptr+1]>13&&Cross_Flag==0)
+    if(Road_Center[Row_Ptr]-Road_Center[Row_Ptr+1]>13&&Cross_Flag==0&&error*errorerror<0)
     {
-      Road_Center[Row_Ptr] = Road_Center[Row_Ptr+1]+Road_Center[Row_Ptr+1]-Road_Center[Row_Ptr+2];
+      Road_Center[Row_Ptr] = Road_Center[Row_Ptr+1];
     }
     
     if(Road_Center[Row_Ptr]<0) Road_Center[Row_Ptr]=0;
@@ -617,53 +655,6 @@ void Find_Middle()
   //filter_Middle(Road_Center);
   //结束for_滤中线
 }
-
-
-
-//中线排除调变
-void filter_Middle(uint8 *Array)
-{
-  uint8 Row_Ptr=0,a=0; //,b=0;
-  
-  for(Row_Ptr=59; Row_Ptr>All_Black; Row_Ptr--)
-  {
-    a = abs(Array[Row_Ptr]-Array[Row_Ptr-1]);
-    //b = abs(Array[Row_Ptr-1]-Array[Row_Ptr-2]);
-    if(a>35)
-      All_Black =Row_Ptr-1;
-    /*if(Row_Ptr>45)
-    {
-    if(abs(a-b)>3)
-    break;
-  }
-    else if(Row_Ptr>30)
-    {
-    if(abs(a-b)>4)
-    break;
-  }
-    else if(Row_Ptr>15)
-    {
-    if(abs(a-b)>6)
-    break;
-  }
-    else if(Row_Ptr>15)
-    {
-    if(abs(a-b)>8)
-    break;
-  }
-    else
-    {
-    if(abs(a-b)>10)
-    break;
-  }*/
-  }
-  /*for(;Row_Ptr>All_Black;Row_Ptr--)
-  {
-  Array[Row_Ptr] = Array[Row_Ptr+1];
-}*/
-}
-//
-
 //寻边线
 void Search_Line(void)
 {

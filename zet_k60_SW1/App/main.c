@@ -133,45 +133,18 @@ void  main(void)
     lptmr_pulse_clean();
     IR2_last = IR2;
     IR2 = gpio_get(PTE9);///隔一下再读另一边的红外对管
-    
-    /*if(IR1&&IR2&&stop_Flag!=1&&(sum_time>12600||sum_time==0))             //PTC8，PTC9触发中断
-    {      
-      if(stopline_num>0)
-        stop_Car();
-      else
-        stopline_num++;
-      if(stopline_num==1)
-      {
-        sum_time=0;
-      }      
-    }
-    if(IR1)
-    {      
-      uart_putchar(UART5,'A');//左
-      uart_putchar(UART5,'\n');
-      
-    }
-    if(IR2)
-    {
-      uart_putchar(UART5,'B');//右
-      uart_putchar(UART5,'\n');
-    }*/
+        
     if(stop_Flag !=1)
     {  
       Motor_Out();
-    }
-    /*if(Cross_Flag==0&&Bend_Lift!=1&&Bend_Right!=1&&Car==1)
-    {
-    stop_Car();
-    
-  }*/
+    }    
     
     if(stop_Flag==1)
     {
       race[3]=1;///告诉后车遇到圆环且停好车了，准备超车，
     }
     
-    if(Stop_Flag==2)
+    if(Stop_Flag==2&&stop_Flag!=1)
     {      
       stop_Car();
     }
@@ -192,11 +165,11 @@ void  main(void)
     
     //Overtake_judge();
     dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-    OLED_Print_Num1(88, 1, All_Black);
+    OLED_Print_Num1(88, 1, cross_num);
     OLED_Print_Num1(88, 2, error);
     OLED_Print_Num1(88, 3, errorerror);
-    OLED_Print_Num1(88, 4, speed_get_L);
-    OLED_Print_Num1(88, 5, Stop_Flag);
+    OLED_Print_Num1(88, 4, Kp);
+    OLED_Print_Num1(88, 5, Kd);
     //wzt_bluetooth(); 
     
     
@@ -207,7 +180,7 @@ void  main(void)
     }    
     pit_close(PIT1);
     
-    OLED_Print_Num1(88, 6, time1);
+    OLED_Print_Num1(88, 6, Servo_temp);
     
     //OLED_Print_Num1(88, 6, nrf_data);
   }
