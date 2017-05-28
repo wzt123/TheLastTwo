@@ -272,84 +272,84 @@ void Servo_control(void)
     
       if(abs(error)<4)
       {
-        Kd = 5;
+        Kd = 15;
       }
       else if(abs(error)<6)
       {
         if(error<0)
-          Kd = 9;
+          Kd = 16;
         else
-          Kd = 7;
+          Kd = 16;
       }
       else if(abs(error)<8)
       {
         if(error<0)
-          Kd = 7;
+          Kd = 17;
         else
-          Kd = 7;
+          Kd = 17;
       }
       else if(abs(error)<10)
       {
         if(error<0)
-          Kd = 6;
+          Kd = 17;
         else
-          Kd = 7;
+          Kd = 17;
       }
       else if(abs(error)<12)
       {
         if(error<0)
-          Kd = 8;
+          Kd = 20;
         else
-          Kd = 10;
+          Kd = 20;
       }
       else if(abs(error)<14)
       {
         if(error<0)
-          Kd = 11;
+          Kd = 20;
         else
-          Kd = 12;
+          Kd = 20;
       }
       else if(abs(error)<16)
       {
         if(error<0)
-          Kd = 12;
+          Kd = 20;
         else
-          Kd = 12;
+          Kd = 20;
       }
       else if(abs(error)<18)
       {
         if(error<0)
-          Kd = 12;
+          Kd = 22;
         else
-          Kd = 12;
+          Kd = 22;
       }      
       else if(abs(error)<20)
       {
         if(error<0)
-          Kd = 14;
+          Kd = 24;
         else
-          Kd = 14;
+          Kd = 24;
       }      
       else if(abs(error)<22)
       {
         if(error<0)
-          Kd = 18;
+          Kd = 26;
         else
-          Kd = 18;
+          Kd = 26;
       }
       else if(abs(error)<24)
       {
         if(error<0)
-          Kd = 18;
+          Kd = 28;
         else
-          Kd = 18;
+          Kd = 28;
       }
       else if(abs(error)<26)
       {
         if(error<0)
-          Kd = 18;
+          Kd = 30;
         else
-          Kd = 18;
+          Kd = 30;
       }
       else
       {
@@ -389,7 +389,7 @@ void Servo_control(void)
     else
     {
       if(abs(error)<20)
-        Kp =36;
+        Kp =56;
       else
         Kp = 56;
       Servo_temp=Kp*error/10+Kd*errorerror/10;
