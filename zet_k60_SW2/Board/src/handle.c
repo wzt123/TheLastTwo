@@ -812,7 +812,7 @@ void Search_Line(void)
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
     //从左到右检测起跑线
-    if(Row_Ptr>40&&Row_Ptr<55)
+    if(Row_Ptr>40)
     {
       
       start_line_num[Row_Ptr] = 0;
@@ -1116,7 +1116,7 @@ void Search_Line(void)
           if(img[i][(a+b)/2]==255&&img[i+1][(a+b)/2]==255&&img[i][(a+b)/2+1]==255&&img[i+1][(a+b)/2+1]==255&&img[i][(a+b)/2-1]==255&&img[i+1][(a+b)/2-1]==255)
             c_f=1;
           
-          if(a_f==1&&b_f==1&&c_f==1&&(Bend_Right==0||Bend_Lift==0))
+          if(a_f==1&&b_f==1&&c_f==1&&(Bend_Right==0||Bend_Lift==0)&&Stop_Flag!=0&&sum_time>100)
           {
             if((Bend_Right==1||Bend_Lift==1))
             {
