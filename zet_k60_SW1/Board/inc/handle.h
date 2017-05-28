@@ -71,6 +71,7 @@ extern uint8 start_line_num[60] ;
 extern uint8 stop_line_num;
 extern uint32 sum_time;
 extern int16 Servo_temp;
+extern uint8 cross_num;
 /////////////////////////////////////////
 //extern int32 All_Black;
 extern uint16 Servo_value;

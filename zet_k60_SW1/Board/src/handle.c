@@ -706,10 +706,12 @@ void Search_Line(void)
   Right_r_out=0;
   //////////////////////////
   stop_line_num = 0;
-  Ring_width_1 = 0;
-  Ring_width_2 = 0;
+  Ring_width_1 = 50;
+  Ring_width_2 = 30;
   Ring_width =0;
   Ring_First_Row=0;
+  uint8 Ring_Second_Row = 0;  
+  Ring_Second_Row=0;
   Bend_Lift =0;
   Bend_Right = 0;
   uint8 ring_flag=0,j;
@@ -1044,18 +1046,18 @@ void Search_Line(void)
       else if(Left_Flag[Row_Ptr-6]==1 && Right_Flag[Row_Ptr-6]==1)
         StopRow=Row_Ptr-6;
     }
-    else if(Left_Flag[Row_Ptr+4]==3 &&
-            Left_Flag[Row_Ptr+3]==3 &&
-              Left_Flag[Row_Ptr+2]==3 &&
-                Left_Flag[Row_Ptr+1]==3 &&
+    else if(Left_Flag[Row_Ptr+4]==3 &&Right_Flag[Row_Ptr+4] ==1&&
+            Left_Flag[Row_Ptr+3]==3 &&Right_Flag[Row_Ptr+3] ==1&&
+              Left_Flag[Row_Ptr+2]==3 &&Right_Flag[Row_Ptr+2] ==1&&
+                Left_Flag[Row_Ptr+1]==3 &&Right_Flag[Row_Ptr+1] ==1&&
                   Left_Flag[Row_Ptr]==3 &&Row_Ptr<48&&Row_Ptr>7)
     {
       Bend_Lift = 1;
     }
-    else if(Right_Flag[Row_Ptr+4]==3&&
-            Right_Flag[Row_Ptr+3]==3&&
-              Right_Flag[Row_Ptr+2]==3&&
-                Right_Flag[Row_Ptr+1]==3&&
+    else if(Right_Flag[Row_Ptr+4]==3&&Left_Flag[Row_Ptr+4]==1&&
+            Right_Flag[Row_Ptr+3]==3&&Left_Flag[Row_Ptr+3]==1&&
+              Right_Flag[Row_Ptr+2]==3&&Left_Flag[Row_Ptr+2]==1&&
+                Right_Flag[Row_Ptr+1]==3&&Left_Flag[Row_Ptr+1]==1&&
                   Right_Flag[Row_Ptr]==3&&Row_Ptr<48&&Row_Ptr>7)
     {
       Bend_Right = 1;
@@ -1067,7 +1069,8 @@ void Search_Line(void)
       if(ring_flag==0&&img[Row_Ptr][j]==255&&img[Row_Ptr][j+1]==255&&img[Row_Ptr][j+2]==0&&img[Row_Ptr][j+3]==0) 
       {
         ring_flag=1;
-        Ring_width_1 = j+3;
+        if(j+2<Ring_width_1)
+          Ring_width_1 = j+2;
         a=j+2;
       }
       else if(ring_flag==1&&img[Row_Ptr][j]==0&&img[Row_Ptr][j+1]==0&&img[Row_Ptr][j+2]==255&&img[Row_Ptr][j+3]==255) 
@@ -1075,15 +1078,18 @@ void Search_Line(void)
         b=j;
         ring_flag=2;
         ring_num++;
-        Ring_width_2 = j+1;
+        if(j+1>Ring_width_2)
+          Ring_width_2 = j+1;
         if(ring_num==1) Ring_First_Row=Row_Ptr;
         break;
-      }
+      }      
+    }
+    
       if(Ring_width_2-Ring_width_1>Ring_width)
       {
         Ring_width = Ring_width_2-Ring_width_1;
       }
-    }
+    
     if(ring_flag!=2) ring_num=0;
     a_f=0;b_f=0;c_f=0;
     if(ring_num>3&&Row_Ptr>(All_Black+6)&&Cross_Flag!=3)
@@ -1096,15 +1102,24 @@ void Search_Line(void)
             a_f=1;
           if(img[i][b]==255&&img[i+1][b]==255)
             b_f=1;
-          if(img[i][(a+b)/2]==255&&img[i+1][(a+b)/2]==255)
+          if(img[i][(a+b)/2]==255&&img[i+1][(a+b)/2]==255&&img[i][(a+b)/2+1]==255&&img[i+1][(a+b)/2+1]==255&&img[i][(a+b)/2-1]==255&&img[i+1][(a+b)/2-1]==255)
             c_f=1;
           
-          if(a_f==1&&b_f==1&&c_f==1)
+          if(a_f==1&&b_f==1&&c_f==1&&(Bend_Right==0||Bend_Lift==0))
           {
-            
-            Cross_Flag_Last = Cross_Flag;
-            Cross_Flag=3;
-            
+            if((Bend_Right==1||Bend_Lift==1))
+            {
+              if(White_Cnt<3)
+              {
+                Cross_Flag_Last = Cross_Flag;
+                Cross_Flag=3;
+              }
+            }
+            else 
+            {
+              Cross_Flag_Last = Cross_Flag;
+              Cross_Flag=3;
+            }
             //Cross_Flag_Last=3;//只在有圆环的时候才等于3，在超车成功后，继续变为0的时候
             break;          
           }
@@ -1113,13 +1128,9 @@ void Search_Line(void)
             Ring_width_1 = 0;
             Ring_width_2 = 0;
             Ring_width =0;
-          }
-          
-          
+          }          
         }   
-      }
-      
-      
+      }     
     }
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])
     {
