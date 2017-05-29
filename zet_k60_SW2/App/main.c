@@ -148,6 +148,11 @@ void  main(void)
     {      
       stop_Car();
     }
+    
+    ///定时停车，测试用
+    //sum_time +=time1; 
+    /*if(sum_time>5000&&stop_Flag!=1)
+      stop_Car();*/
     ///蓝牙传送编码器的值
     send_data[0] = speed_get_L;
     send_data[1] = speed_get_R;
@@ -168,8 +173,8 @@ void  main(void)
     OLED_Print_Num1(88, 1, Cross_Flag);
     OLED_Print_Num1(88, 2, error);
     OLED_Print_Num1(88, 3, errorerror);
-    OLED_Print_Num1(88, 4, Kp);
-    OLED_Print_Num1(88, 5, Kd);
+    OLED_Print_Num1(88, 4, Servo_error);
+    OLED_Print_Num1(88, 5, Servo_errorerror);
     //wzt_bluetooth(); 
     
     
@@ -180,7 +185,7 @@ void  main(void)
     }    
     pit_close(PIT1);
     
-    OLED_Print_Num1(88, 6, time1);
+    OLED_Print_Num1(88, 6, Servo_temp);
     
     //OLED_Print_Num1(88, 6, nrf_data);
   }

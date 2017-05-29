@@ -105,6 +105,8 @@ uint8 Cross_Cnt=0;
 uint8 cross_num = 0;
 uint8 white_Left_cnt = 0;
 uint8 white_Right_cnt = 0;
+int16 Servo_error = 0;
+int16 Servo_errorerror = 0;
 uint8 weight_num_Cross [60]=
 {
   10,10,10,10,10,
@@ -221,6 +223,90 @@ void Calculate_Slope()
     Road_Right[i]=(uint8)(Road_Right[Right_start]-Right_Slope*j+0.5);
   }
 }
+
+
+
+/*
+根据error和errorerror返回角度
+*/
+int16  angle_errorerror(uint8 error_state,int16 errorerror)
+{
+  uint8 KD;
+  switch (error_state)
+  {
+    case 0:
+      if(abs(errorerror)<10)
+        KD = 10;
+      else if(abs(errorerror)<20)
+        KD = 30;
+      else if(abs(errorerror)<25)
+        KD = 35;
+      else if(abs(errorerror)<30)
+        KD = 25;
+      else 
+        KD = 20;
+      break;
+    case 1:
+      if(abs(errorerror)<10)
+        KD = 10;
+      else if(abs(errorerror)<20)
+        KD = 30;
+      else if(abs(errorerror)<25)
+        KD = 35;
+      else if(abs(errorerror)<30)
+        KD = 25;
+      else 
+        KD = 20;
+      break;
+  }
+  
+  return KD*errorerror/10;
+}
+
+/*
+根据error 返回不同的角度
+*/
+int16  angle_error(int16 error,int16 errorerror)
+{
+  uint8 KP;
+  int8 errorerror_angle;
+  if(abs(error)<4)
+  {
+    KP = 30;
+    errorerror_angle = angle_errorerror(0,errorerror);
+  }
+  else if(abs(error)<10)
+  {
+    KP = 35;
+    errorerror_angle = angle_errorerror(1,errorerror);
+  }
+  else if(abs(error)<15)
+  {
+    KP = 40;
+    errorerror_angle = angle_errorerror(2,errorerror);
+  }
+  else if(abs(error)<20)
+  {
+    KP = 50;
+    errorerror_angle = angle_errorerror(3,errorerror);
+  }
+  else if(abs(error)<25)
+  {
+    KP = 55;
+    errorerror_angle = angle_errorerror(4,errorerror);
+  }
+  else if(abs(error)<30)
+  {
+    KP = 60;
+    errorerror_angle = angle_errorerror(5,errorerror);
+  }
+  else if(abs(error)<40)
+  {
+    KP = 65;
+    errorerror_angle = angle_errorerror(6,errorerror);
+  }
+  return KP*error/10+errorerror_angle;
+}
 /*
 舵机控制
 */
@@ -234,6 +320,8 @@ void Servo_control(void)
   Kd=0;
   Servo_temp=0;
   uint8 l=0;
+  Servo_error = 0;
+  Servo_errorerror = 0;  
   // buff[0]=1;
   if(cross_num>15)
   {
@@ -269,119 +357,26 @@ void Servo_control(void)
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
-    
-    
-    
-      if(abs(error)<4)
-      {
-        Kd = 15;
-      }
-      else if(abs(error)<6)
-      {
-        if(error<0)
-          Kd = 16;
-        else
-          Kd = 16;
-      }
-      else if(abs(error)<8)
-      {
-        if(error<0)
-          Kd = 17;
-        else
-          Kd = 17;
-      }
-      else if(abs(error)<10)
-      {
-        if(error<0)
-          Kd = 17;
-        else
-          Kd = 17;
-      }
-      else if(abs(error)<12)
-      {
-        if(error<0)
-          Kd = 20;
-        else
-          Kd = 20;
-      }
-      else if(abs(error)<14)
-      {
-        if(error<0)
-          Kd = 20;
-        else
-          Kd = 20;
-      }
-      else if(abs(error)<16)
-      {
-        if(error<0)
-          Kd = 20;
-        else
-          Kd = 20;
-      }
-      else if(abs(error)<18)
-      {
-        if(error<0)
-          Kd = 22;
-        else
-          Kd = 22;
-      }      
-      else if(abs(error)<20)
-      {
-        if(error<0)
-          Kd = 24;
-        else
-          Kd = 24;
-      }      
-      else if(abs(error)<22)
-      {
-        if(error<0)
-          Kd = 26;
-        else
-          Kd = 26;
-      }
-      else if(abs(error)<24)
-      {
-        if(error<0)
-          Kd = 28;
-        else
-          Kd = 28;
-      }
-      else if(abs(error)<26)
-      {
-        if(error<0)
-          Kd = 30;
-        else
-          Kd = 30;
-      }
-      else
-      {
-        if(error<0)
-          Kd = 40;
-        else
-          Kd = 40;
-      }   
     if(Cross_Flag==2)
     {
       Kp =86;
-      Servo_temp=Kp*error/10;
+      Servo_temp=Kp*error/10-50;
     }
     else if(Cross_Flag==4)
     {
       Kp =86;
-      Servo_temp=Kp*error/10;
+      Servo_temp=Kp*error/10+50;
     }
     else if(Cross_Flag==3)
     {
       if(Car == 1)
-      {        
+      {
           Servo_temp=-Ring_First_Row*55/10;
       }
       else
       {
           Servo_temp=Ring_First_Row*55/10;
       }
-      
-      Servo_value=Servomiddle+Servo_temp;
     }
     else if(Cross_Flag==1)
     {
@@ -389,12 +384,8 @@ void Servo_control(void)
       Servo_temp=Kp*error/10+Kd*errorerror/10;
     }
     else
-    {
-      if(abs(error)<20)
-        Kp =56;
-      else
-        Kp = 56;
-      Servo_temp=Kp*error/10+Kd*errorerror/10;
+    {      
+      Servo_temp=angle_error(error,error);
     }
     if(cross_num>15)
     {
@@ -819,7 +810,7 @@ void Search_Line(void)
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
     //从左到右检测起跑线
-    if(Row_Ptr>40)
+    if(Row_Ptr>30)
     {
       
       start_line_num[Row_Ptr] = 0;
