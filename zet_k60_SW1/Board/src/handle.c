@@ -688,7 +688,7 @@ void Search_Line(void)
   
   a=1;
   uint8 b=79;
-  uint8 i;
+  uint8 i,j,k;
   uint8 a_f=0,b_f=0,c_f=0;
   
   Left_Cnt=0;
@@ -732,6 +732,7 @@ void Search_Line(void)
   ring_num=0;
   white_Left_cnt = 0;
   white_Right_cnt = 0;
+
   ///////////////////////
   //前三行搜线开始
   for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
@@ -1099,6 +1100,7 @@ void Search_Line(void)
         if(Col_Ptr+2<Ring_width_1)
           Ring_width_1 = Col_Ptr+2;
         a=Col_Ptr+2;
+
       }
       else if(ring_flag==1&&img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==255&&img[Row_Ptr][Col_Ptr+3]==255) 
       {
@@ -1136,6 +1138,7 @@ void Search_Line(void)
             }
         }
     }
+
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])
     {
       Road_Left[Row_Ptr]=Road_Left[Row_Ptr+1];
