@@ -70,6 +70,8 @@ extern uint8 Ring_width;
 extern int32 error1;
 extern int32 error2;
 extern uint8 cross_num;
+extern uint8 white_Left_cnt;
+extern uint8 white_Right_cnt;
 /////////////////////////////////////////
 //extern int32 All_Black;
 extern uint16 Servo_value;
