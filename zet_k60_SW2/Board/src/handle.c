@@ -685,7 +685,7 @@ void Search_Line(void)
   
   uint8 a=1;
   uint8 b=79;
-  uint8 i;
+  uint8 i,j,k;
   uint8 a_f=0,b_f=0,c_f=0;
   
   Left_Cnt=0;
@@ -725,8 +725,9 @@ void Search_Line(void)
   Ring_Second_Row=0;
   Bend_Lift =0;
   Bend_Right = 0;
-  uint8 ring_flag=0,j;
+  uint8 ring_flag=0;
   uint8 ring_num=0;
+  uint8 c=0;
   ///////////////////////
   //前三行搜线开始
   for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
@@ -1080,8 +1081,8 @@ void Search_Line(void)
       if(ring_flag==0&&img[Row_Ptr][j]==255&&img[Row_Ptr][j+1]==255&&img[Row_Ptr][j+2]==0&&img[Row_Ptr][j+3]==0) 
       {
         ring_flag=1;
-        if(j+2<Ring_width_1)
-          Ring_width_1 = j+2;
+        //if(j+2<Ring_width_1)
+          //Ring_width_1 = j+2;
         a=j+2;
       }
       else if(ring_flag==1&&img[Row_Ptr][j]==0&&img[Row_Ptr][j+1]==0&&img[Row_Ptr][j+2]==255&&img[Row_Ptr][j+3]==255) 
@@ -1089,27 +1090,41 @@ void Search_Line(void)
         b=j;
         ring_flag=2;
         ring_num++;
-        if(j+1>Ring_width_2)
-          Ring_width_2 = j+1;
+        //if(j+1>Ring_width_2)
+          //Ring_width_2 = j+1;
         if(ring_num==1) Ring_First_Row=Row_Ptr;
         break;
       }      
     }
     
-      if(Ring_width_2-Ring_width_1>Ring_width)
-      {
-        Ring_width = Ring_width_2-Ring_width_1;
-      }
+      //if(Ring_width_2-Ring_width_1>Ring_width)
+      //{
+        //Ring_width = Ring_width_2-Ring_width_1;
+      //}
     
-    if(ring_flag!=2) ring_num=0;
+    if(ring_num<4&&ring_flag!=2) ring_num=0;
+    
     a_f=0;b_f=0;c_f=0;
-    if(ring_num>3&&Row_Ptr>(All_Black+6)&&Cross_Flag!=3)
-    {    
-      if(Ring_width>27)
-      {
-        for(i=Row_Ptr-ring_num;i>0;i--)
+    if(ring_num>3&&Row_Ptr>15&&Cross_Flag!=3)
+    {
+      c=(a+b)/2;
+      //if(Ring_width>27)
+      //{
+        for(i=Ring_First_Row-ring_num;i>0;i--)
         {
-          if(img[i][a]==255&&img[i+1][a]==255)
+          if(img[i][c]!=255) continue;
+          k=0;
+          for(j=Road_Left[Row_Ptr]+1;j<Road_Right[Row_Ptr]-2;j++)
+          {
+            if(img[i][j]==0&&img[i][j+1]==0) k=1;
+          }
+          if(k==0) break; 
+          
+        }
+        if(i!=0)  Cross_Flag=3;
+    }
+        
+          /*if(img[i][a]==255&&img[i+1][a]==255)
             a_f=1;
           if(img[i][b]==255&&img[i+1][b]==255)
             b_f=1;
@@ -1139,10 +1154,10 @@ void Search_Line(void)
             Ring_width_1 = 0;
             Ring_width_2 = 0;
             Ring_width =0;
-          }          
-        }   
-      }     
-    }
+          }*/          
+       // }   
+      //}     
+    //}
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])
     {
       Road_Left[Row_Ptr]=Road_Left[Row_Ptr+1];
