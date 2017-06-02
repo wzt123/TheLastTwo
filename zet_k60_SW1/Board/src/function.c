@@ -156,32 +156,31 @@ void Motor_Out(void)
        if(All_Black>=40)
         {speed_PWM=0;}
        else
-       {
-         if(speed_get_L<20)
-         {           
-           speed_PWM_R = 0;
-           speed_PWM_L = 0;
-         }
-         else if(speed_get_R<100||speed_get_L<100)
-         {
-           speed_PWM_R = 7000;
-           speed_PWM_L = 7000;
-         }
+       { 
          
+         
+         if(abs(error)<4)
+         {
+            speed_goal_R=5000;
+            speed_goal_L=5000;
+         }
+         else if(abs(error)<8)
+         {
+           stop();
+           return;
+         }
          else
          {
-         
-         
-         speed_goal_R=3000;
-         speed_goal_L=3000;
-         
+           speed_goal_R=3000;
+           speed_goal_L=3000;
+         }
          speed_err_R=speed_goal_R-speed_get_R*10;
          speed_err_L = speed_goal_L-speed_get_L*10;
          speed_increment_R=speed_Ki*speed_err_R/10;
          speed_increment_L=speed_Ki*speed_err_L/10;
          speed_PWM_R=6100+speed_increment_R;
          speed_PWM_L=6100+speed_increment_L;
-         }
+         
        }
   //}
        if(Car==2)
@@ -197,6 +196,22 @@ void Motor_Out(void)
            speed_PWM_L = speed_goal_L+100;
          }
        }
+       if(speed_get_L<20||speed_get_R<20)
+       {
+         if(speed_get_L<20)
+         { 
+           speed_PWM_L = 0;
+         }
+         if(speed_get_R<20)
+         {
+           speed_PWM_R = 0;
+         }
+       }
+         else if(speed_get_R<100||speed_get_L<100)
+         {
+           speed_PWM_R = 7000;
+           speed_PWM_L = 7000;
+         }
        
       if(speed_PWM_R<0)
         speed_PWM_R=0;
@@ -210,7 +225,7 @@ void Motor_Out(void)
         
    ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
    ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
-   
+    
 }
 
 
@@ -225,7 +240,7 @@ void stop(void)
   gpio_set(PTB16,0);//驱动反向使能
   ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
-  DELAY_MS(1);
+  DELAY_MS(10);
   gpio_set(PTC3,1);//驱动反向使能
   gpio_set(PTC2,0);//驱动反向使能
   gpio_set(PTB17,0);//驱动反向使能
@@ -243,7 +258,7 @@ void stop_Car(void)
   gpio_set(PTB16,0);//驱动反向使能
   ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
-  ftm_pwm_duty(FTM0, FTM_CH3, 8561);
+  ftm_pwm_duty(FTM0, FTM_CH3, 8508);
   DELAY_MS(100);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1

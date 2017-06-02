@@ -224,89 +224,6 @@ void Calculate_Slope()
   }
 }
 
-
-
-/*
-根据error和errorerror返回角度
-*/
-int16  angle_errorerror(uint8 error_state,int16 errorerror)
-{
-  uint8 KD;
-  switch (error_state)
-  {
-    case 0:
-      if(abs(errorerror)<10)
-        KD = 10;
-      else if(abs(errorerror)<20)
-        KD = 30;
-      else if(abs(errorerror)<25)
-        KD = 35;
-      else if(abs(errorerror)<30)
-        KD = 25;
-      else 
-        KD = 20;
-      break;
-    case 1:
-      if(abs(errorerror)<10)
-        KD = 10;
-      else if(abs(errorerror)<20)
-        KD = 30;
-      else if(abs(errorerror)<25)
-        KD = 35;
-      else if(abs(errorerror)<30)
-        KD = 25;
-      else 
-        KD = 20;
-      break;
-  }
-  
-  return KD*errorerror/10;
-}
-
-/*
-根据error 返回不同的角度
-*/
-int16  angle_error(int16 error,int16 errorerror)
-{
-  uint8 KP;
-  int8 errorerror_angle;
-  if(abs(error)<4)
-  {
-    KP = 30;
-    errorerror_angle = angle_errorerror(0,errorerror);
-  }
-  else if(abs(error)<10)
-  {
-    KP = 35;
-    errorerror_angle = angle_errorerror(1,errorerror);
-  }
-  else if(abs(error)<15)
-  {
-    KP = 40;
-    errorerror_angle = angle_errorerror(2,errorerror);
-  }
-  else if(abs(error)<20)
-  {
-    KP = 50;
-    errorerror_angle = angle_errorerror(3,errorerror);
-  }
-  else if(abs(error)<25)
-  {
-    KP = 55;
-    errorerror_angle = angle_errorerror(4,errorerror);
-  }
-  else if(abs(error)<30)
-  {
-    KP = 60;
-    errorerror_angle = angle_errorerror(5,errorerror);
-  }
-  else if(abs(error)<40)
-  {
-    KP = 65;
-    errorerror_angle = angle_errorerror(6,errorerror);
-  }
-  return KP*error/10+errorerror_angle;
-}
 /*
 舵机控制
 */
@@ -381,12 +298,120 @@ void Servo_control(void)
     else if(Cross_Flag==1)
     {
       Kp =66;
+      Kd = 30;
       Servo_temp=Kp*error/10+Kd*errorerror/10;
     }
     else
     {      
-      Servo_temp=angle_error(error,error);
+      if(All_Black==0)
+      {
+        if(error<0)
+        {
+          Kp = 45;
+          Kd = 0;
+        }
+        else
+        {
+          Kp = 45;
+          Kd = 0;
+        }
+      }
+      else if(All_Black<6)
+      {
+        if(error<0)
+        {
+          Kp = 35;
+          Kd = 28;
+        }
+        else
+        {
+          Kp = 35;
+          Kd = 15;
+        }
+      }
+      else if(All_Black<10)
+      {
+        if(error<0)
+        {
+          Kp = 35;
+          Kd = 20;
+        }
+        else
+        {
+          Kp = 35;
+          Kd = 20;
+        }
+      }
+      
+      else if(All_Black<17)
+      {
+        if(error<0)
+        {
+          Kp = 40;
+          Kd = 30;
+        }
+        else
+        {
+          Kp = 40;
+          Kd=30;
+        }
+      }
+      else if(All_Black<25)
+      {
+        if(error<0)
+        {
+          Kp=55;
+          Kd=25;
+        }
+        else
+        {
+          Kp=55;
+          Kd =25;
+        }
+      }
+      
+      else if(All_Black<32)
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=25;
+        }
+        else
+        {
+          Kp=50;
+          Kd =25;
+        }
+      }
+      else if(All_Black<41)
+      {
+        if(error<0)
+        {
+          Kp = 55;
+          Kd = 30;
+        }
+        else
+        {
+          Kp = 55;
+          Kd = 30;
+        }
+      }
+      else
+      {
+        if(error<0)
+        {
+          Kp=100;
+          Kd=35;
+        }
+        else
+        {
+          Kp=100;
+          Kd =35;
+        }
     }
+    Servo_temp=Kp*error/10+Kd*errorerror/10;
+    }
+    
     if(cross_num>15)
     {
       if(error<0)

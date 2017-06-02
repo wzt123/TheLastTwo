@@ -233,6 +233,8 @@ void Servo_control(void)
   Kd=0;
   Servo_temp=0;
   uint8 l=0;
+  Servo_error = 0;
+  Servo_errorerror = 0;  
   // buff[0]=1;
   if(cross_num>15)
   {
@@ -268,133 +270,144 @@ void Servo_control(void)
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
-    
-    
-    
-      if(abs(error)<4)
-      {
-        Kd = 15;
-      }
-      else if(abs(error)<6)
-      {
-        if(error<0)
-          Kd = 16;
-        else
-          Kd = 16;
-      }
-      else if(abs(error)<8)
-      {
-        if(error<0)
-          Kd = 17;
-        else
-          Kd = 17;
-      }
-      else if(abs(error)<10)
-      {
-        if(error<0)
-          Kd = 17;
-        else
-          Kd = 17;
-      }
-      else if(abs(error)<12)
-      {
-        if(error<0)
-          Kd = 20;
-        else
-          Kd = 20;
-      }
-      else if(abs(error)<14)
-      {
-        if(error<0)
-          Kd = 20;
-        else
-          Kd = 20;
-      }
-      else if(abs(error)<16)
-      {
-        if(error<0)
-          Kd = 20;
-        else
-          Kd = 20;
-      }
-      else if(abs(error)<18)
-      {
-        if(error<0)
-          Kd = 22;
-        else
-          Kd = 22;
-      }      
-      else if(abs(error)<20)
-      {
-        if(error<0)
-          Kd = 24;
-        else
-          Kd = 24;
-      }      
-      else if(abs(error)<22)
-      {
-        if(error<0)
-          Kd = 26;
-        else
-          Kd = 26;
-      }
-      else if(abs(error)<24)
-      {
-        if(error<0)
-          Kd = 28;
-        else
-          Kd = 28;
-      }
-      else if(abs(error)<26)
-      {
-        if(error<0)
-          Kd = 30;
-        else
-          Kd = 30;
-      }
-      else
-      {
-        if(error<0)
-          Kd = 40;
-        else
-          Kd = 40;
-      }   
     if(Cross_Flag==2)
     {
       Kp =86;
-      Servo_temp=Kp*error/10;
+      Servo_temp=Kp*error/10-50;
     }
     else if(Cross_Flag==4)
     {
       Kp =86;
-      Servo_temp=Kp*error/10;
+      Servo_temp=Kp*error/10+50;
     }
     else if(Cross_Flag==3)
     {
       if(Car == 1)
-      {        
+      {
           Servo_temp=-Ring_First_Row*55/10;
       }
       else
       {
           Servo_temp=Ring_First_Row*55/10;
       }
-      
-      Servo_value=Servomiddle+Servo_temp;
     }
     else if(Cross_Flag==1)
     {
       Kp =66;
+      Kd = 30;
       Servo_temp=Kp*error/10+Kd*errorerror/10;
     }
     else
-    {
-      if(abs(error)<20)
-        Kp =56;
+    {      
+      if(All_Black==0)
+      {
+        if(error<0)
+        {
+          Kp = 45;
+          Kd = 0;
+        }
+        else
+        {
+          Kp = 45;
+          Kd = 0;
+        }
+      }
+      else if(All_Black<6)
+      {
+        if(error<0)
+        {
+          Kp = 35;
+          Kd = 28;
+        }
+        else
+        {
+          Kp = 35;
+          Kd = 15;
+        }
+      }
+      else if(All_Black<10)
+      {
+        if(error<0)
+        {
+          Kp = 35;
+          Kd = 20;
+        }
+        else
+        {
+          Kp = 35;
+          Kd = 20;
+        }
+      }
+      
+      else if(All_Black<17)
+      {
+        if(error<0)
+        {
+          Kp = 40;
+          Kd = 30;
+        }
+        else
+        {
+          Kp = 40;
+          Kd=30;
+        }
+      }
+      else if(All_Black<25)
+      {
+        if(error<0)
+        {
+          Kp=55;
+          Kd=25;
+        }
+        else
+        {
+          Kp=55;
+          Kd =25;
+        }
+      }
+      
+      else if(All_Black<32)
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=25;
+        }
+        else
+        {
+          Kp=50;
+          Kd =25;
+        }
+      }
+      else if(All_Black<41)
+      {
+        if(error<0)
+        {
+          Kp = 55;
+          Kd = 30;
+        }
+        else
+        {
+          Kp = 55;
+          Kd = 30;
+        }
+      }
       else
-        Kp = 56;
-      Servo_temp=Kp*error/10+Kd*errorerror/10;
+      {
+        if(error<0)
+        {
+          Kp=100;
+          Kd=35;
+        }
+        else
+        {
+          Kp=100;
+          Kd =35;
+        }
     }
+    Servo_temp=Kp*error/10+Kd*errorerror/10;
+    }
+    
     if(cross_num>15)
     {
       if(error<0)
