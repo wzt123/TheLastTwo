@@ -171,8 +171,8 @@ void Motor_Out(void)
          }
          else
          {
-           speed_goal_R=3000;
-           speed_goal_L=3000;
+           speed_goal_R=3300;
+           speed_goal_L=3300;
          }
          speed_err_R=speed_goal_R-speed_get_R*10;
          speed_err_L = speed_goal_L-speed_get_L*10;
@@ -238,8 +238,8 @@ void stop(void)
   //gpio_set(PTC2,1);//驱动反向使能
   //gpio_set(PTB17,1);//驱动反向使能
   //gpio_set(PTB16,0);//驱动反向使能
-  ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
-  ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
+  ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
   DELAY_MS(10);
   gpio_set(PTC3,1);//驱动反向使能
   gpio_set(PTC2,0);//驱动反向使能
