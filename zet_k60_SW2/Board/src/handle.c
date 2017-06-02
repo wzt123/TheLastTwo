@@ -342,7 +342,19 @@ void Servo_control(void)
           Kd = 20;
         }
       }
-      
+      else if(All_Black<14)
+      {
+        if(error<0)
+        {
+          Kp = 40;
+          Kd = 20;
+        }
+        else
+        {
+          Kp = 40;
+          Kd=20;
+        }
+      }
       else if(All_Black<17)
       {
         if(error<0)
@@ -835,7 +847,7 @@ void Search_Line(void)
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
     //从左到右检测起跑线
-    if(Row_Ptr>30)
+    if(Row_Ptr>40)
     {
       
       start_line_num[Row_Ptr] = 0;
@@ -1149,7 +1161,7 @@ void Search_Line(void)
     {      
         if(ring_num>5)
         {
-            if(Ring_width>20&&Stop_Flag!=0&&sum_time>100)
+            if(Ring_width>10&&Stop_Flag!=0&&sum_time>100)
             {
               Cross_Flag=3;        
             }

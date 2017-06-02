@@ -159,12 +159,12 @@ void Motor_Out(void)
        { 
          
          
-         if(abs(error)<4)
+         if(abs(errorerror)<4)
          {
             speed_goal_R=5000;
             speed_goal_L=5000;
          }
-         else if(abs(error)<8||(All_Black>4&&All_Black<8))
+         else if(abs(errorerror)<8||(All_Black>4&&All_Black<8))
          {
            stop();
            return;
@@ -234,12 +234,12 @@ void Motor_Out(void)
 */
 void stop(void)
 {
-  gpio_set(PTC3,0);//驱动反向使能
-  gpio_set(PTC2,1);//驱动反向使能
-  gpio_set(PTB17,1);//驱动反向使能
-  gpio_set(PTB16,0);//驱动反向使能
-  ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
-  ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
+  //gpio_set(PTC3,0);//驱动反向使能
+  //gpio_set(PTC2,1);//驱动反向使能
+  //gpio_set(PTB17,1);//驱动反向使能
+  //gpio_set(PTB16,0);//驱动反向使能
+  ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
   DELAY_MS(10);
   gpio_set(PTC3,1);//驱动反向使能
   gpio_set(PTC2,0);//驱动反向使能
@@ -259,7 +259,7 @@ void stop_Car(void)
   ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
   ftm_pwm_duty(FTM0, FTM_CH3, 8508);
-  DELAY_MS(100);
+  DELAY_MS(200);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
   stop_Flag  = 1;
