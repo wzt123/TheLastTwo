@@ -233,8 +233,6 @@ void Servo_control(void)
   Kd=0;
   Servo_temp=0;
   uint8 l=0;
-  Servo_error = 0;
-  Servo_errorerror = 0;  
   // buff[0]=1;
   if(cross_num>15)
   {

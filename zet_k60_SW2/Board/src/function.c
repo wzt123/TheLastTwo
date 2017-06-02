@@ -164,7 +164,7 @@ void Motor_Out(void)
             speed_goal_R=5000;
             speed_goal_L=5000;
          }
-         else if(abs(error)<8)
+         else if(abs(error)<8||(All_Black>4&&All_Black<8))
          {
            stop();
            return;
