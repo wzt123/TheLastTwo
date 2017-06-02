@@ -1143,7 +1143,7 @@ void Search_Line(void)
     {      
         if(ring_num>5)
         {
-            if(Ring_width>10&&Stop_Flag!=0&&sum_time>100)
+            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100)
             {
               Cross_Flag=3;        
             }

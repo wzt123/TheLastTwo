@@ -372,13 +372,13 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp=55;
-          Kd=25;
+          Kp=48;
+          Kd=28;
         }
         else
         {
-          Kp=55;
-          Kd =25;
+          Kp=48;
+          Kd =28;
         }
       }
       
@@ -438,6 +438,8 @@ void Servo_control(void)
     Servo_value = Servo_min;
   if(Servo_value>Servo_max)
     Servo_value = Servo_max;
+  if(stop_line_num>3)
+    Servo_value  = Servomiddle;
   ftm_pwm_duty(FTM0,FTM_CH3,Servo_value);
 }
 //NRF
@@ -847,7 +849,7 @@ void Search_Line(void)
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
     //从左到右检测起跑线
-    if(Row_Ptr>40)
+    if(Row_Ptr>30)
     {
       
       start_line_num[Row_Ptr] = 0;
@@ -867,7 +869,8 @@ void Search_Line(void)
       {
         if(sum_time>8000)
         {
-          Stop_Flag=2;
+          if(Row_Ptr>40)
+            Stop_Flag=2;
         }
       }
       else if(stop_line_num>=3&&Stop_Flag==0)
@@ -1161,7 +1164,7 @@ void Search_Line(void)
     {      
         if(ring_num>5)
         {
-            if(Ring_width>10&&Stop_Flag!=0&&sum_time>100)
+            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100)
             {
               Cross_Flag=3;        
             }
