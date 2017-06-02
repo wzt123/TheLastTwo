@@ -424,13 +424,13 @@ void Servo_control(void)
     Servo_temp=Kp*error/10+Kd*errorerror/10;
     }
     
-    if(cross_num>15)
+    /*if(cross_num>15)
     {
       if(error<0)
         Servo_temp = Servo_temp-cross_num;
       else
         Servo_temp = Servo_temp+cross_num;
-    }
+    }*/
     
     Servo_value=Servomiddle+Servo_temp;
     
