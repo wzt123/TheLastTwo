@@ -421,12 +421,12 @@ void Servo_control(void)
       if(error<0)
       {
         Kp = 45;
-        Kd = 0;
+        Kd = 15;
       }
       else
       {
         Kp = 45;
-        Kd = 0;
+        Kd = 15;
       }
     }
     else if(All_Black<6)
@@ -434,12 +434,12 @@ void Servo_control(void)
       if(error<0)
       {
         Kp = 35;
-        Kd = 10;
+        Kd = 15;
       }
       else
       {
         Kp = 35;
-        Kd = 10;
+        Kd = 15;
       }
     }
     else if(All_Black<10)
@@ -447,12 +447,12 @@ void Servo_control(void)
       if(error<0)
       {
         Kp = 35;
-        Kd = 10;
+        Kd = 15;
       }
       else
       {
         Kp = 35;
-        Kd = 10;
+        Kd = 15;
       }
     }
     
@@ -461,12 +461,12 @@ void Servo_control(void)
       if(error<0)
       {
         Kp = 30;
-        Kd = 10;
+        Kd = 15;
       }
       else
       {
         Kp = 30;
-        Kd=10;
+        Kd=15;
       }
     }
     else if(All_Black<25)
@@ -737,24 +737,7 @@ void Find_Middle()
     {
       Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
     }
-    
-    if(Road_Left[Row_Ptr]<Road_Left[Row_Ptr+1]&&
-         Road_Left[Row_Ptr+1]<Road_Left[Row_Ptr+2]&&
-           Road_Left[Row_Ptr+2]<Road_Left[Row_Ptr+3]&&
-              Road_Left[Row_Ptr-4]>=Road_Left[Row_Ptr-3]&&
-               Road_Left[Row_Ptr-5]>Road_Left[Row_Ptr-4]&&
-               Road_Left[Row_Ptr-6]>Road_Left[Row_Ptr-5]&&Row_Ptr>cross_num)
-      {        
-        cross_num = Row_Ptr;
-      }
-    if(Road_Right[Row_Ptr]>Road_Right[Row_Ptr+1]&&
-         Road_Right[Row_Ptr+1]>Road_Right[Row_Ptr+2]&&
-           Road_Right[Row_Ptr+2]>Road_Right[Row_Ptr+3]&&
-              Road_Left[Row_Ptr-4]<=Road_Left[Row_Ptr-3]&&
-               Road_Left[Row_Ptr-5]<Road_Left[Row_Ptr-4]&&
-               Road_Left[Row_Ptr-6]<Road_Left[Row_Ptr-5]
-       &&Row_Ptr>cross_num)
-    cross_num = Row_Ptr;
+   
     
     ////ÅÅ³ýÖÐÏßÌø±ä
     if(Road_Center[Row_Ptr]-Road_Center[Row_Ptr+1]>13&&Cross_Flag==0&&error*errorerror<0)
