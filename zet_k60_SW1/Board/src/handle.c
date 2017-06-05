@@ -323,7 +323,7 @@ void Servo_control(void)
         Kd = 5;
       }
     }
-    else if(All_Black<22)
+    else if(All_Black<16) ////直道入弯道或者270度时提前转角
     {
       if(error<0)
       {
@@ -334,6 +334,20 @@ void Servo_control(void)
       {
         Kp = 30;
         Kd=10;
+      }
+      
+    }
+    else if(All_Black<22) ////弯道入直道的时候
+    {
+      if(error<0)
+      {
+        Kp = 35;
+        Kd = 18;
+      }
+      else
+      {
+        Kp = 35;
+        Kd=18;
       }
       
     }
