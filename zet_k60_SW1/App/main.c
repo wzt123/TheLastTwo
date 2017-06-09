@@ -165,11 +165,19 @@ void  main(void)
     
     //Overtake_judge();
     dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
+<<<<<<< HEAD
     OLED_Print_Num1(88, 1, Cross3_Cnt);
     OLED_Print_Num1(88, 2, error);
     OLED_Print_Num1(88, 3, errorerror);
     OLED_Print_Num1(88, 4, Out_Right);
     OLED_Print_Num1(88, 5, Out_Left);
+=======
+    OLED_Print_Num1(88, 1, All_Black);
+    OLED_Print_Num1(88, 2, error);
+    OLED_Print_Num1(88, 3, errorerror);
+    OLED_Print_Num1(88, 4, Kp);
+    OLED_Print_Num1(88, 5, Kd);
+>>>>>>> d52721fae38cba3ee3ff7e317d2092d5a91eb1e6
     //wzt_bluetooth(); 
     
     

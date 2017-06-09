@@ -301,125 +301,6 @@ void Servo_control(void)
     }
     else
     {      
-      /*if(All_Black==0)
-      {
-        if(error<0)
-        {
-          Kp = 45;
-          Kd = 0;
-        }
-        else
-        {
-          Kp = 45;
-          Kd = 0;
-        }
-      }
-      else if(All_Black<6)
-      {
-        if(error<0)
-        {
-          Kp = 35;
-          Kd = 28;
-        }
-        else
-        {
-          Kp = 35;
-          Kd = 15;
-        }
-      }
-      else if(All_Black<10)
-      {
-        if(error<0)
-        {
-          Kp = 35;
-          Kd = 20;
-        }
-        else
-        {
-          Kp = 35;
-          Kd = 20;
-        }
-      }
-      
-      else if(All_Black<15)
-      {
-        if(error<0)
-        {
-          Kp = 40;
-          Kd = 18;
-        }
-        else
-        {
-          Kp = 40;
-          Kd=18;
-        }
-      }
-      else if(All_Black<20)
-      {
-        if(error<0)
-        {
-          Kp = 40;
-          Kd = 20;
-        }
-        else
-        {
-          Kp = 40;
-          Kd=20;
-        }
-      }
-      else if(All_Black<25)
-      {
-        if(error<0)
-        {
-          Kp=45;
-          Kd=15;
-        }
-        else
-        {
-          Kp=45;
-          Kd =15;
-        }
-      }
-      
-      else if(All_Black<32)
-      {
-        if(error<0)
-        {
-          Kp=50;
-          Kd=25;
-        }
-        else
-        {
-          Kp=50;
-          Kd =25;
-        }
-      }
-      else if(All_Black<41)
-      {
-        if(error<0)
-        {
-          Kp = 55;
-          Kd = 30;
-        }
-        else
-        {
-          Kp = 55;
-          Kd = 30;
-        }
-      }
-      else
-      {
-        if(error<0)
-        {
-          Kp=100;
-          Kd=35;
-        }
-        else
-        {
-          Kp=100;
-          Kd =35;
-        }
-    }*/
       if(All_Black==0)
     {
       if(error<0)
@@ -433,45 +314,46 @@ void Servo_control(void)
         Kd = 15;
       }
     }
-    else if(All_Black<6)
+    else if(All_Black<12)
     {
       if(error<0)
       {
         Kp = 35;
-        Kd = 15;
+        Kd = 5;
       }
       else
       {
         Kp = 35;
-        Kd = 15;
+        Kd = 5;
       }
     }
-    else if(All_Black<10)
-    {
-      if(error<0)
-      {
-        Kp = 35;
-        Kd = 15;
-      }
-      else
-      {
-        Kp = 35;
-        Kd = 15;
-      }
-    }
-    
-    else if(All_Black<17)
+    else if(All_Black<16) ////直道入弯道或者270度时提前转角
     {
       if(error<0)
       {
         Kp = 30;
-        Kd = 15;
+        Kd = 10;
       }
       else
       {
         Kp = 30;
-        Kd=15;
+        Kd=10;
       }
+      
+    }
+    else if(All_Black<22) ////弯道入直道的时候
+    {
+      if(error<0)
+      {
+        Kp = 35;
+        Kd = 18;
+      }
+      else
+      {
+        Kp = 35;
+        Kd=18;
+      }
+      
     }
     else if(All_Black<25)
     {

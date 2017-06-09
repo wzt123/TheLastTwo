@@ -24,7 +24,7 @@ uint16 var;
 uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
 uint32 Distance = 2500;
-uint16 send_data[3][8] = { { 0 }, { 0 }, { 0 } };
+uint8 stop_time = 0;
 /*uint8 Edge_R[3]= {0};
 uint8 Edge_L[3]= {0};   
 uint8 stopline_num = 0;
@@ -155,30 +155,37 @@ void Motor_Out(void)
         {speed_PWM=0;}
        else
        { 
-         
-         
-         if(abs(error)<4)
+         if(stop_time==0)
          {
-            speed_goal_R=5000;
-            speed_goal_L=5000;
+           if(abs(error)<4)
+           {
+             speed_goal_R=3600;
+             speed_goal_L=3600;
+           }
+           else if(abs(error)<8||(All_Black>4&&All_Black<8))
+           {
+             stop();
+             return;
+           }
+           else
+           {
+             speed_goal_R=3000;
+             speed_goal_L=3000;
+           }
+           speed_err_R=speed_goal_R-speed_get_R*10;
+           speed_err_L = speed_goal_L-speed_get_L*10;
+           speed_increment_R=speed_Ki*speed_err_R/10;
+           speed_increment_L=speed_Ki*speed_err_L/10;
+           speed_PWM_R=6100+speed_increment_R;
+           speed_PWM_L=6100+speed_increment_L;
+           
          }
-         else if(abs(error)<8||(All_Black>4&&All_Black<8))
+         else if(stop_time<5)
          {
-           stop();
-           return;
+           stop_time++;
          }
          else
-         {
-           speed_goal_R=3000;
-           speed_goal_L=3000;
-         }
-         speed_err_R=speed_goal_R-speed_get_R*10;
-         speed_err_L = speed_goal_L-speed_get_L*10;
-         speed_increment_R=speed_Ki*speed_err_R/10;
-         speed_increment_L=speed_Ki*speed_err_L/10;
-         speed_PWM_R=6100+speed_increment_R;
-         speed_PWM_L=6100+speed_increment_L;
-         
+           stop_time=0;
        }
   //}
        if(Car==2)
@@ -238,7 +245,8 @@ void stop(void)
   //gpio_set(PTB16,0);//驱动反向使能
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
-  DELAY_MS(10);
+  stop_time++;
+  //DELAY_MS(10);
   gpio_set(PTC3,1);//驱动反向使能
   gpio_set(PTC2,0);//驱动反向使能
   gpio_set(PTB17,0);//驱动反向使能

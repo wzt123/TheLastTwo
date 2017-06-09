@@ -159,8 +159,8 @@ void Motor_Out(void)
          
          if(abs(errorerror)<4)
          {
-            speed_goal_R=5000;
-            speed_goal_L=5000;
+            speed_goal_R=3600;
+            speed_goal_L=3600;
          }
          else if(abs(errorerror)<8||(All_Black>4&&All_Black<8))
          {
