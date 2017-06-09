@@ -45,8 +45,9 @@ extern uint8 C;
 extern uint16 Servomiddle;
 extern uint8 Turn_Left;
 extern uint8 Overtake;
-
-
+extern uint8 Out_Left;
+extern uint8 Out_Right;
+extern uint8 Cross3_Cnt;
 extern uint8 CrossRow;
 //
 extern uint8 GetMedianNum(uint8 *bArray,uint8 iFilterLen);
