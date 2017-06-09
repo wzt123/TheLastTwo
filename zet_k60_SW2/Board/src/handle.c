@@ -587,9 +587,9 @@ void Find_Middle()
       if(Road_Right[Row_Ptr]>Road_Right[Row_Ptr+1]&&
          Road_Right[Row_Ptr+1]>Road_Right[Row_Ptr+2]&&
            Road_Right[Row_Ptr+2]>Road_Right[Row_Ptr+3]&&
-              Road_Left[Row_Ptr-4]<=Road_Left[Row_Ptr-3]&&
-               Road_Left[Row_Ptr-5]<=Road_Left[Row_Ptr-4]&&
-               Road_Left[Row_Ptr-6]<=Road_Left[Row_Ptr-5]&&Row_Ptr>cross_num)
+              Road_Right[Row_Ptr-4]<=Road_Right[Row_Ptr-3]&&
+               Road_Right[Row_Ptr-5]<=Road_Right[Row_Ptr-4]&&
+               Road_Right[Row_Ptr-6]<=Road_Right[Row_Ptr-5]&&Row_Ptr>cross_num)
       {
         Cross_Flag=4;        
         cross_num = Row_Ptr;
