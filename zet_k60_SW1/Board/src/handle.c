@@ -275,12 +275,12 @@ void Servo_control(void)
     if(Cross_Flag==2)
     {
       Kp =86;
-      Servo_temp=Kp*error/10+100;
+      Servo_temp=Kp*error/10+50;
     }
     else if(Cross_Flag==4)
     {
       Kp =86;
-      Servo_temp=Kp*error/10-100;
+      Servo_temp=Kp*error/10-150;
     }
     else if(Cross_Flag==3)
     {
@@ -536,7 +536,7 @@ void Find_Middle()
     Calculate_Slope();
     if(Cross_Cnt==0) Cross_Cnt=1;//一个十字路口
     else if(Cross_Cnt==1) Cross_Cnt=2;
-    else if(Cross_Cnt>2) Cross_Cnt=1;
+    else if(Cross_Cnt>2&&Cross_Cnt<5) Cross_Cnt=1;
   }
   else if(Cross_Flag==0)
   {
@@ -548,14 +548,14 @@ void Find_Middle()
   else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
   if(Cross_Cnt==6)   //右转判断左线
   {
-    for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
+    for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
       if(Road_Left[Row_Ptr]>Road_Left[Row_Ptr+1]&&
          Road_Left[Row_Ptr+1]>Road_Left[Row_Ptr+2]&&
            Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
               Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
                Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
-               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2]&&Row_Ptr>cross_num)
+               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2])
       {
         Cross_Flag=2;
         cross_num = Row_Ptr;
@@ -563,7 +563,7 @@ void Find_Middle()
         break;
       }
     }
-    if(Flag_L>0&&abs(error)<6/*Cross_Flag!=2*/)
+    if(Flag_L>0&&Cross_Flag!=2)
     {
       Flag_L=0;
       Cross_Cnt=0;
@@ -571,14 +571,14 @@ void Find_Middle()
   }
   else if(Cross_Cnt==7) //左转判断右线
   {
-    for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
+    for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
       if(Road_Right[Row_Ptr]<Road_Right[Row_Ptr+1]&&
          Road_Right[Row_Ptr+1]<Road_Right[Row_Ptr+2]&&
            Road_Right[Row_Ptr+2]<Road_Right[Row_Ptr+3]&&
               Road_Right[Row_Ptr-1]>=Road_Right[Row_Ptr]&&
                Road_Right[Row_Ptr-2]>=Road_Right[Row_Ptr-1]&&
-               Road_Right[Row_Ptr-3]>Road_Right[Row_Ptr-2]&&Row_Ptr>cross_num)
+               Road_Right[Row_Ptr-3]>Road_Right[Row_Ptr-2])
       {
         Cross_Flag=4;        
         cross_num = Row_Ptr;
@@ -767,7 +767,7 @@ uint8 a=1;
 uint8 ring_num;
 void Search_Line(void)
 {
-  
+  Cross_Flag_Last=Cross_Flag; 
   Row_Ptr=0;
   Col_Ptr=0;
   uint8 LFlag=0;

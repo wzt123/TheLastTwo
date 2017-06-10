@@ -148,6 +148,9 @@ void  main(void)
     {      
       stop_Car();
     }
+    
+    //if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3&&stop_Flag!=1)
+      //stop_Car();
     ///À¶ÑÀ´«ËÍ±àÂëÆ÷µÄÖµ
     send_data[0] = speed_get_L;
     send_data[1] = speed_get_R;

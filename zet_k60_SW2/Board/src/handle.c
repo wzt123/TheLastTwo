@@ -548,7 +548,7 @@ void Find_Middle()
     Calculate_Slope();
     if(Cross_Cnt==0) Cross_Cnt=1;//一个十字路口
     else if(Cross_Cnt==1) Cross_Cnt=2;
-    else if(Cross_Cnt>2) Cross_Cnt=1;
+    else if(Cross_Cnt>2&&Cross_Cnt<5) Cross_Cnt=1;
   }
   else if(Cross_Flag==0)
   {
@@ -567,7 +567,7 @@ void Find_Middle()
            Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
               Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
                Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
-               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2]&&Row_Ptr>cross_num)
+               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2])
       {
         Cross_Flag=2;
         cross_num = Row_Ptr;
@@ -590,7 +590,7 @@ void Find_Middle()
            Road_Right[Row_Ptr+2]<Road_Right[Row_Ptr+3]&&
               Road_Right[Row_Ptr-1]>=Road_Right[Row_Ptr]&&
                Road_Right[Row_Ptr-2]>=Road_Right[Row_Ptr-1]&&
-               Road_Right[Row_Ptr-3]>Road_Right[Row_Ptr-2]&&Row_Ptr>cross_num)
+               Road_Right[Row_Ptr-3]>Road_Right[Row_Ptr-2])
       {
         Cross_Flag=4;        
         cross_num = Row_Ptr;
@@ -638,24 +638,6 @@ void Find_Middle()
     {
       Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
     }
-    
-    if(Road_Left[Row_Ptr]<Road_Left[Row_Ptr+1]&&
-         Road_Left[Row_Ptr+1]<Road_Left[Row_Ptr+2]&&
-           Road_Left[Row_Ptr+2]<Road_Left[Row_Ptr+3]&&
-              Road_Left[Row_Ptr-4]>=Road_Left[Row_Ptr-3]&&
-               Road_Left[Row_Ptr-5]>Road_Left[Row_Ptr-4]&&
-               Road_Left[Row_Ptr-6]>Road_Left[Row_Ptr-5]&&Row_Ptr>cross_num)
-      {        
-        cross_num = Row_Ptr;
-      }
-    if(Road_Right[Row_Ptr]>Road_Right[Row_Ptr+1]&&
-         Road_Right[Row_Ptr+1]>Road_Right[Row_Ptr+2]&&
-           Road_Right[Row_Ptr+2]>Road_Right[Row_Ptr+3]&&
-              Road_Left[Row_Ptr-4]<=Road_Left[Row_Ptr-3]&&
-               Road_Left[Row_Ptr-5]<Road_Left[Row_Ptr-4]&&
-               Road_Left[Row_Ptr-6]<Road_Left[Row_Ptr-5]
-       &&Row_Ptr>cross_num)
-    cross_num = Row_Ptr;
     
     ////排除中线跳变
     if(Road_Center[Row_Ptr]-Road_Center[Row_Ptr+1]>13&&Cross_Flag==0&&error*errorerror<0)
@@ -705,7 +687,7 @@ uint8 a=1;
 uint8 ring_num;
 void Search_Line(void)
 {
-  
+  Cross_Flag_Last = Cross_Flag;
   Row_Ptr=0;
   Col_Ptr=0;
   uint8 LFlag=0;
@@ -1165,10 +1147,10 @@ void Search_Line(void)
     {      
         if(ring_num>5)
         {
-            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100)
-            {
+            //if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100)
+            //{
               Cross_Flag=3;        
-            }
+            //}
         }
     }
 
