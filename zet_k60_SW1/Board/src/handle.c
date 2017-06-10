@@ -594,7 +594,7 @@ void Find_Middle()
   }
   //************************//
   //出圆环判断
-  if(Cross_Flag==3)
+  /*if(Cross_Flag==3)
   {
     if(Cross3_Cnt==0) Cross3_Cnt=1;//遇到圆环
     else if(Cross3_Cnt>1) Cross3_Cnt=1;
@@ -681,9 +681,9 @@ void Find_Middle()
       Out_Right=1; //右转出圆环标志
      // Cross3_Cnt=0;
     }
-  }
+  }*/
 
-  //*******************//
+  //*******************// 
     for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
     {
       if(start_line_num[Row_Ptr]<7)

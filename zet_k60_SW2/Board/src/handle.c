@@ -542,6 +542,7 @@ void Find_Middle()
   repair_slope_L=0;
   /////
   //filter_Middle(Road_Center);
+    //Ð±ÈëÊ®×ÖÅÐ¶Ï
   if(Cross_Flag==1&&StopRow>All_Black)
   {
     Calculate_Slope();
@@ -557,16 +558,16 @@ void Find_Middle()
   }
   if(Cross_Cnt==5&&error>10) Cross_Cnt=6;//ÓÒ×ª
   else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//×ó×ª
-  if(Cross_Cnt==6)
+  if(Cross_Cnt==6)   //ÓÒ×ªÅÐ¶Ï×óÏß
   {
     for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
     {
-      if(Road_Left[Row_Ptr]<Road_Left[Row_Ptr+1]&&
-         Road_Left[Row_Ptr+1]<Road_Left[Row_Ptr+2]&&
-           Road_Left[Row_Ptr+2]<Road_Left[Row_Ptr+3]&&
-              Road_Left[Row_Ptr-4]>=Road_Left[Row_Ptr-3]&&
-               Road_Left[Row_Ptr-5]>=Road_Left[Row_Ptr-4]&&
-               Road_Left[Row_Ptr-6]>=Road_Left[Row_Ptr-5]&&Row_Ptr>cross_num)
+      if(Road_Left[Row_Ptr]>Road_Left[Row_Ptr+1]&&
+         Road_Left[Row_Ptr+1]>Road_Left[Row_Ptr+2]&&
+           Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
+              Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
+               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
+               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2]&&Row_Ptr>cross_num)
       {
         Cross_Flag=2;
         cross_num = Row_Ptr;
@@ -580,16 +581,16 @@ void Find_Middle()
       Cross_Cnt=0;
     }
   }
-  else if(Cross_Cnt==7)
+  else if(Cross_Cnt==7) //×ó×ªÅÐ¶ÏÓÒÏß
   {
     for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
     {
-      if(Road_Right[Row_Ptr]>Road_Right[Row_Ptr+1]&&
-         Road_Right[Row_Ptr+1]>Road_Right[Row_Ptr+2]&&
-           Road_Right[Row_Ptr+2]>Road_Right[Row_Ptr+3]&&
-              Road_Right[Row_Ptr-4]<=Road_Right[Row_Ptr-3]&&
-               Road_Right[Row_Ptr-5]<=Road_Right[Row_Ptr-4]&&
-               Road_Right[Row_Ptr-6]<=Road_Right[Row_Ptr-5]&&Row_Ptr>cross_num)
+      if(Road_Right[Row_Ptr]<Road_Right[Row_Ptr+1]&&
+         Road_Right[Row_Ptr+1]<Road_Right[Row_Ptr+2]&&
+           Road_Right[Row_Ptr+2]<Road_Right[Row_Ptr+3]&&
+              Road_Right[Row_Ptr-1]>=Road_Right[Row_Ptr]&&
+               Road_Right[Row_Ptr-2]>=Road_Right[Row_Ptr-1]&&
+               Road_Right[Row_Ptr-3]>Road_Right[Row_Ptr-2]&&Row_Ptr>cross_num)
       {
         Cross_Flag=4;        
         cross_num = Row_Ptr;
