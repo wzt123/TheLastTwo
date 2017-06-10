@@ -76,9 +76,9 @@ void  main(void)
   
   //设置 PORTE 的中断服务函数为 PORTE_VECTORn
   //enable_irq(PORTC_PORTD_IRQn);
-  //int a=nrf_link_check();
+  int a=nrf_link_check();
   uint8 IR1=0,IR2=0;
-  while(1)
+  while(a)
   {
     pit_time_start(PIT1);
     camera_get_img();                                   //摄像头获取图像
@@ -163,7 +163,7 @@ void  main(void)
     stop_Flag=0;
   }*/
     
-    //Overtake_judge();
+    Overtake_judge();
     dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
 
     OLED_Print_Num1(88, 1, Cross_Cnt);

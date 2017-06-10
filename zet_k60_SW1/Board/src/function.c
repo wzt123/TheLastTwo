@@ -70,7 +70,7 @@ void Init_All(void)
   pit_init_ms(PIT0, 50);                             //初始化PIT0，定时时间为： 1000ms       
   set_vector_handler(PIT0_VECTORn ,PIT0_IRQHandler);       //设置PIT0的中断服务函数为 PIT_IRQHandler
   stopLine_init();
-  //while(!nrf_init());
+  while(!nrf_init());
   set_vector_handler(PORTC_VECTORn ,PORTC_IRQHandler);                //设置 PORTE 的中断服务函数为 PORTE_VECTORn
   chaoShenBo_init();
   enable_irq(PORTC_IRQn);
@@ -128,7 +128,7 @@ void Motor_Out(void)
       speed_PWM -=50;
     }
   }*/
-  uint8 speed_Ki=19;
+  uint8 speed_Ki=35;
   float speed_Kd=0.0;
   float speed_Kp=0.0;
   /*if(Overtake2==1||buff[1]==2)

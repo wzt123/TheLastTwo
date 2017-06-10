@@ -275,12 +275,12 @@ void Servo_control(void)
     if(Cross_Flag==2)
     {
       Kp =86;
-      Servo_temp=Kp*error/10-50;
+      Servo_temp=Kp*error/10+100;
     }
     else if(Cross_Flag==4)
     {
       Kp =86;
-      Servo_temp=Kp*error/10+50;
+      Servo_temp=Kp*error/10-100;
     }
     else if(Cross_Flag==3)
     {
@@ -563,7 +563,7 @@ void Find_Middle()
         break;
       }
     }
-    if(Flag_L>0&&Cross_Flag!=2)
+    if(Flag_L>0&&abs(error)<6/*Cross_Flag!=2*/)
     {
       Flag_L=0;
       Cross_Cnt=0;
