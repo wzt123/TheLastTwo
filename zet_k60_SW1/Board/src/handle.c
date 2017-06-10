@@ -550,12 +550,12 @@ void Find_Middle()
   {
     for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
     {
-      if(Road_Left[Row_Ptr]<Road_Left[Row_Ptr+1]&&
-         Road_Left[Row_Ptr+1]<Road_Left[Row_Ptr+2]&&
-           Road_Left[Row_Ptr+2]<Road_Left[Row_Ptr+3]&&
-              Road_Left[Row_Ptr-4]>=Road_Left[Row_Ptr-3]&&
-               Road_Left[Row_Ptr-5]>=Road_Left[Row_Ptr-4]&&
-               Road_Left[Row_Ptr-6]>=Road_Left[Row_Ptr-5]&&Row_Ptr>cross_num)
+      if(Road_Left[Row_Ptr]>Road_Left[Row_Ptr+1]&&
+         Road_Left[Row_Ptr+1]>Road_Left[Row_Ptr+2]&&
+           Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
+              Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
+               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
+               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2]&&Row_Ptr>cross_num)
       {
         Cross_Flag=2;
         cross_num = Row_Ptr;
@@ -573,12 +573,12 @@ void Find_Middle()
   {
     for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
     {
-      if(Road_Right[Row_Ptr]>Road_Right[Row_Ptr+1]&&
-         Road_Right[Row_Ptr+1]>Road_Right[Row_Ptr+2]&&
-           Road_Right[Row_Ptr+2]>Road_Right[Row_Ptr+3]&&
-              Road_Right[Row_Ptr-4]<=Road_Right[Row_Ptr-3]&&
-               Road_Right[Row_Ptr-5]<=Road_Right[Row_Ptr-4]&&
-               Road_Right[Row_Ptr-6]<=Road_Right[Row_Ptr-5]&&Row_Ptr>cross_num)
+      if(Road_Right[Row_Ptr]<Road_Right[Row_Ptr+1]&&
+         Road_Right[Row_Ptr+1]<Road_Right[Row_Ptr+2]&&
+           Road_Right[Row_Ptr+2]<Road_Right[Row_Ptr+3]&&
+              Road_Right[Row_Ptr-1]>=Road_Right[Row_Ptr]&&
+               Road_Right[Row_Ptr-2]>=Road_Right[Row_Ptr-1]&&
+               Road_Right[Row_Ptr-3]>Road_Right[Row_Ptr-2]&&Row_Ptr>cross_num)
       {
         Cross_Flag=4;        
         cross_num = Row_Ptr;
@@ -607,17 +607,17 @@ void Find_Middle()
   if(Cross3_Cnt==2&&error>10) Cross3_Cnt=4;//右边过
   else if(Cross3_Cnt==2&&error<-10) Cross3_Cnt=5;//左边过
   if(Cross3_Cnt==4&&error<-10) Cross3_Cnt=6; //右边过
-  else if(Cross3_Cnt=5&&error>10) Cross3_Cnt=7; //左边过
+  else if(Cross3_Cnt==5&&error>10) Cross3_Cnt=7; //左边过
   if(Cross3_Cnt==7) //左边过找左线
   {
     for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
     {
-      if(Road_Left[Row_Ptr]<Road_Left[Row_Ptr+1]&&
-         Road_Left[Row_Ptr+1]<Road_Left[Row_Ptr+2]&&
-           Road_Left[Row_Ptr+2]<Road_Left[Row_Ptr+3]&&
-              Road_Left[Row_Ptr-4]>=Road_Left[Row_Ptr-3]&&
-               Road_Left[Row_Ptr-5]>=Road_Left[Row_Ptr-4]&&
-               Road_Left[Row_Ptr-6]>=Road_Left[Row_Ptr-5]&&Row_Ptr>cross_num)
+      if(Road_Left[Row_Ptr]>Road_Left[Row_Ptr+1]&&
+         Road_Left[Row_Ptr+1]>Road_Left[Row_Ptr+2]&&
+           Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
+              Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
+               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
+               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2])
       {
         Cross3_Cnt=8; //左转找到拐点
         break;
@@ -628,12 +628,12 @@ void Find_Middle()
   {
     for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
     {
-      if(Road_Right[Row_Ptr]>Road_Right[Row_Ptr+1]&&
-         Road_Right[Row_Ptr+1]>Road_Right[Row_Ptr+2]&&
-           Road_Right[Row_Ptr+2]>Road_Right[Row_Ptr+3]&&
-              Road_Right[Row_Ptr-4]<=Road_Right[Row_Ptr-3]&&
-               Road_Right[Row_Ptr-5]<=Road_Right[Row_Ptr-4]&&
-               Road_Right[Row_Ptr-6]<=Road_Right[Row_Ptr-5]&&Row_Ptr>cross_num)
+      if(Road_Right[Row_Ptr]<Road_Right[Row_Ptr+1]&&
+         Road_Right[Row_Ptr+1]<Road_Right[Row_Ptr+2]&&
+           Road_Right[Row_Ptr+2]<Road_Right[Row_Ptr+3]&&
+              Road_Right[Row_Ptr-1]>=Road_Right[Row_Ptr]&&
+               Road_Right[Row_Ptr-2]>=Road_Right[Row_Ptr-1]&&
+               Road_Right[Row_Ptr-3]>Road_Right[Row_Ptr-2])
       {
         Cross3_Cnt=9; //右转找到拐点
         break;
@@ -644,12 +644,12 @@ void Find_Middle()
   {
     for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
     {
-      if(Road_Left[Row_Ptr]<Road_Left[Row_Ptr+1]&&
-         Road_Left[Row_Ptr+1]<Road_Left[Row_Ptr+2]&&
-           Road_Left[Row_Ptr+2]<Road_Left[Row_Ptr+3]&&
-              Road_Left[Row_Ptr-4]>=Road_Left[Row_Ptr-3]&&
-               Road_Left[Row_Ptr-5]>=Road_Left[Row_Ptr-4]&&
-               Road_Left[Row_Ptr-6]>=Road_Left[Row_Ptr-5]&&Row_Ptr>cross_num)
+      if(Road_Left[Row_Ptr]>Road_Left[Row_Ptr+1]&&
+         Road_Left[Row_Ptr+1]>Road_Left[Row_Ptr+2]&&
+           Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
+              Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
+               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
+               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2])
       {
                 //左转找到拐点
         break;
@@ -658,19 +658,19 @@ void Find_Middle()
     if(Row_Ptr==All_Black)
     {
       Out_Left=1; //左转出圆环标志
-      Cross3_Cnt=0;
+     // Cross3_Cnt=0;
     }
   }
   else if(Cross3_Cnt==9)
   {
     for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
     {
-      if(Road_Right[Row_Ptr]>Road_Right[Row_Ptr+1]&&
-         Road_Right[Row_Ptr+1]>Road_Right[Row_Ptr+2]&&
-           Road_Right[Row_Ptr+2]>Road_Right[Row_Ptr+3]&&
-              Road_Right[Row_Ptr-4]<=Road_Right[Row_Ptr-3]&&
-               Road_Right[Row_Ptr-5]<=Road_Right[Row_Ptr-4]&&
-               Road_Right[Row_Ptr-6]<=Road_Right[Row_Ptr-5]&&Row_Ptr>cross_num)
+      if(Road_Left[Row_Ptr]>Road_Left[Row_Ptr+1]&&
+         Road_Left[Row_Ptr+1]>Road_Left[Row_Ptr+2]&&
+           Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
+              Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
+               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
+               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2])
       {
                 //左转找到拐点
         break;
@@ -679,7 +679,7 @@ void Find_Middle()
     if(Row_Ptr==All_Black)
     {
       Out_Right=1; //右转出圆环标志
-      Cross3_Cnt=0;
+     // Cross3_Cnt=0;
     }
   }
 
