@@ -60,7 +60,7 @@ void PIT0_IRQHandler(void)
 
 void Init_All(void)
 {
-  Car=1;
+  Car=2;
   Motor_Init();
   OLED_Init();
   ov7725_eagle_init(imgbuff);
@@ -128,7 +128,7 @@ void Motor_Out(void)
       speed_PWM -=50;
     }
   }*/
-  uint8 speed_Ki=19;
+  uint8 speed_Ki=35;
   float speed_Kd=0.0;
   float speed_Kp=0.0;
   /*if(Overtake2==1||buff[1]==2)
@@ -155,30 +155,37 @@ void Motor_Out(void)
         {speed_PWM=0;}
        else
        { 
-         
-         
-         if(abs(errorerror)<4)
+         if(stop_time==0)
          {
-            speed_goal_R=3600;
-            speed_goal_L=3600;
+           if(abs(error)<4)
+           {
+             speed_goal_R=3600;
+             speed_goal_L=3600;
+           }
+           else if(abs(error)<8||(All_Black>4&&All_Black<8))
+           {
+             stop();
+             return;
+           }
+           else
+           {
+             speed_goal_R=4000;
+             speed_goal_L=4000;
+           }
+           speed_err_R=speed_goal_R-speed_get_R*10;
+           speed_err_L = speed_goal_L-speed_get_L*10;
+           speed_increment_R=speed_Ki*speed_err_R/10;
+           speed_increment_L=speed_Ki*speed_err_L/10;
+           speed_PWM_R=6100+speed_increment_R;
+           speed_PWM_L=6100+speed_increment_L;
+           
          }
-         else if(abs(errorerror)<8||(All_Black>4&&All_Black<8))
+         else if(stop_time<5)
          {
-           stop();
-           return;
+           stop_time++;
          }
          else
-         {
-           speed_goal_R=3000;
-           speed_goal_L=3000;
-         }
-         speed_err_R=speed_goal_R-speed_get_R*10;
-         speed_err_L = speed_goal_L-speed_get_L*10;
-         speed_increment_R=speed_Ki*speed_err_R/10;
-         speed_increment_L=speed_Ki*speed_err_L/10;
-         speed_PWM_R=6100+speed_increment_R;
-         speed_PWM_L=6100+speed_increment_L;
-         
+           stop_time=0;
        }
   //}
        if(Car==2)
@@ -238,7 +245,8 @@ void stop(void)
   //gpio_set(PTB16,0);//驱动反向使能
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
-  DELAY_MS(10);
+  stop_time++;
+  //DELAY_MS(10);
   gpio_set(PTC3,1);//驱动反向使能
   gpio_set(PTC2,0);//驱动反向使能
   gpio_set(PTB17,0);//驱动反向使能

@@ -172,7 +172,7 @@ void  main(void)
     OLED_Print_Num1(88, 1, Cross_Cnt);
     OLED_Print_Num1(88, 2, error);
     OLED_Print_Num1(88, 3, errorerror);
-    OLED_Print_Num1(88, 4, Out_Right);
+    OLED_Print_Num1(88, 4, ABDistance);
     OLED_Print_Num1(88, 5, Out_Left);
 
     //wzt_bluetooth(); 

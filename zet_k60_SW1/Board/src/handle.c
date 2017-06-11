@@ -275,12 +275,12 @@ void Servo_control(void)
     if(Cross_Flag==2)
     {
       Kp =86;
-      Servo_temp=Kp*error/10+50;
+      Servo_temp=Kp*error/10+100;
     }
     else if(Cross_Flag==4)
     {
       Kp =86;
-      Servo_temp=Kp*error/10-150;
+      Servo_temp=Kp*error/10-100;
     }
     else if(Cross_Flag==3)
     {
@@ -1226,10 +1226,10 @@ void Search_Line(void)
     {      
         if(ring_num>5)
         {
-            //if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100)
-            //{
+            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100)
+            {
               Cross_Flag=3;        
-            //}
+            }
         }
     }
 
