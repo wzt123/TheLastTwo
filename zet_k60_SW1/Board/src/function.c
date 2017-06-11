@@ -167,10 +167,15 @@ void Motor_Out(void)
              stop();
              return;
            }
+           else if(Cross_Flag==3)
+           {
+             stop();
+             return;
+           }
            else
            {
-             speed_goal_R=4000;
-             speed_goal_L=4000;
+             speed_goal_R=3700;
+             speed_goal_L=3700;
            }
            speed_err_R=speed_goal_R-speed_get_R*10;
            speed_err_L = speed_goal_L-speed_get_L*10;
@@ -180,7 +185,7 @@ void Motor_Out(void)
            speed_PWM_L=6100+speed_increment_L;
            
          }
-         else if(stop_time<5)
+         else if(stop_time<8)
          {
            stop_time++;
          }
@@ -264,7 +269,7 @@ void stop_Car(void)
   gpio_set(PTB16,0);//驱动反向使能
   ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
-  ftm_pwm_duty(FTM0, FTM_CH3, 8508);
+  ftm_pwm_duty(FTM0, FTM_CH3, 8561);
   DELAY_MS(200);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1

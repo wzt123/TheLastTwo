@@ -201,15 +201,15 @@ void Calculate_Slope()
       break;}
     }
   }
-  for(Row_Ptr=All_White-White_Cnt+2;Row_Ptr>=StopRow;Row_Ptr--)
+  for(Row_Ptr=All_White-White_Cnt+2;Row_Ptr>=StopRow&&Row_Ptr>15;Row_Ptr--)
   {
     if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr+1]==3&&Left_Flag[Row_Ptr+2]==3)
       Left_stop=Row_Ptr-4;
     if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr+1]==3&&Right_Flag[Row_Ptr+2]==3)
       Right_stop=Row_Ptr-4;
   }
-  if(Left_stop<5) Left_stop=10;
-  if(Right_stop<5) Right_stop=10;
+  if(Left_stop<10) Left_stop=10;
+  if(Right_stop<10) Right_stop=10;
   Left_Slope=1.0*(Road_Left[Left_stop]-Road_Left[Left_start])/(Left_start-Left_stop);
   Right_Slope=1.0*(Road_Right[Right_start]-Road_Right[Right_stop])/(Right_start-Right_stop);
   j=0;
@@ -274,13 +274,13 @@ void Servo_control(void)
     errorerror = error2-error1;
     if(Cross_Flag==2)
     {
-      Kp =86;
-      Servo_temp=Kp*error/10+100;
+      Kp =80;
+      Servo_temp=Kp*error/10;
     }
     else if(Cross_Flag==4)
     {
-      Kp =86;
-      Servo_temp=Kp*error/10-100;
+      Kp =80;
+      Servo_temp=Kp*error/10;
     }
     else if(Cross_Flag==3)
     {
@@ -296,7 +296,7 @@ void Servo_control(void)
     else if(Cross_Flag==1)
     {
       Kp =66;
-      Kd = 30;
+      Kd = 15;
       Servo_temp=Kp*error/10+Kd*errorerror/10;
     }
     else
@@ -319,12 +319,12 @@ void Servo_control(void)
       if(error<0)
       {
         Kp = 35;
-        Kd = 5;
+        Kd = 3;
       }
       else
       {
         Kp = 35;
-        Kd = 5;
+        Kd = 3;
       }
     }
     else if(All_Black<16) ////直道入弯道或者270度时提前转角
@@ -341,17 +341,31 @@ void Servo_control(void)
       }
       
     }
+    else if(All_Black<18) ////弯道入直道的时候
+    {
+      if(error<0)
+      {
+        Kp = 35;
+        Kd = 13;
+      }
+      else
+      {
+        Kp = 35;
+        Kd=13;
+      }
+      
+    }
     else if(All_Black<22) ////弯道入直道的时候
     {
       if(error<0)
       {
         Kp = 35;
-        Kd = 18;
+        Kd = 19;
       }
       else
       {
         Kp = 35;
-        Kd=18;
+        Kd=19;
       }
       
     }
@@ -725,6 +739,11 @@ void Find_Middle()
       Road_Center[Row_Ptr] = Road_Center[Row_Ptr+1];
     }
     
+    if(Road_Center[Row_Ptr]>=77||Road_Center[Row_Ptr]<=3)
+    {  
+    All_Black=Row_Ptr;
+    Cross_Flag=0;
+    }
     if(Road_Center[Row_Ptr]<0) Road_Center[Row_Ptr]=0;
     if(Road_Center[Row_Ptr]>79) Road_Center[Row_Ptr]=79;
   }//结束for
