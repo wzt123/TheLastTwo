@@ -169,9 +169,9 @@ void Calculate_Slope()
 {
   uint8 i=0,j=0;
   uint8 Cross_Flag_Last=0;
-  uint8 Left_stop=1;
+  uint8 Left_stop=20;
   uint8 Left_start=59;
-  uint8 Right_stop=1;  
+  uint8 Right_stop=20;  
   uint8 Right_start=59;
   float Left_Slope=0.0;
   float Right_Slope=0.0;
@@ -201,15 +201,15 @@ void Calculate_Slope()
       break;}
     }
   }
-  for(Row_Ptr=All_White-White_Cnt+2;Row_Ptr>=StopRow&&Row_Ptr>15;Row_Ptr--)
+  for(Row_Ptr=All_White-White_Cnt+2;Row_Ptr>=StopRow&&Row_Ptr>20;Row_Ptr--)
   {
     if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr+1]==3&&Left_Flag[Row_Ptr+2]==3)
       Left_stop=Row_Ptr-4;
     if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr+1]==3&&Right_Flag[Row_Ptr+2]==3)
       Right_stop=Row_Ptr-4;
   }
-  if(Left_stop<10) Left_stop=10;
-  if(Right_stop<10) Right_stop=10;
+  if(Left_stop<20) Left_stop=20;
+  if(Right_stop<20) Right_stop=20;
   Left_Slope=1.0*(Road_Left[Left_stop]-Road_Left[Left_start])/(Left_start-Left_stop);
   Right_Slope=1.0*(Road_Right[Right_start]-Road_Right[Right_stop])/(Right_start-Right_stop);
   j=0;
@@ -379,7 +379,7 @@ void Servo_control(void)
       else
       {
         Kp=40;
-        Kd =25;
+        Kd =23;
       }
     }
     
@@ -741,8 +741,7 @@ void Find_Middle()
     
     if(Road_Center[Row_Ptr]>=77||Road_Center[Row_Ptr]<=3)
     {  
-    All_Black=Row_Ptr;
-    Cross_Flag=0;
+        All_Black=Row_Ptr;
     }
     if(Road_Center[Row_Ptr]<0) Road_Center[Row_Ptr]=0;
     if(Road_Center[Row_Ptr]>79) Road_Center[Row_Ptr]=79;

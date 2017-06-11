@@ -185,7 +185,7 @@ void  main(void)
     }    
     pit_close(PIT1);
     
-    OLED_Print_Num1(88, 6, Servo_temp);
+    OLED_Print_Num1(88, 6, Cross_Flag);
     
     //OLED_Print_Num1(88, 6, nrf_data);
   }
