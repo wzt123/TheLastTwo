@@ -24,6 +24,7 @@ uint16 var;
 uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
 uint32 Distance = 2500;
+uint8 stop_time = 0;
 uint16 send_data[3][8] = { { 0 }, { 0 }, { 0 } };
 /*uint8 Edge_R[3]= {0};
 uint8 Edge_L[3]= {0};   
@@ -60,7 +61,7 @@ void PIT0_IRQHandler(void)
 
 void Init_All(void)
 {
-  Car=2;
+  Car=1;
   Motor_Init();
   OLED_Init();
   ov7725_eagle_init(imgbuff);
@@ -262,8 +263,8 @@ void stop_Car(void)
   gpio_set(PTC2,1);//驱动反向使能
   gpio_set(PTB17,1);//驱动反向使能
   gpio_set(PTB16,0);//驱动反向使能
-  ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
-  ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
+  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
   ftm_pwm_duty(FTM0, FTM_CH3, 8508);
   DELAY_MS(200);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2

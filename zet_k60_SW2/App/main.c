@@ -148,9 +148,11 @@ void  main(void)
     {      
       stop_Car();
     }
-    
-    //if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3&&stop_Flag!=1)
-      //stop_Car();
+    /*if(Stop_Flag==1&&sum_time>2000)
+    {
+      //if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3&&stop_Flag!=1)
+        //stop_Car();
+    }*/
     ///定时停车，测试用
     //sum_time +=time1; 
     /*if(sum_time>5000&&stop_Flag!=1)

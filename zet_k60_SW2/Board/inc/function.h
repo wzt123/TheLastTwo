@@ -25,6 +25,6 @@ extern int16 OutData[4];
 extern uint16 speed_get_R;
 extern uint16 speed_get_L;
 extern uint16 send_data[3][8];
-
+extern uint8 stop_time;
 ////
 #endif
