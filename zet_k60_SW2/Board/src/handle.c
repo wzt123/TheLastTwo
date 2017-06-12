@@ -1111,19 +1111,19 @@ void Search_Line(void)
     {      
       if(ring_flag==0&&img[Row_Ptr][Col_Ptr]==255&&img[Row_Ptr][Col_Ptr+1]==255&&img[Row_Ptr][Col_Ptr+2]==0&&img[Row_Ptr][Col_Ptr+3]==0) 
       {
-        ring_flag=1;
+        ring_flag=1;///找到黑块左跳变点
         if(Col_Ptr+2<Ring_width_1)
-          Ring_width_1 = Col_Ptr+2;
-        a=Col_Ptr+2;
+          Ring_width_1 = Col_Ptr+2;///黑块左边最小的列
+        a=Col_Ptr+2;///左边界
 
       }
       else if(ring_flag==1&&img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==255&&img[Row_Ptr][Col_Ptr+3]==255) 
       {
-        b=Col_Ptr;
-        ring_flag=2;
-        ring_num++;
+        b=Col_Ptr;//右边界
+        ring_flag=2;//找到黑块右跳变点
+        ring_num++;//黑块行数加1
         if(Col_Ptr+1>Ring_width_2)
-          Ring_width_2 = Col_Ptr+1;
+          Ring_width_2 = Col_Ptr+1;//黑块右边最大的的列
         if(ring_num==1) Ring_First_Row=Row_Ptr;
         break;
       }
@@ -1133,9 +1133,6 @@ void Search_Line(void)
       {
         Ring_width = Ring_width_2-Ring_width_1;
       }
-    //if(ring_flag!=2) ring_num=0;
-    //a_f=0;b_f=0;//c_f=0;
-    
     for(Col_Ptr=Ring_width_1;Col_Ptr<Ring_width_2; Col_Ptr++)
     {
       if(img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==0)
@@ -1143,13 +1140,13 @@ void Search_Line(void)
         break;
       }
     }
-    if(abs(Ring_width_2-Col_Ptr)<3)
+    if(abs(Ring_width_2-Col_Ptr)<3)////从黑块的左边往右找，如果Col_Ptr接近了黑块最右边，说明圆环上面有白的，判断为圆环
     {      
         if(ring_num>5)
         {
-            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100)
+            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
             {
-              Cross_Flag=3;        
+              Cross_Flag=3;/////标记为圆环        
             }
         }
     }

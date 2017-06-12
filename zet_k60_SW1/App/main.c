@@ -67,15 +67,8 @@ void  main(void)
   
   EnableInterrupts;
   
-  //set_vector_handler(PORTC_PORTD_VECTORn ,PORTC_PORTD_IRQHandler);
-  
   set_vector_handler(PORTA_VECTORn , PORTA_IRQHandler);  
   set_vector_handler(DMA0_VECTORn , DMA0_IRQHandler);    
-  //set_vector_handler(PIT1_VECTORn , PIT1_IRQHandler);    
-  // enable_irq (PIT1_IRQn);
-  
-  //设置 PORTE 的中断服务函数为 PORTE_VECTORn
-  //enable_irq(PORTC_PORTD_IRQn);
   int a=nrf_link_check();
   uint8 IR1=0,IR2=0;
   while(a)
@@ -134,7 +127,7 @@ void  main(void)
     IR2_last = IR2;
     IR2 = gpio_get(PTE9);///隔一下再读另一边的红外对管
         
-    if(stop_Flag !=1)
+    if(stop_Flag !=1&&ChaoChe_stop!=1)//超车的时候电机不输出
     {  
       Motor_Out();
     }    
@@ -148,9 +141,18 @@ void  main(void)
     {      
       stop_Car();
     }
-    
-    //if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3&&stop_Flag!=1)
-      //stop_Car();
+     
+    /*if(Stop_Flag==1&&sum_time>2000)
+    {
+      if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3)
+        ChaoChe_stop=1;
+    }
+      if(ChaoChe_stop==1)
+      {
+        ChaoChe_stop_time=0;
+        Chaoche_stop();
+      }
+    */
     ///蓝牙传送编码器的值
     send_data[0] = speed_get_L;
     send_data[1] = speed_get_R;
@@ -173,7 +175,7 @@ void  main(void)
     OLED_Print_Num1(88, 2, error);
     OLED_Print_Num1(88, 3, errorerror);
     OLED_Print_Num1(88, 4, ABDistance);
-    OLED_Print_Num1(88, 5, Out_Left);
+    OLED_Print_Num1(88, 5, Ring_First_Row);
 
     //wzt_bluetooth(); 
     

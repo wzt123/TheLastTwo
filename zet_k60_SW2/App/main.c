@@ -181,7 +181,6 @@ void  main(void)
     OLED_Print_Num1(88, 5, Kp*1000+Kd);
     //wzt_bluetooth(); 
     
-    
     time1 = pit_time_get(PIT1)*100/(9*1024*1024);
     if(Stop_Flag==1)
     {

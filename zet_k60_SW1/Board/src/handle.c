@@ -28,7 +28,7 @@ uint8 White_cnt=0;//全白行计数_连续的
 uint8 White_Cnt=0;//全白行计数_所有的
 uint8 White_Ren=0;
 
-uint16 Servo_value=8561;//舵机输出pwm值
+uint16 Servo_value=8513;//舵机输出pwm值
 
 
 uint8 Hinder_Start=0;
@@ -38,9 +38,9 @@ uint8 Cross_Flag=0;
 uint8 Change_Flag;
 uint8 CrossRow=0;
 
-uint16 Servomiddle=8561;
-uint32 Servo_max=8705;
-uint32 Servo_min=8385;
+uint16 Servomiddle=8513;
+uint32 Servo_max=8665;
+uint32 Servo_min=8340;
 float CenterLineSlope=0;
 
 int16 error=0;
@@ -169,9 +169,9 @@ void Calculate_Slope()
 {
   uint8 i=0,j=0;
   uint8 Cross_Flag_Last=0;
-  uint8 Left_stop=1;
+  uint8 Left_stop=20;
   uint8 Left_start=59;
-  uint8 Right_stop=1;  
+  uint8 Right_stop=20;  
   uint8 Right_start=59;
   float Left_Slope=0.0;
   float Right_Slope=0.0;
@@ -201,15 +201,15 @@ void Calculate_Slope()
       break;}
     }
   }
-  for(Row_Ptr=All_White-White_Cnt+2;Row_Ptr>=StopRow;Row_Ptr--)
+  for(Row_Ptr=All_White-White_Cnt+2;Row_Ptr>=StopRow&&Row_Ptr>20;Row_Ptr--)
   {
     if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr+1]==3&&Left_Flag[Row_Ptr+2]==3)
       Left_stop=Row_Ptr-4;
     if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr+1]==3&&Right_Flag[Row_Ptr+2]==3)
       Right_stop=Row_Ptr-4;
   }
-  if(Left_stop<5) Left_stop=10;
-  if(Right_stop<5) Right_stop=10;
+  if(Left_stop<20) Left_stop=20;
+  if(Right_stop<20) Right_stop=20;
   Left_Slope=1.0*(Road_Left[Left_stop]-Road_Left[Left_start])/(Left_start-Left_stop);
   Right_Slope=1.0*(Road_Right[Right_start]-Road_Right[Right_stop])/(Right_start-Right_stop);
   j=0;
@@ -275,12 +275,12 @@ void Servo_control(void)
     if(Cross_Flag==2)
     {
       Kp =86;
-      Servo_temp=Kp*error/10+100;
+      Servo_temp=Kp*error/10;
     }
     else if(Cross_Flag==4)
     {
       Kp =86;
-      Servo_temp=Kp*error/10-100;
+      Servo_temp=Kp*error/10;
     }
     else if(Cross_Flag==3)
     {
@@ -720,7 +720,7 @@ void Find_Middle()
    
     
     ////排除中线跳变
-    if(Road_Center[Row_Ptr]-Road_Center[Row_Ptr+1]>13&&Cross_Flag==0&&error*errorerror<0)
+    if(Road_Center[Row_Ptr]-Road_Center[Row_Ptr+1]>30&&Cross_Flag==0&&error*errorerror<0)
     {
       Road_Center[Row_Ptr] = Road_Center[Row_Ptr+1];
     }
@@ -912,7 +912,7 @@ void Search_Line(void)
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
     //从左到右检测起跑线
-    if(Row_Ptr>40)
+    if(Row_Ptr>25)
     {
       
       start_line_num[Row_Ptr] = 0;
@@ -1226,7 +1226,7 @@ void Search_Line(void)
     {      
         if(ring_num>5)
         {
-            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100)
+            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100&&Ring_First_Row>25)
             {
               Cross_Flag=3;        
             }
