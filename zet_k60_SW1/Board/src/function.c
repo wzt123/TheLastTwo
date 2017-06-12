@@ -320,6 +320,7 @@ void Chaoche_stop(){
     gpio_set(PTC2,0);//驱动正向
     gpio_set(PTB17,0);//驱动反向
     gpio_set(PTB16,1);//驱动正向
+    ChaoChe_stop=0;
     return;
   }
 }

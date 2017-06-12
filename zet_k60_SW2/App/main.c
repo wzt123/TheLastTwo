@@ -67,18 +67,11 @@ void  main(void)
   
   EnableInterrupts;
   
-  //set_vector_handler(PORTC_PORTD_VECTORn ,PORTC_PORTD_IRQHandler);
-  
   set_vector_handler(PORTA_VECTORn , PORTA_IRQHandler);  
   set_vector_handler(DMA0_VECTORn , DMA0_IRQHandler);    
-  //set_vector_handler(PIT1_VECTORn , PIT1_IRQHandler);    
-  // enable_irq (PIT1_IRQn);
-  
-  //设置 PORTE 的中断服务函数为 PORTE_VECTORn
-  //enable_irq(PORTC_PORTD_IRQn);
   int a=nrf_link_check();
   uint8 IR1=0,IR2=0;
-  while(1)
+  while(a)
   {
     pit_time_start(PIT1);
     camera_get_img();                                   //摄像头获取图像
@@ -134,29 +127,41 @@ void  main(void)
     IR2_last = IR2;
     IR2 = gpio_get(PTE9);///隔一下再读另一边的红外对管
         
-    if(stop_Flag !=1)
+    if(stop_Flag !=1&&ChaoChe_stop!=1)//超车的时候电机不输出
     {  
       Motor_Out();
     }    
-    
-    if(stop_Flag==1)
-    {
-      race[3]=1;///告诉后车遇到圆环且停好车了，准备超车，
-    }
-    
     if(Stop_Flag==2&&stop_Flag!=1)
     {      
       stop_Car();
     }
-    /*if(Stop_Flag==1&&sum_time>2000)
+     
+    if(Stop_Flag==1&&sum_time>2000)
     {
-      //if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3&&stop_Flag!=1)
-        //stop_Car();
-    }*/
-    ///定时停车，测试用
-    //sum_time +=time1; 
-    /*if(sum_time>5000&&stop_Flag!=1)
-      stop_Car();*/
+      if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3)
+      {
+        ChaoChe_stop=1;
+        ChaoChe_stop_time=0;
+        gpio_set(PTE25,0);//停车，关闭前车超声波
+        gpio_set(PTE24,0);
+        race[0]=1;//race[0]通讯位，告诉后车，准备超车，让前车打开超声波
+      }
+    }
+    if(ChaoChe_stop==1)
+    {
+      Chaoche_stop();
+    }
+    
+    if(ChaoChe_stop==1&&ABDistance>30)//超车后的后车（以前的前车）检测到超声波，
+    {
+      ChaoChe_stop=0;
+      Car=2;
+      race[1]=1;//race[1]通讯位，告诉前车，超车成功
+    }
+    
+    
+    
+    
     ///蓝牙传送编码器的值
     send_data[0] = speed_get_L;
     send_data[1] = speed_get_R;
@@ -165,21 +170,32 @@ void  main(void)
     
     nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
     nrf_data = buff[0];
-    ////////////////后车检测到超声波信号，发来一个1，表明超车成功
-    /*if(buff[1]==1)
+    ////////////////后车检测到超声波信号，buff[1]发来一个1，表明超车成功
+    if(buff[1]==1)
     {
-    Car=1;
-    stop_Flag=0;
-  }*/
+      Car=1;
+      race[0]=0;
+      race[1]=0;
+    }
+    if(buff[0]==1)//前车告诉后车已经停车了buff[0]发来一个1
+    {
+      gpio_set(PTE25,1);//后车开启超声波
+      gpio_set(PTE24,1);
+    }
+    
+    
     
     Overtake_judge();
     dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
+
     OLED_Print_Num1(88, 1, All_Black);
-    OLED_Print_Num1(88, 2, Cross_Flag);
-    OLED_Print_Num1(88, 3, error);
+    OLED_Print_Num1(88, 2, error);
+    OLED_Print_Num1(88, 3, errorerror);
     OLED_Print_Num1(88, 4, ABDistance);
-    OLED_Print_Num1(88, 5, Kp*1000+Kd);
+    OLED_Print_Num1(88, 5, Ring_First_Row);
+
     //wzt_bluetooth(); 
+    
     
     time1 = pit_time_get(PIT1)*100/(9*1024*1024);
     if(Stop_Flag==1)
@@ -188,7 +204,7 @@ void  main(void)
     }    
     pit_close(PIT1);
     
-    OLED_Print_Num1(88, 6, Servo_temp);
+    OLED_Print_Num1(88, 6, Cross_Flag);
     
     //OLED_Print_Num1(88, 6, nrf_data);
   }

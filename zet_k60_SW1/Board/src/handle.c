@@ -433,18 +433,15 @@ void Overtake_judge()
 {
   if(Car==1)
   {
-    if(Cross_Flag==3)
-    {
-        race[0]=1;
-        nrf_tx(race,4);
-        while(nrf_tx_state() == NRF_TXING);//等待发送完成
-        race[0]=0;
-        //Car=2;
-    }
+    nrf_tx(race,4);
+    while(nrf_tx_state() == NRF_TXING);//等待发送完成 
+    race[0]=0;
   }
-  else if(Car==2) 
+  else if(Car==2)
   {
-    
+    nrf_tx(race,4);
+    while(nrf_tx_state() == NRF_TXING);//等待发送完成
+    race[1]=0;
   }
 }
 

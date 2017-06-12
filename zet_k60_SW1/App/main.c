@@ -131,28 +131,36 @@ void  main(void)
     {  
       Motor_Out();
     }    
-    
-    if(stop_Flag==1)
-    {
-      race[3]=1;///告诉后车遇到圆环且停好车了，准备超车，
-    }
-    
     if(Stop_Flag==2&&stop_Flag!=1)
     {      
       stop_Car();
     }
      
-    /*if(Stop_Flag==1&&sum_time>2000)
+    if(Stop_Flag==1&&sum_time>2000)
     {
       if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3)
-        ChaoChe_stop=1;
-    }
-      if(ChaoChe_stop==1)
       {
+        ChaoChe_stop=1;
         ChaoChe_stop_time=0;
-        Chaoche_stop();
+        gpio_set(PTE25,0);//停车，关闭前车超声波
+        gpio_set(PTE24,0);
+        race[0]=1;//race[0]通讯位，告诉后车，准备超车，让前车打开超声波
       }
-    */
+    }
+    if(ChaoChe_stop==1)
+    {
+      Chaoche_stop();
+    }
+    
+    if(ChaoChe_stop==1&&ABDistance>30)//超车后的后车（以前的前车）检测到超声波，
+    {
+      ChaoChe_stop=0;
+      Car=2;
+      race[1]=1;//race[1]通讯位，告诉前车，超车成功
+    }
+    
+    
+    
     ///蓝牙传送编码器的值
     send_data[0] = speed_get_L;
     send_data[1] = speed_get_R;
@@ -161,12 +169,19 @@ void  main(void)
     
     nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
     nrf_data = buff[0];
-    ////////////////后车检测到超声波信号，发来一个1，表明超车成功
-    /*if(buff[1]==1)
+    ////////////////后车检测到超声波信号，buff[1]发来一个1，表明超车成功
+    if(buff[1]==1)
     {
-    Car=1;
-    stop_Flag=0;
-  }*/
+      Car=1;
+      race[0]=0;
+      race[1]=0;
+    }
+    if(buff[0]==1)//前车告诉后车已经停车了buff[0]发来一个1
+    {
+      gpio_set(PTE25,1);//后车开启超声波
+      gpio_set(PTE24,1);
+    }
+    
     
     Overtake_judge();
     dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
