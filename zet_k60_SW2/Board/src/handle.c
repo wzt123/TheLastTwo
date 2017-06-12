@@ -288,11 +288,11 @@ void Servo_control(void)
     {
       if(Car == 1)
       {
-          Servo_temp=-Ring_First_Row*55/10;
+          Servo_temp=Servo_temp-Ring_First_Row*55/10;
       }
       else
       {
-          Servo_temp=Ring_First_Row*55/10;
+          Servo_temp=Servo_temp+Ring_First_Row*55/10;
       }
     }
     else if(Cross_Flag==1)
@@ -316,7 +316,7 @@ void Servo_control(void)
           Kd = 0;
         }
       }
-      else if(All_Black<6)
+      /*else if(All_Black<6)
       {
         if(error<0)
         {
@@ -328,57 +328,57 @@ void Servo_control(void)
           Kp = 35;
           Kd = 15;
         }
-      }
+      }*/
       else if(All_Black<10)
       {
         if(error<0)
         {
           Kp = 35;
-          Kd = 20;
+          Kd = 5;
         }
         else
         {
           Kp = 35;
-          Kd = 20;
-        }
-      }
-      else if(All_Black<14)
-      {
-        if(error<0)
-        {
-          Kp = 40;
-          Kd = 20;
-        }
-        else
-        {
-          Kp = 40;
-          Kd=20;
+          Kd = 5;
         }
       }
       else if(All_Black<17)
       {
         if(error<0)
         {
-          Kp = 40;
-          Kd = 25;
+          Kp = 35;
+          Kd = 11;
         }
         else
         {
-          Kp = 40;
-          Kd=25;
+          Kp = 35;
+          Kd=11;
+        }
+      }
+      else if(All_Black<22)
+      {
+        if(error<0)
+        {
+          Kp = 45;
+          Kd = 19;
+        }
+        else
+        {
+          Kp = 45;
+          Kd=19;
         }
       }
       else if(All_Black<25)
       {
         if(error<0)
         {
-          Kp=48;
-          Kd=28;
+          Kp=50;
+          Kd=20;
         }
         else
         {
-          Kp=48;
-          Kd =28;
+          Kp=50;
+          Kd =20;
         }
       }
       
@@ -449,13 +449,15 @@ void Overtake_judge()
   {
     nrf_tx(race,4);
     while(nrf_tx_state() == NRF_TXING);//等待发送完成 
-    race[0]=0;
+    
+    race[1]=0;
   }
   else if(Car==2)
   {
     nrf_tx(race,4);
     while(nrf_tx_state() == NRF_TXING);//等待发送完成
-    race[1]=0;
+    race[0]=0;
+    
   }
 }
 

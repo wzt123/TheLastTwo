@@ -18,7 +18,7 @@ uint32 GetSys100UsTime(void);
 uint32 GetSys10UsTime(void);
 extern void EXTI_SET(PTXn_e ptxn,uint8 IRQC);
 extern void PORTE_IRQHandler(void);
-
+extern uint32 ABDistance_last;
 
 
 #endif

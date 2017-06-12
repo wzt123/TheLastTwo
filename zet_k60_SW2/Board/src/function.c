@@ -62,7 +62,7 @@ void PIT0_IRQHandler(void)
 
 void Init_All(void)
 {
-  Car=1;
+  Car=2;
   Motor_Init();
   OLED_Init();
   ov7725_eagle_init(imgbuff);
@@ -132,7 +132,7 @@ void Motor_Out(void)
   speed_PWM -=50;
 }
 }*/
-  uint8 speed_Ki=19;
+  uint8 speed_Ki=15;
   float speed_Kd=0.0;
   float speed_Kp=0.0;
   /*if(Overtake2==1||buff[1]==2)
@@ -196,7 +196,7 @@ void Motor_Out(void)
       speed_PWM_L=6100+speed_increment_L;
       
     }
-    else if(stop_time<8)
+    else if(stop_time<3)
     {
       stop_time++;
     }
@@ -217,13 +217,13 @@ void Motor_Out(void)
   speed_PWM_L = speed_goal_L+100;
 }
 }*/
-  if(speed_get_L<20||speed_get_R<20)
+  if(speed_get_L<50||speed_get_R<50)
   {
-    if(speed_get_L<20)
+    if(speed_get_L<50)
     { 
       speed_PWM_L = 0;
     }
-    if(speed_get_R<20)
+    if(speed_get_R<50)
     {
       speed_PWM_R = 0;
     }
@@ -290,8 +290,8 @@ void stop_Car(void)
   gpio_set(PTC2,1);//驱动反向使能
   gpio_set(PTB17,1);//驱动反向使能
   gpio_set(PTB16,0);//驱动反向使能
-  ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
-  ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
+  ftm_pwm_duty(FTM2,FTM_CH0,7800);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,7800);//B1
   ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
   DELAY_MS(200);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
@@ -304,15 +304,19 @@ void stop_Car(void)
 *超车停车
 */
 void Chaoche_stop(){
-  if(speed_get_L>10||speed_get_R>10)
+  if(ChaoChe_stop_time<7)
   {
-    gpio_set(PTC3,0);//驱动反向使能
-    gpio_set(PTC2,1);//驱动反向使能
-    gpio_set(PTB17,1);//驱动反向使能
-    gpio_set(PTB16,0);//驱动反向使能
-    ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
-    ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
-    ChaoChe_stop_time++;
+    if(speed_get_L>10||speed_get_R>10)
+    {
+      
+      gpio_set(PTC3,0);//驱动反向使能
+      gpio_set(PTC2,1);//驱动反向使能
+      gpio_set(PTB17,1);//驱动反向使能
+      gpio_set(PTB16,0);//驱动反向使能
+      ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
+      ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
+      ChaoChe_stop_time++;
+    }
   }
   else
   {
