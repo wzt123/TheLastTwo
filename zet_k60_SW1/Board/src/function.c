@@ -54,8 +54,8 @@ void PIT0_IRQHandler(void)
   // Search_Line();
   //Find_Middle();
   //Servo_control();
-    //zf_oled( val);
-    PIT_Flag_Clear(PIT0);       //清中断标志位
+  //zf_oled( val);
+  PIT_Flag_Clear(PIT0);       //清中断标志位
 }
 
 
@@ -78,8 +78,8 @@ void Init_All(void)
   enable_irq(PORTC_IRQn);
   enable_irq (PIT0_IRQn);                                //使能PIT0中断
 }
-  
-  
+
+
 /*
 *       电机舵机初始化
 *
@@ -89,7 +89,8 @@ void Motor_Init(void)
     ftm_pwm_init(FTM2,FTM_CH1,15000,0);//驱动B1FTM初始化
     gpio_init(PTC3,GPO,0);//驱动正向使能初始化
     gpio_init(PTC2,GPO,0);//驱动反向使能初始化
-    
+    gpio_set(PTC3,1);
+    gpio_set(PTC2,0);
     
     ftm_pwm_init(FTM2,FTM_CH0,15000,0);//驱动B2FTM初始化
     gpio_init(PTB17,GPO,0);//驱动正向使能初始化
@@ -104,7 +105,7 @@ void Motor_Init(void)
     
 }
 
-  
+
 /*
 *       电机PID输出
 *
@@ -330,10 +331,10 @@ void Chaoche_stop(){
 */
 void xx_bluetooth()
 {
-    uart_init(UART5,9600);     //初始化串口(UART3 是工程里配置为printf函数输出端口，故已经进行初始化)
-    //uart_putstr   (UART5 ,"\n\n\n接收中断测试：");           //发送字符串
-    set_vector_handler(UART5_RX_TX_VECTORn,uart5_handler);   // 设置中断服务函数到中断向量表里
-    uart_rx_irq_en (UART5);                                 //开串口接收中断
+  uart_init(UART5,9600);     //初始化串口(UART3 是工程里配置为printf函数输出端口，故已经进行初始化)
+  //uart_putstr   (UART5 ,"\n\n\n接收中断测试：");           //发送字符串
+  set_vector_handler(UART5_RX_TX_VECTORn,uart5_handler);   // 设置中断服务函数到中断向量表里
+  uart_rx_irq_en (UART5);                                 //开串口接收中断
 }
 
 /*
@@ -341,15 +342,15 @@ void xx_bluetooth()
 */
 void uart5_handler(void)
 {
-    char ch;
-
-    if(uart_query    (UART5) == 1)   //接收数据寄存器满
-    {
-        //用户需要处理接收数据
-        uart_getchar   (UART5, &ch);                    //无限等待接受1个字节
-        uart_putchar   (UART5 , ch);                    //发送字符串
-        uart_putstr   (UART5 ,"\n\n\n接收中断测试：");
-    }
+  char ch;
+  
+  if(uart_query    (UART5) == 1)   //接收数据寄存器满
+  {
+    //用户需要处理接收数据
+    uart_getchar   (UART5, &ch);                    //无限等待接受1个字节
+    uart_putchar   (UART5 , ch);                    //发送字符串
+    uart_putstr   (UART5 ,"\n\n\n接收中断测试：");
+  }
 }
 
 
@@ -358,18 +359,18 @@ void uart5_handler(void)
 */
 void PORTC_IRQHandler()
 {
-    uint8  n;    //引脚号
-    uint32 flag;
-
-    flag = PORTC_ISFR;
-    PORTC_ISFR  = ~0;                                   //清中断标志位
-
-    n = 0;
-    if(flag & (1 << n))                                 //PTC0触发中断
-    {
-        nrf_handler();
-    }
-    
+  uint8  n;    //引脚号
+  uint32 flag;
+  
+  flag = PORTC_ISFR;
+  PORTC_ISFR  = ~0;                                   //清中断标志位
+  
+  n = 0;
+  if(flag & (1 << n))                                 //PTC0触发中断
+  {
+    nrf_handler();
+  }
+  
 }
 
 
@@ -378,12 +379,12 @@ void PORTC_IRQHandler()
 */
 void ChaoShenBo_PitInit(PITn_e pitn)
 {
-    SIM_SCGC6   |= SIM_SCGC6_PIT_MASK;//module clock  
-    PIT_MCR     &= ~PIT_MCR_MDIS_MASK;//pit module enable 
-    PIT_LDVAL(pitn)   = 0xFFFFFFFF;          // 
-    PIT_Flag_Clear(pitn);       //清中断标志位
- //   PIT_TCTRL0  |= PIT_TCTRL_TIE_MASK;//Enable interrupt
- //   PIT_TCTRL0  |= PIT_TCTRL_TEN_MASK;//enable the timer,run
+  SIM_SCGC6   |= SIM_SCGC6_PIT_MASK;//module clock  
+  PIT_MCR     &= ~PIT_MCR_MDIS_MASK;//pit module enable 
+  PIT_LDVAL(pitn)   = 0xFFFFFFFF;          // 
+  PIT_Flag_Clear(pitn);       //清中断标志位
+  //   PIT_TCTRL0  |= PIT_TCTRL_TIE_MASK;//Enable interrupt
+  //   PIT_TCTRL0  |= PIT_TCTRL_TEN_MASK;//enable the timer,run
 }
 /*
 * 超声波初始化
@@ -397,7 +398,7 @@ void chaoShenBo_init(void)
   {
     gpio_init(PTE25,GPO,1);//前车发送
     gpio_init(PTE24,GPO,1);//前车发送
-     
+    
   }
   else
   {

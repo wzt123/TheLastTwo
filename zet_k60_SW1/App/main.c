@@ -186,11 +186,12 @@ void  main(void)
     Overtake_judge();
     dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
 
-    OLED_Print_Num1(88, 1, Cross_Cnt);
+    OLED_Print_Num1(88, 1, All_Black);
     OLED_Print_Num1(88, 2, error);
     OLED_Print_Num1(88, 3, errorerror);
     OLED_Print_Num1(88, 4, ABDistance);
     OLED_Print_Num1(88, 5, Ring_First_Row);
+
 
     //wzt_bluetooth(); 
     
