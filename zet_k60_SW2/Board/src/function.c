@@ -293,7 +293,7 @@ void stop_Car(void)
   ftm_pwm_duty(FTM2,FTM_CH0,7800);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,7800);//B1
   ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
-  DELAY_MS(200);
+  DELAY_MS(130);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
   stop_Flag  = 1;

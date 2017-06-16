@@ -28,7 +28,7 @@ uint8 White_cnt=0;//全白行计数_连续的
 uint8 White_Cnt=0;//全白行计数_所有的
 uint8 White_Ren=0;
 
-uint16 Servo_value=8513;//舵机输出pwm值
+uint16 Servo_value=8808;//舵机输出pwm值
 
 
 uint8 Hinder_Start=0;
@@ -38,9 +38,9 @@ uint8 Cross_Flag=0;
 uint8 Change_Flag;
 uint8 CrossRow=0;
 
-uint16 Servomiddle=8513;
-uint32 Servo_max=8665;
-uint32 Servo_min=8340;
+uint16 Servomiddle=8808;
+uint32 Servo_max=8970;
+uint32 Servo_min=8660;
 float CenterLineSlope=0;
 
 int16 error=0;
@@ -272,25 +272,26 @@ void Servo_control(void)
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
+    
     if(Cross_Flag==2)
     {
-      Kp =80;
-      Servo_temp=Kp*error/10;
+      Kp =86;
+      Servo_temp=Kp*error/10+100;
     }
     else if(Cross_Flag==4)
     {
-      Kp =80;
-      Servo_temp=Kp*error/10;
+      Kp =86;
+      Servo_temp=Kp*error/10-100;
     }
     else if(Cross_Flag==3)
     {
       if(Car == 1)
       {
-          Servo_temp=-Ring_First_Row*55/10;
+          Servo_temp=-Ring_First_Row*100/10-30;
       }
       else
       {
-          Servo_temp=Ring_First_Row*55/10;
+          Servo_temp=Ring_First_Row*100/10+30;
       }
     }
     else if(Cross_Flag==1)
@@ -306,12 +307,12 @@ void Servo_control(void)
       if(error<0)
       {
         Kp = 45;
-        Kd = 15;
+        Kd = 0;
       }
       else
       {
         Kp = 45;
-        Kd = 15;
+        Kd = 0;
       }
     }
     else if(All_Black<12)
@@ -327,7 +328,7 @@ void Servo_control(void)
         Kd = 3;
       }
     }
-    else if(All_Black<16) ////直道入弯道或者270度时提前转角
+    /*else if(All_Black<16) ////直道入弯道或者270度时提前转角
     {
       if(error<0)
       {
@@ -340,18 +341,18 @@ void Servo_control(void)
         Kd=10;
       }
       
-    }
+    }*/
     else if(All_Black<18) ////弯道入直道的时候
     {
       if(error<0)
       {
-        Kp = 35;
-        Kd = 13;
+        Kp = 30;
+        Kd = 7;
       }
       else
       {
-        Kp = 35;
-        Kd=13;
+        Kp = 30;
+        Kd=7;
       }
       
     }
@@ -359,13 +360,13 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp = 35;
-        Kd = 19;
+        Kp = 45;
+        Kd = 18;
       }
       else
       {
-        Kp = 35;
-        Kd=19;
+        Kp = 45;
+        Kd=18;
       }
       
     }
@@ -373,13 +374,13 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp=40;
-        Kd=25;
+        Kp=50;
+        Kd=20;
       }
       else
       {
-        Kp=40;
-        Kd =23;
+        Kp=50;
+        Kd =20;
       }
     }
     
@@ -387,13 +388,26 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp=50;
-        Kd=25;
+        Kp=45;
+        Kd=20;
       }
       else
       {
-        Kp=50;
-        Kd =25;
+        Kp=45;
+        Kd =20;
+      }
+    }
+    else if(All_Black<36)
+    {
+      if(error<0)
+      {
+        Kp = 50;
+        Kd = 28;
+      }
+      else
+      {
+        Kp = 50;
+        Kd = 28;
       }
     }
     else if(All_Black<41)
@@ -449,13 +463,15 @@ void Overtake_judge()
   {
     nrf_tx(race,4);
     while(nrf_tx_state() == NRF_TXING);//等待发送完成 
-    race[0]=0;
+    
+    race[1]=0;
   }
   else if(Car==2)
   {
     nrf_tx(race,4);
     while(nrf_tx_state() == NRF_TXING);//等待发送完成
-    race[1]=0;
+    race[0]=0;
+    
   }
 }
 
@@ -736,10 +752,10 @@ void Find_Middle()
       Road_Center[Row_Ptr] = Road_Center[Row_Ptr+1];
     }
     
-    if(Road_Center[Row_Ptr]>=77||Road_Center[Row_Ptr]<=3)
+    /*if(Road_Center[Row_Ptr]>=77||Road_Center[Row_Ptr]<=3)
     {  
         All_Black=Row_Ptr;
-    }
+    }*/
     if(Road_Center[Row_Ptr]<0) Road_Center[Row_Ptr]=0;
     if(Road_Center[Row_Ptr]>79) Road_Center[Row_Ptr]=79;
   }//结束for
@@ -1241,7 +1257,7 @@ void Search_Line(void)
     {      
         if(ring_num>5)
         {
-            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100&&Ring_First_Row>25)
+            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100&&Ring_First_Row>20)
             {
               Cross_Flag=3;        
             }

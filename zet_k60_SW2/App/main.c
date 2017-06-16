@@ -131,10 +131,10 @@ void  main(void)
     {  
       Motor_Out();
     }    
-    if(Stop_Flag==2&&stop_Flag!=1)
+    /*if(Stop_Flag==2&&stop_Flag!=1)
     {      
       stop_Car();
-    }
+    }*/
      
     /*if(Stop_Flag==1&&sum_time>2000)
     {

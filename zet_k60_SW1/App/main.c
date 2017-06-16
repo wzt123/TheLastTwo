@@ -48,6 +48,7 @@ uint16 speed_rember_L[3] = {0};
 void  main(void)
 {
   //zet_bluetooth();
+  ABDistance=0;
   uint16 send_data[3] = {0};
   uint8 time1=0;
   sum_time = 0;
@@ -131,12 +132,12 @@ void  main(void)
     {  
       Motor_Out();
     }    
-    if(Stop_Flag==2&&stop_Flag!=1)
+    /*if(Stop_Flag==2&&stop_Flag!=1)
     {      
       stop_Car();
-    }
+    }*/
      
-    if(Stop_Flag==1&&sum_time>2000)
+    /*if(Stop_Flag==1&&sum_time>2000)
     {
       if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3)
       {
@@ -145,6 +146,7 @@ void  main(void)
         gpio_set(PTE25,0);//停车，关闭前车超声波
         gpio_set(PTE24,0);
         race[0]=1;//race[0]通讯位，告诉后车，准备超车，让前车打开超声波
+        ABDistance_last=2000;
       }
     }
     if(ChaoChe_stop==1)
@@ -157,9 +159,20 @@ void  main(void)
       ChaoChe_stop=0;
       Car=2;
       race[1]=1;//race[1]通讯位，告诉前车，超车成功
+      
+      gpio_set(PTC3,1);
+      gpio_set(PTC2,0);
+      gpio_set(PTB17,0);
+      gpio_set(PTB16,1);
+      ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2左电机
+      ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1右电机
     }
-    
-    
+    if(ABDistance>300)
+    {
+      Car=2;
+      race[1]=1;
+    }
+    */
     
     ///蓝牙传送编码器的值
     send_data[0] = speed_get_L;
@@ -168,13 +181,15 @@ void  main(void)
     //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
     
     nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
-    nrf_data = buff[0];
+    nrf_data = buff[1];
     ////////////////后车检测到超声波信号，buff[1]发来一个1，表明超车成功
     if(buff[1]==1)
     {
       Car=1;
       race[0]=0;
       race[1]=0;
+      ABDistance=0;
+      ABDistance_last=0;
     }
     if(buff[0]==1)//前车告诉后车已经停车了buff[0]发来一个1
     {
@@ -189,10 +204,10 @@ void  main(void)
     OLED_Print_Num1(88, 1, All_Black);
     OLED_Print_Num1(88, 2, error);
     OLED_Print_Num1(88, 3, errorerror);
-    OLED_Print_Num1(88, 4, ABDistance);
-    OLED_Print_Num1(88, 5, Ring_First_Row);
+    OLED_Print_Num1(88, 4, Kp);
+    OLED_Print_Num1(88, 5, Kd);
 
-
+  
     //wzt_bluetooth(); 
     
     
@@ -202,8 +217,8 @@ void  main(void)
       sum_time +=time1; 
     }    
     pit_close(PIT1);
-    
-    OLED_Print_Num1(88, 6, Cross_Flag);
+    nrf_data = race[1];
+    OLED_Print_Num1(88, 6, Servo_temp);
     
     //OLED_Print_Num1(88, 6, nrf_data);
   }
