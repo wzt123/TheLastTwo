@@ -16,7 +16,8 @@ extern int8 Road_Width[ROW_MAX];
 extern uint8 Left_Flag[ROW_MAX];
 extern uint8 Right_Flag[ROW_MAX];
 extern uint16 Road_area;
-
+extern uint8 Right_xian;
+extern uint8 Left_xian;
 extern uint8 Cross_Flag;
 extern uint8 Change_Flag;
 extern float Midd_Slope;
