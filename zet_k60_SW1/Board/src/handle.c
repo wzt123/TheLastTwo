@@ -289,12 +289,12 @@ void Servo_control(void)
     if(Cross_Flag==2)
     {
       Kp =86;
-      Servo_temp=Kp*error/10+100;
+      Servo_temp=Kp*error/10+60;
     }
     else if(Cross_Flag==4)
     {
       Kp =86;
-      Servo_temp=Kp*error/10-100;
+      Servo_temp=Kp*error/10-60;
     }
     else if(Cross_Flag==3)
     {
