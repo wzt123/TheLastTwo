@@ -238,6 +238,19 @@ void Servo_control(void)
   Servo_temp=0;
   uint8 l=0;
   // buff[0]=1;
+  ///¹ýÕÏ°­
+  if(Cross_Flag==5)
+  {
+    Servomiddle=8850;
+  }
+  else if(Cross_Flag==6)
+  {
+    Servomiddle=8750;
+  }
+  else
+  {
+    Servomiddle=8808;
+  }
   if(cross_num>15)
   {
       Lastline=cross_num;
@@ -276,12 +289,12 @@ void Servo_control(void)
     if(Cross_Flag==2)
     {
       Kp =86;
-      Servo_temp=Kp*error/10+100;
+      Servo_temp=Kp*error/10+60;
     }
     else if(Cross_Flag==4)
     {
       Kp =86;
-      Servo_temp=Kp*error/10-100;
+      Servo_temp=Kp*error/10-60;
     }
     else if(Cross_Flag==3)
     {
@@ -1272,7 +1285,21 @@ void Search_Line(void)
         {
             if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100&&Ring_First_Row>20)
             {
-              Cross_Flag=3;        
+              if(White_Cnt>3)
+              {
+                Cross_Flag=3;
+              }
+              else
+              {
+                if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
+                {
+                  Cross_Flag=5;
+                }
+                else if(Road_Right[Row_Ptr]-Ring_width_2<Ring_width_1-Road_Left[Row_Ptr])
+                {
+                  Cross_Flag=6;
+                }
+              }
             }
         }
     }

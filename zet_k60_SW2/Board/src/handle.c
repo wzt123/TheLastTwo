@@ -241,6 +241,18 @@ void Servo_control(void)
   Servo_error = 0;
   Servo_errorerror = 0;  
   // buff[0]=1;
+  if(Cross_Flag==5)
+  {
+    Servomiddle=8558;
+  }
+  else if(Cross_Flag==6)
+  {
+    Servomiddle=8458;
+  }
+  else
+  {
+    Servomiddle=8508;
+  }
   if(cross_num>15)
   {
       Lastline=cross_num;
@@ -1167,6 +1179,7 @@ void Search_Line(void)
       {
         if(Road_Left[Col_Ptr-1]>Road_Left[Col_Ptr]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr-1]==0)
         {
+
           Left_Y=0;
           break;
         }

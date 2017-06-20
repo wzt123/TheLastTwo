@@ -73,7 +73,8 @@ extern int32 error2;
 extern uint8 cross_num;
 extern uint8 white_Left_cnt;
 extern uint8 white_Right_cnt;
-
+extern uint8 Ring_width_1;
+extern uint8 Ring_width_2;
 extern uint8 Cross_Cnt;
 /////////////////////////////////////////
 //extern int32 All_Black;
