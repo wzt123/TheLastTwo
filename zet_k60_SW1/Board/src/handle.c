@@ -297,7 +297,7 @@ void Servo_control(void)
     else if(Cross_Flag==1)
     {
       Kp =66;
-      Kd = 15;
+      Kd = 35;
       Servo_temp=Kp*error/10+Kd*errorerror/10;
     }
     else
@@ -319,13 +319,13 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp = 35;
-        Kd = 3;
+        Kp = 25;
+        Kd = 0;
       }
       else
       {
-        Kp = 35;
-        Kd = 3;
+        Kp = 25;
+        Kd = 0;
       }
     }
     /*else if(All_Black<16) ////直道入弯道或者270度时提前转角
@@ -342,7 +342,7 @@ void Servo_control(void)
       }
       
     }*/
-    else if(All_Black<18) ////弯道入直道的时候
+    else if(All_Black<21) ////弯道入直道的时候
     {
       if(error<0)
       {
@@ -351,12 +351,12 @@ void Servo_control(void)
       }
       else
       {
-        Kp = 30;
-        Kd=7;
+        Kp = 25;
+        Kd=4;
       }
       
     }
-    else if(All_Black<22) ////弯道入直道的时候
+    else if(All_Black<23) ////弯道入直道的时候
     {
       if(error<0)
       {
@@ -365,12 +365,12 @@ void Servo_control(void)
       }
       else
       {
-        Kp = 45;
+        Kp = 35;
         Kd=18;
       }
       
     }
-    else if(All_Black<25)
+    else if(All_Black<26)
     {
       if(error<0)
       {
@@ -384,6 +384,19 @@ void Servo_control(void)
       }
     }
     
+    else if(All_Black<27)
+    {
+      if(error<0)
+      {
+        Kp=45;
+        Kd=20;
+      }
+      else
+      {
+        Kp=35;
+        Kd =20;
+      }
+    }
     else if(All_Black<32)
     {
       if(error<0)
