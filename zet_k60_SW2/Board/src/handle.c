@@ -240,6 +240,18 @@ void Servo_control(void)
   Servo_error = 0;
   Servo_errorerror = 0;  
   // buff[0]=1;
+  if(Cross_Flag==5)
+  {
+    Servomiddle=8558;
+  }
+  else if(Cross_Flag==6)
+  {
+    Servomiddle=8458;
+  }
+  else
+  {
+    Servomiddle=8508;
+  }
   if(cross_num>15)
   {
       Lastline=cross_num;
@@ -1143,9 +1155,20 @@ void Search_Line(void)
     {      
         if(ring_num>5)
         {
-            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
+            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100&&Ring_First_Row>20&&White_Cnt>3)
             {
-              Cross_Flag=3;/////标记为圆环        
+              Cross_Flag=3;        
+            }
+            else//障碍
+            {
+              if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
+              {
+                Cross_Flag=5;
+              }
+              else if(Road_Right[Row_Ptr]-Ring_width_2<Ring_width_1-Road_Left[Row_Ptr])
+              {
+                Cross_Flag=6;
+              }
             }
         }
     }
