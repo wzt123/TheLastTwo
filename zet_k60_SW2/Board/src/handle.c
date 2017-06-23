@@ -243,7 +243,7 @@ void Servo_control(void)
   Servo_errorerror = 0;  
   // buff[0]=1;
   //ring_time
-  if(Cross_Flag_Last==3&&Cross_Flag!=3)
+  /*if(Cross_Flag_Last==3&&Cross_Flag!=3)
   {
     ring_time++;
   }
@@ -255,7 +255,7 @@ void Servo_control(void)
   else
   {
     ring_time=0;
-  }
+  }*/
   if(Cross_Flag==5)
   {
     Servomiddle=8558;
@@ -312,7 +312,7 @@ void Servo_control(void)
       Kp =86;
       Servo_temp=Kp*error/10-100;
     }
-    else if(Cross_Flag==3)
+    else if(Cross_Flag==31||Cross_Flag==3)
     {
       if(Car == 1)
       {

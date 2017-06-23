@@ -28,6 +28,9 @@ uint8 White_cnt=0;//全白行计数_连续的
 uint8 White_Cnt=0;//全白行计数_所有的
 uint8 White_Ren=0;
 
+uint8 Right_xian=0;
+uint8 Left_xian=0;
+
 uint16 Servo_value=8808;//舵机输出pwm值
 
 
@@ -289,14 +292,14 @@ void Servo_control(void)
     if(Cross_Flag==2)
     {
       Kp =86;
-      Servo_temp=Kp*error/10+60;
+      Servo_temp=Kp*error/10+90;
     }
     else if(Cross_Flag==4)
     {
       Kp =86;
-      Servo_temp=Kp*error/10-60;
+      Servo_temp=Kp*error/10-90;
     }
-    else if(Cross_Flag==3)
+    else if(Cross_Flag==3||Cross_Flag==31)
     {
       if(Car == 1)
       {
@@ -836,6 +839,12 @@ void Search_Line(void)
   int8 LEnd=0;
   int8 REnd=79;
   
+  uint8 Left_left=0;
+  uint8 Right_right=0;
+  uint8 Left_J=0;
+  uint8 Left_Y=0;
+  uint8 Right_J=0;
+  uint8 Right_Y=0;
   uint8 Cross_flag=0;
   
   a=1;
@@ -1248,19 +1257,19 @@ void Search_Line(void)
     {      
       if(ring_flag==0&&img[Row_Ptr][Col_Ptr]==255&&img[Row_Ptr][Col_Ptr+1]==255&&img[Row_Ptr][Col_Ptr+2]==0&&img[Row_Ptr][Col_Ptr+3]==0) 
       {
-        ring_flag=1;
+        ring_flag=1;///找到黑块左跳变点
         if(Col_Ptr+2<Ring_width_1)
-          Ring_width_1 = Col_Ptr+2;
-        a=Col_Ptr+2;
+          Ring_width_1 = Col_Ptr+2;///黑块左边最小的列
+        a=Col_Ptr+2;///左边界
 
       }
       else if(ring_flag==1&&img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==255&&img[Row_Ptr][Col_Ptr+3]==255) 
       {
-        b=Col_Ptr;
-        ring_flag=2;
-        ring_num++;
+        b=Col_Ptr;//右边界
+        ring_flag=2;//找到黑块右跳变点
+        ring_num++;//黑块行数加1
         if(Col_Ptr+1>Ring_width_2)
-          Ring_width_2 = Col_Ptr+1;
+          Ring_width_2 = Col_Ptr+1;//黑块右边最大的的列
         if(ring_num==1) Ring_First_Row=Row_Ptr;
         break;
       }
@@ -1270,9 +1279,6 @@ void Search_Line(void)
       {
         Ring_width = Ring_width_2-Ring_width_1;
       }
-    //if(ring_flag!=2) ring_num=0;
-    //a_f=0;b_f=0;//c_f=0;
-    
     for(Col_Ptr=Ring_width_1;Col_Ptr<Ring_width_2; Col_Ptr++)
     {
       if(img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==0)
@@ -1280,29 +1286,94 @@ void Search_Line(void)
         break;
       }
     }
-    if(abs(Ring_width_2-Col_Ptr)<3)
+    if(abs(Ring_width_2-Col_Ptr)<3)//障碍
+    {      
+      if(ring_num>5)
+      {
+        if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
+        {
+          Cross_Flag=5;
+        }
+        else if(Road_Right[Row_Ptr]-Ring_width_2<Ring_width_1-Road_Left[Row_Ptr])
+        {
+          Cross_Flag=6;
+        }
+        
+      }
+    }
+    //入圆环前两边拐点   
+    Left_J=0;
+    Left_Y=0;
+    if(Left_left!=1&&Row_Ptr<53&&Row_Ptr>8) //左拐点确定
+    {
+      for(Col_Ptr=Row_Ptr;Col_Ptr<Row_Ptr+5;Col_Ptr++)
+      {
+        if(Road_Left[Col_Ptr]<Road_Left[Col_Ptr+1]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr+1]==0)
+        {
+          Left_J=0;
+          break;
+        }
+        else if(Road_Left[Col_Ptr]>Road_Left[Col_Ptr+1]) Left_J=1;
+      }
+      for(Col_Ptr=Row_Ptr;Col_Ptr>Row_Ptr-5;Col_Ptr--)
+      {
+        if(Road_Left[Col_Ptr-1]>Road_Left[Col_Ptr]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr-1]==0)
+        {
+
+          Left_Y=0;
+          break;
+        }
+        else if(Road_Left[Col_Ptr-1]<Road_Left[Col_Ptr]) Left_Y=1;
+      }
+      if(Left_J==1&&Left_Y==1)
+      {
+        Left_left=1;
+        Left_xian=Row_Ptr;
+      }
+    }
+    Right_J=0;
+    Right_Y=0;
+    if(Right_right!=1&&Row_Ptr<53&&Row_Ptr>8) //右拐点确定
+    {
+      for(Col_Ptr=Row_Ptr;Col_Ptr<Row_Ptr+5;Col_Ptr++)
+      {
+        if(Road_Right[Col_Ptr]>Road_Right[Col_Ptr+1]||Road_Right[Col_Ptr]==79||Road_Right[Col_Ptr+1]==79)
+        {
+          Right_J=0;
+          break;
+        }
+        else if(Road_Right[Col_Ptr]<Road_Right[Col_Ptr+1]) Right_J=1;
+      }
+      for(Col_Ptr=Row_Ptr;Col_Ptr>Row_Ptr-5;Col_Ptr--)
+      {
+        if(Road_Right[Col_Ptr-1]<Road_Right[Col_Ptr]||Road_Right[Col_Ptr]==79||Road_Right[Col_Ptr-1]==79)
+        {
+          Right_Y=0;
+          break;
+        }
+        else if(Road_Right[Col_Ptr-1]>Road_Right[Col_Ptr]) Right_Y=1;
+      }
+      if(Right_J==1&&Right_Y==1)
+      {
+        Right_right=1;
+        Right_xian=Row_Ptr;
+      }
+    }
+    
+      
+    if(abs(Ring_width_2-Col_Ptr)<3)////从黑块的左边往右找，如果Col_Ptr接近了黑块最右边，说明圆环上面有白的，判断为圆环
     {      
         if(ring_num>5)
         {
-            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>100&&Ring_First_Row>20)
+            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
             {
-              if(White_Cnt>3)
-              {
-                Cross_Flag=3;
-              }
-              else
-              {
-                if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
-                {
-                  Cross_Flag=5;
-                }
-                else if(Road_Right[Row_Ptr]-Ring_width_2<Ring_width_1-Road_Left[Row_Ptr])
-                {
-                  Cross_Flag=6;
-                }
-              }
+              Cross_Flag=3;/////标记为小圆环
             }
         }
+    }
+    if(ring_num>4&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10)
+    {
+      Cross_Flag=31;/////标记为大圆环
     }
 
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])

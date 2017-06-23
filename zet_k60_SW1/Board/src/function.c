@@ -15,8 +15,12 @@ uint16 speed_lasterr=0;
 uint16 speed_PWM=0;
 uint16 speed_PWM_R = 0;
 uint16 speed_PWM_L = 0;
-int16  speed_err_R;
-int16  speed_err_L;
+int16  speed_err_R = 0;
+int16  speed_err_L = 0;
+uint8 speed_err_R_last = 0;
+uint8 speed_err_L_last = 0;
+uint8 speed_err_R_lastlast = 0;
+uint8 speed_err_L_lastlast = 0;
 int16 speed_increment_R;
 int16 speed_increment_L;
 uint8 Status=0;
@@ -137,8 +141,8 @@ void Motor_Out(void)
 }
 }*/
   uint8 speed_Ki=15;
-  float speed_Kd=0.0;
-  float speed_Kp=0.0;
+  uint8 speed_Kd=3;
+  uint8 speed_Kp=3;
   /*if(Overtake2==1||buff[1]==2)
   {
   if(buff[1]==2&&Car==2)
@@ -177,8 +181,8 @@ void Motor_Out(void)
       
       else
       {
-        speed_goal_R=3600;
-        speed_goal_L=3600;
+        speed_goal_R=3900;
+        speed_goal_L=3900;
       }
       
       /*if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
@@ -192,10 +196,21 @@ void Motor_Out(void)
           
         return;
       }*/
-      speed_err_R=speed_goal_R-speed_get_R*10;
+      speed_err_R_lastlast = speed_err_R_last;
+      speed_err_R_last = speed_err_R;
+      
+      speed_err_L_lastlast = speed_err_L_last;
+      speed_err_L_last = speed_err_L;
+      
+      speed_err_R = speed_goal_R-speed_get_R*10;
       speed_err_L = speed_goal_L-speed_get_L*10;
-      speed_increment_R=speed_Ki*speed_err_R/10;
-      speed_increment_L=speed_Ki*speed_err_L/10;
+      
+      speed_increment_R = speed_Kp*(speed_err_R-speed_err_R_last)/10+
+                              speed_Ki*speed_err_R/10+
+                            speed_Kd*(speed_err_R-2*speed_err_R_last+speed_err_R_lastlast)/10;
+      speed_increment_L= speed_Kp*(speed_err_L-speed_err_L_last)/10+
+                          speed_Ki*speed_err_L/10+
+                            speed_Kd*(speed_err_L-2*speed_err_L_last+speed_err_L_lastlast)/10;
       speed_PWM_R=6100+speed_increment_R;
       speed_PWM_L=6100+speed_increment_L;
       
