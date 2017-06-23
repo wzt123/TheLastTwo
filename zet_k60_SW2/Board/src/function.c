@@ -23,7 +23,7 @@ uint8 Status=0;
 uint16 var;
 uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
-uint32 Distance = 2500;
+uint32 Distance = 3500;
 uint8 stop_time = 0;
 uint8 ChaoChe_stop=0;
 uint8 ChaoChe_stop_time = 0;
@@ -177,7 +177,7 @@ void Motor_Out(void)
         speed_goal_L=3600;
       }
       
-      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
+      /*if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
       {
         if(abs(error)<8&&abs(error)>=4)
           stop1();
@@ -187,7 +187,7 @@ void Motor_Out(void)
         }
           
         return;
-      }
+      }*/
       speed_err_R=speed_goal_R-speed_get_R*10;
       speed_err_L = speed_goal_L-speed_get_L*10;
       speed_increment_R=speed_Ki*speed_err_R/10;

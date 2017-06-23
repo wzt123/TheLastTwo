@@ -181,7 +181,7 @@ void Motor_Out(void)
         speed_goal_L=3600;
       }
       
-      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
+      /*if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
       {
         if(abs(error)<8&&abs(error)>=4)
           stop1();
@@ -191,7 +191,7 @@ void Motor_Out(void)
         }
           
         return;
-      }
+      }*/
       speed_err_R=speed_goal_R-speed_get_R*10;
       speed_err_L = speed_goal_L-speed_get_L*10;
       speed_increment_R=speed_Ki*speed_err_R/10;

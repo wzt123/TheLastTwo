@@ -304,7 +304,8 @@ void Servo_control(void)
       }
       else
       {
-          Servo_temp=Ring_First_Row*100/10+30;
+          //Servo_temp=Ring_First_Row*100/10+30;
+        Servo_temp=-Ring_First_Row*100/10-30;
       }
     }
     else if(Cross_Flag==1)
@@ -373,41 +374,41 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp = 45;
+        Kp = 33;
         Kd = 18;
       }
       else
       {
-        Kp = 35;
+        Kp = 33;
         Kd=18;
       }
       
     }
-    else if(All_Black<26)
+    /*else if(All_Black<26)
     {
       if(error<0)
       {
-        Kp=50;
-        Kd=20;
+        Kp=40;
+        Kd=15;
       }
       else
       {
-        Kp=50;
-        Kd =20;
+        Kp=40;
+        Kd =15;
       }
-    }
+    }*/
     
     else if(All_Black<27)
     {
       if(error<0)
       {
-        Kp=45;
-        Kd=20;
+        Kp=33;
+        Kd=18;
       }
       else
       {
-        Kp=35;
-        Kd =20;
+        Kp=33;
+        Kd =18;
       }
     }
     else if(All_Black<32)

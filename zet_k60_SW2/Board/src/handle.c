@@ -300,11 +300,13 @@ void Servo_control(void)
     {
       if(Car == 1)
       {
-          Servo_temp=Servo_temp-Ring_First_Row*55/10;
+          //Servo_temp=Servo_temp-Ring_First_Row*55/10;
+          Servo_temp=-Ring_First_Row*100/10-30;
       }
       else
       {
-          Servo_temp=Servo_temp+Ring_First_Row*55/10;
+          //Servo_temp=Servo_temp+Ring_First_Row*55/10;
+          Servo_temp=-Ring_First_Row*100/10-30;
       }
     }
     else if(Cross_Flag==1)
