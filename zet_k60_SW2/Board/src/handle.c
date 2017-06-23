@@ -1251,21 +1251,22 @@ void Search_Line(void)
         Right_xian=Row_Ptr;
       }
     }
+    
+      
+    if(abs(Ring_width_2-Col_Ptr)<3)////从黑块的左边往右找，如果Col_Ptr接近了黑块最右边，说明圆环上面有白的，判断为圆环
+    {      
+        if(ring_num>5)
+        {
+            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
+            {
+              Cross_Flag=3;/////标记为小圆环
+            }
+        }
+    }
     if(ring_num>4&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10)
     {
-      Cross_Flag=3;/////标记为圆环
+      Cross_Flag=31;/////标记为大圆环
     }
-      
-    //if(abs(Ring_width_2-Col_Ptr)<3)////从黑块的左边往右找，如果Col_Ptr接近了黑块最右边，说明圆环上面有白的，判断为圆环
-    //{      
-      //  if(ring_num>5)
-        //{
-          //  if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
-            //{
-              //Cross_Flag=3;/////标记为圆环
-  //          }
-    //    }
-   // }
 
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])
     {
