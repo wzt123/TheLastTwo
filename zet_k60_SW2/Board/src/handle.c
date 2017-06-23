@@ -108,6 +108,7 @@ uint8 white_Left_cnt = 0;
 uint8 white_Right_cnt = 0;
 int16 Servo_error = 0;
 int16 Servo_errorerror = 0;
+uint8 ring_time = 0;
 uint8 weight_num_Cross [60]=
 {
   10,10,10,10,10,
@@ -241,6 +242,20 @@ void Servo_control(void)
   Servo_error = 0;
   Servo_errorerror = 0;  
   // buff[0]=1;
+  //ring_time
+  if(Cross_Flag_Last==3&&Cross_Flag!=3)
+  {
+    ring_time++;
+  }
+  if(ring_time>0&&ring_time<150)
+  {
+    Cross_Flag=3;
+    ring_time++;
+  }
+  else
+  {
+    ring_time=0;
+  }
   if(Cross_Flag==5)
   {
     Servomiddle=8558;
@@ -253,12 +268,12 @@ void Servo_control(void)
   {
     Servomiddle=8508;
   }
-  if(cross_num>15)
+  /*if(cross_num>15)
   {
       Lastline=cross_num;
   }
-  else
-  {
+  el8se
+  {*/
     if(All_Black>2)
     {
       Lastline=All_Black;
@@ -267,7 +282,7 @@ void Servo_control(void)
     {
       Lastline=2;
     }
-  }
+  //}
   l = 59-Lastline;
 
   for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
@@ -1161,6 +1176,21 @@ void Search_Line(void)
       if(img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==0)
       {
         break;
+      }
+    }
+    if(abs(Ring_width_2-Col_Ptr)<3)//障碍
+    {      
+      if(ring_num>5)
+      {
+        if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
+        {
+          Cross_Flag=5;
+        }
+        else if(Road_Right[Row_Ptr]-Ring_width_2<Ring_width_1-Road_Left[Row_Ptr])
+        {
+          Cross_Flag=6;
+        }
+        
       }
     }
     //入圆环前两边拐点   

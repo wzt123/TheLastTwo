@@ -217,15 +217,12 @@ void Motor_Out(void)
   speed_PWM_L = speed_goal_L+100;
 }
 }*/
-  if(speed_get_L<50||speed_get_R<50)
+  if(speed_get_R<50)
   {
-    if(speed_get_L<50)
-    { 
-      speed_PWM_L = 0;
-    }
     if(speed_get_R<50)
     {
       speed_PWM_R = 0;
+      speed_PWM_L = 0;
     }
   }
   else if(speed_get_R<100||speed_get_L<100)

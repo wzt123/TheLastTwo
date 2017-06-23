@@ -175,11 +175,13 @@ void  main(void)
     }
     */
     ///蓝牙传送编码器的值
-    send_data[0] = speed_get_L;
-    send_data[1] = speed_get_R;
-    //send_data[2] = Cross_Flag*500;
-    //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
-    
+    //send_data[0] = speed_get_L;
+    //send_data[1] = speed_get_R;
+      send_data[0] = Cross_Flag*50+50;
+    if(speed_get_R>50&&Cross_Flag!=0)
+    uart_putchar(UART5,Cross_Flag);
+      //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
+   
     nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
     nrf_data = buff[1];
     ////////////////后车检测到超声波信号，buff[1]发来一个1，表明超车成功
