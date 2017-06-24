@@ -105,6 +105,8 @@ uint8 ring_time = 0;
 uint32 sum_time = 0;
 uint8 Cross_Cnt=0;
 uint8 cross_num = 0;
+uint8 cross_time = 0;
+uint8 cross_Time = 0;
 uint8 white_Left_cnt = 0;
 uint8 white_Right_cnt = 0;
 int16 Servo_error = 0;
@@ -231,19 +233,36 @@ void Calculate_Slope()
 */
 void Servo_control(void)
 {  
-  if(Cross_Flag_Last==31&&Cross_Flag!=31)
+  if(Cross_Flag_Last==31)
   {
     ring_time++;
+    cross_Time=0;
   }
-  if(ring_time>0&&Cross_Flag!=3)
+  if(ring_time>0/*&&Cross_Flag!=3*/)
   {
+    Cross_Flag=3;
     ring_time++;
   }
   
-  if(All_Black>2&ring_time>0)
+  if(Ring_First_Row==0&&ring_time>0)
   {
     ring_time=0;
   }
+  
+  if((Cross_Flag_Last==2||Cross_Flag_Last==4)&&(Cross_Flag!=2&&Cross_Flag!=4))
+    cross_time++;
+  if(cross_time!=0&&abs(error)<5)
+   cross_time=0;
+  
+  if(Cross_Flag_Last==1&&ring_time==0)
+    cross_Time=1;
+  else if(cross_Time>0&&cross_Time<100)
+  {
+    cross_Time++;
+  }
+  else if(cross_Time>100)
+    cross_Time=0;
+  
   
   uint8 Row_Ptr=0;
   error=0;
@@ -326,20 +345,18 @@ void Servo_control(void)
       Kp =86;
       Servo_temp=Kp*error/10-100;
     }
-    else if(ring_time>0)
+    else if(ring_time>0||Cross_Flag==31||Cross_Flag==3)
     {
-      if(Ring_First_Row>24)
-      {  
         if(Car == 1)
         {
-          Servo_temp=-Ring_First_Row*100/10-30;
+          Servo_temp=-Ring_First_Row*100/10-60;
         }
         else
         {
           //Servo_temp=Ring_First_Row*100/10+30;
-          Servo_temp=-Ring_First_Row*100/10-30;
+          Servo_temp=-Ring_First_Row*100/10-60;
         }
-      }
+      
     }
     else if(Cross_Flag==1)
     {
@@ -886,7 +903,7 @@ void Search_Line(void)
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
     //从左到右检测起跑线
-    if(Row_Ptr>30)
+    if(Row_Ptr>10)
     {
       
       start_line_num[Row_Ptr] = 0;
@@ -1160,6 +1177,99 @@ void Search_Line(void)
       white_Left_cnt++;
     }
     //if(  (Row_Ptr>All_Black+6)&&(Cross_Flag!=3||Cross_Flag!=4))
+    
+    //入圆环前两边拐点   
+    Left_J=0;
+    Left_Y=0;
+    if(Left_left!=1&&Row_Ptr<53&&Row_Ptr>8) //左拐点确定
+    {
+      for(Col_Ptr=Row_Ptr;Col_Ptr<Row_Ptr+5;Col_Ptr++)
+      {
+        if(Road_Left[Col_Ptr]<Road_Left[Col_Ptr+1]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr+1]==0)
+        {
+          Left_J=0;
+          break;
+        }
+        else if(Road_Left[Col_Ptr]>Road_Left[Col_Ptr+1]) 
+        {
+          Left_J=1;
+          
+        }
+      }
+      for(Col_Ptr=Row_Ptr;Col_Ptr>Row_Ptr-5;Col_Ptr--)
+      {
+        if(Road_Left[Col_Ptr-1]>Road_Left[Col_Ptr]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr-1]==0)
+        {
+
+          Left_Y=0;
+          break;
+        }
+        else if(Road_Left[Col_Ptr-1]<Road_Left[Col_Ptr]) 
+        {
+          Left_Y=1;
+          break;
+        }
+      }
+      if(Left_J==1&&Left_Y==1)
+      {
+        Left_left=1;
+        Left_xian=Row_Ptr;
+      }
+    }
+    Right_J=0;
+    Right_Y=0;
+    if(Right_right!=1&&Row_Ptr<53&&Row_Ptr>8) //右拐点确定
+    {
+      for(Col_Ptr=Row_Ptr;Col_Ptr<Row_Ptr+5;Col_Ptr++)
+      {
+        if(Road_Right[Col_Ptr]>Road_Right[Col_Ptr+1]||Road_Right[Col_Ptr]==79||Road_Right[Col_Ptr+1]==79)
+        {
+          Right_J=0;
+          break;
+        }
+        else if(Road_Right[Col_Ptr]<Road_Right[Col_Ptr+1]) Right_J=1;
+      }
+      for(Col_Ptr=Row_Ptr;Col_Ptr>Row_Ptr-5;Col_Ptr--)
+      {
+        if(Road_Right[Col_Ptr-1]<Road_Right[Col_Ptr]||Road_Right[Col_Ptr]==79||Road_Right[Col_Ptr-1]==79)
+        {
+          Right_Y=0;
+          break;
+        }
+        else if(Road_Right[Col_Ptr-1]>Road_Right[Col_Ptr]) 
+        {
+          Right_Y=1;
+          break;
+        }
+      }
+      if(Right_J==1&&Right_Y==1)
+      {
+        Right_right=1;
+        Right_xian=Row_Ptr;
+      }
+    }
+    
+      
+    /*if(abs(Ring_width_2-Col_Ptr)<3)////从黑块的左边往右找，如果Col_Ptr接近了黑块最右边，说明圆环上面有白的，判断为圆环
+    {      
+        if(ring_num>5)
+        {
+            if(Ring_width>10&&Stop_Flag!=0&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
+            {
+              Cross_Flag=3;/////标记为小圆环
+            }
+        }
+    }*/
+    if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10)
+    {
+      Cross_Flag=31;/////标记为大圆环
+    }
+    
+   /* if(samll_Ring_temp==1&&cross_Time==0&&(Right_right==1||Left_left==1)&&Stop_Flag!=0&&sum_time>1000)
+    {
+      Cross_Flag=3;
+      ring_time++;
+    }*/
     ring_flag=0;
     for(Col_Ptr=Road_Left[Row_Ptr]; Col_Ptr<Road_Right[Row_Ptr]-3; Col_Ptr++)
     {      
@@ -1194,13 +1304,15 @@ void Search_Line(void)
         break;
       }
     }
+    uint8 samll_Ring_temp=0;
     if(abs(Ring_width_2-Col_Ptr)<3)//障碍
-    {      
-      if(/*Ring_width>10&&Stop_Flag!=0&&sum_time>1000&&*/White_Cnt>3&&ring_time>0)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
-            {
-              Cross_Flag=3;/////标记为小圆环
-            }
-      else if(ring_num>5)
+    {     
+      samll_Ring_temp=1;
+      if(/*Ring_width>10&&Stop_Flag!=0&&sum_time>1000&&White_Cnt>3&&*/cross_Time==0&&Stop_Flag!=0&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
+      {
+        Cross_Flag=3;/////标记为小圆环
+      }
+      else if(ring_num>5&&ring_time==0)
       {
         if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
         {
@@ -1213,81 +1325,6 @@ void Search_Line(void)
         
       }
     }
-    //入圆环前两边拐点   
-    Left_J=0;
-    Left_Y=0;
-    if(Left_left!=1&&Row_Ptr<53&&Row_Ptr>8) //左拐点确定
-    {
-      for(Col_Ptr=Row_Ptr;Col_Ptr<Row_Ptr+5;Col_Ptr++)
-      {
-        if(Road_Left[Col_Ptr]<Road_Left[Col_Ptr+1]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr+1]==0)
-        {
-          Left_J=0;
-          break;
-        }
-        else if(Road_Left[Col_Ptr]>Road_Left[Col_Ptr+1]) Left_J=1;
-      }
-      for(Col_Ptr=Row_Ptr;Col_Ptr>Row_Ptr-5;Col_Ptr--)
-      {
-        if(Road_Left[Col_Ptr-1]>Road_Left[Col_Ptr]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr-1]==0)
-        {
-
-          Left_Y=0;
-          break;
-        }
-        else if(Road_Left[Col_Ptr-1]<Road_Left[Col_Ptr]) Left_Y=1;
-      }
-      if(Left_J==1&&Left_Y==1)
-      {
-        Left_left=1;
-        Left_xian=Row_Ptr;
-      }
-    }
-    Right_J=0;
-    Right_Y=0;
-    if(Right_right!=1&&Row_Ptr<53&&Row_Ptr>8) //右拐点确定
-    {
-      for(Col_Ptr=Row_Ptr;Col_Ptr<Row_Ptr+5;Col_Ptr++)
-      {
-        if(Road_Right[Col_Ptr]>Road_Right[Col_Ptr+1]||Road_Right[Col_Ptr]==79||Road_Right[Col_Ptr+1]==79)
-        {
-          Right_J=0;
-          break;
-        }
-        else if(Road_Right[Col_Ptr]<Road_Right[Col_Ptr+1]) Right_J=1;
-      }
-      for(Col_Ptr=Row_Ptr;Col_Ptr>Row_Ptr-5;Col_Ptr--)
-      {
-        if(Road_Right[Col_Ptr-1]<Road_Right[Col_Ptr]||Road_Right[Col_Ptr]==79||Road_Right[Col_Ptr-1]==79)
-        {
-          Right_Y=0;
-          break;
-        }
-        else if(Road_Right[Col_Ptr-1]>Road_Right[Col_Ptr]) Right_Y=1;
-      }
-      if(Right_J==1&&Right_Y==1)
-      {
-        Right_right=1;
-        Right_xian=Row_Ptr;
-      }
-    }
-    
-      
-    /*if(abs(Ring_width_2-Col_Ptr)<3)////从黑块的左边往右找，如果Col_Ptr接近了黑块最右边，说明圆环上面有白的，判断为圆环
-    {      
-        if(ring_num>5)
-        {
-            if(Ring_width>10&&Stop_Flag!=0&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
-            {
-              Cross_Flag=3;/////标记为小圆环
-            }
-        }
-    }*/
-    if(ring_num>4&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10)
-    {
-      Cross_Flag=31;/////标记为大圆环
-    }
-
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])
     {
       Road_Left[Row_Ptr]=Road_Left[Row_Ptr+1];
