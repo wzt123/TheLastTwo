@@ -114,6 +114,7 @@ uint8 Out_Right=0;
 uint8 cross_num = 0;
 uint8 white_Left_cnt = 0;
 uint8 white_Right_cnt = 0;
+uint8 Cross_flag =0;
 uint8 weight_num_Cross [60]=
 {
   10,10,10,10,10,
@@ -242,7 +243,7 @@ void Servo_control(void)
   }
   if(ring_time>0/*&&Cross_Flag!=3*/)
   {
-    Cross_Flag=3;
+    Cross_Flag=31;
     ring_time++;
   }
   
@@ -256,7 +257,7 @@ void Servo_control(void)
   if(cross_time!=0&&abs(error)<5)
    cross_time=0;
   
-  if(Cross_Flag_Last==1&&ring_time==0)
+  if(Cross_flag>1)
     cross_Time=1;
   else if(cross_Time>0&&cross_Time<100)
   {
@@ -328,16 +329,18 @@ void Servo_control(void)
       Servo_temp=Kp*error/10-90;
     }
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
-    else if(ring_time>0)
+    else if(Cross_Flag==31&&Ring_First_Row>18)
     {
         if(Car == 1)
         {
-          Servo_temp=-Ring_First_Row*100/10-90;}
+          Servo_temp=-Ring_First_Row*100/10-90;
+        }
         else
         {
           //Servo_temp=Ring_First_Row*100/10+30;
           Servo_temp=-Ring_First_Row*100/10-90;
         }
+      
     }
     else if(Cross_Flag==1)
     {
@@ -387,7 +390,7 @@ void Servo_control(void)
       }
       
     }*/
-    else if(All_Black<22) ////弯道入直道的时候
+    else if(All_Black<21) ////弯道入直道的时候
     {
       if(error<0)
       {
@@ -397,7 +400,7 @@ void Servo_control(void)
       else
       {
         Kp = 25;
-        Kd=3;
+        Kd=4;
       }
       
     }
@@ -411,7 +414,7 @@ void Servo_control(void)
       else
       {
         Kp = 33;
-        Kd=14;
+        Kd=18;
       }
       
     }
@@ -434,12 +437,12 @@ void Servo_control(void)
       if(error<0)
       {
         Kp=33;
-        Kd=17;
+        Kd=18;
       }
       else
       {
         Kp=33;
-        Kd =17;
+        Kd =18;
       }
     }
     else if(All_Black<32)
@@ -873,7 +876,7 @@ void Search_Line(void)
   uint8 Left_Y=0;
   uint8 Right_J=0;
   uint8 Right_Y=0;
-  uint8 Cross_flag=0;
+  Cross_flag=0;
   
   a=1;
   uint8 b=79;
@@ -1317,12 +1320,13 @@ void Search_Line(void)
     uint8 samll_Ring_temp=0;
     if(abs(Ring_width_2-Col_Ptr)<3)//障碍
     {     
-      samll_Ring_temp=1;
-      if(/*Ring_width>10&&Stop_Flag!=0&&sum_time>1000&&White_Cnt>3&&*/cross_Time==0&&Stop_Flag!=0&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
-      {
-        Cross_Flag=3;/////标记为小圆环
-      }
-      else if(ring_num>5&&ring_time==0)
+      //samll_Ring_temp=1;
+      //if(/*Ring_width>10&&Stop_Flag!=0&&sum_time>1000&&White_Cnt>3&&*/cross_Time==0&&Stop_Flag!=0&&White_Cnt>3&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
+      //{
+        //Cross_Flag=3;/////标记为小圆环
+      //}
+      //else 
+        if(ring_num>5&&ring_time==0)
       {
         if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
         {
@@ -1413,16 +1417,16 @@ void Search_Line(void)
             }
         }
     }*/
-    if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10)
+    if(ring_num>0&&Right_right==1&&Left_left==1&&White_Cnt>3&&(abs(Right_xian-Left_xian))<10)
     {
       Cross_Flag=31;/////标记为大圆环
     }
 
-    if(samll_Ring_temp==1&&cross_Time==0&&(Right_right==1||Left_left==1)&&Stop_Flag!=0&&sum_time>1000)
+    /*if(samll_Ring_temp==1&&cross_Time==0&&(Right_right==1||Left_left==1)&&Stop_Flag!=0&&sum_time>1000)
     {
       Cross_Flag=3;
       ring_time++;
-    }
+    }*/
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])
     {
       Road_Left[Row_Ptr]=Road_Left[Row_Ptr+1];
