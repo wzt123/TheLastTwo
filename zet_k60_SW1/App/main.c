@@ -58,7 +58,7 @@ void  main(void)
   uint8 IR1_last = 0;
   uint8 IR2_last = 0;
   
-  //uint32 time2 = 0;
+  //ui nt32 time2 = 0;
   DisableInterrupts;
   NVIC_SetPriority(PORTA_IRQn,1);
   NVIC_SetPriority(DMA0_IRQn,2);
@@ -202,8 +202,8 @@ void  main(void)
     dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
 
     OLED_Print_Num1(88, 1, All_Black);
-    OLED_Print_Num1(88, 2, error);
-    OLED_Print_Num1(88, 3, errorerror);
+    OLED_Print_Num1(88, 2, error1);
+    OLED_Print_Num1(88, 3, error2);
     OLED_Print_Num1(88, 4, Ring_First_Row);
     OLED_Print_Num1(88, 5, Cross_Flag);
 

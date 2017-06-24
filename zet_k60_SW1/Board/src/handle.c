@@ -319,18 +319,23 @@ void Servo_control(void)
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
     else if(ring_time>0)
     {
-      if(Ring_First_Row>24)
-      {  
+      //if(Ring_First_Row>24)
+      uint8 i=0;
+      //{  
+      if(Ring_First_Row>10)
+        i=50;
+      else
+        i=30;
         if(Car == 1)
         {
-          Servo_temp=-Ring_First_Row*100/10-30;
+          Servo_temp=-Ring_First_Row*100/10-i;
         }
         else
         {
           //Servo_temp=Ring_First_Row*100/10+30;
-          Servo_temp=-Ring_First_Row*100/10-30;
+          Servo_temp=-Ring_First_Row*100/10-i;
         }
-      }
+      //}
     }
     else if(Cross_Flag==1)
     {
@@ -380,7 +385,7 @@ void Servo_control(void)
       }
       
     }*/
-    else if(All_Black<21) ////弯道入直道的时候
+    else if(All_Black<22) ////弯道入直道的时候
     {
       if(error<0)
       {
@@ -390,7 +395,7 @@ void Servo_control(void)
       else
       {
         Kp = 25;
-        Kd=4;
+        Kd=3;
       }
       
     }
@@ -404,7 +409,7 @@ void Servo_control(void)
       else
       {
         Kp = 33;
-        Kd=18;
+        Kd=14;
       }
       
     }
@@ -427,12 +432,12 @@ void Servo_control(void)
       if(error<0)
       {
         Kp=33;
-        Kd=18;
+        Kd=17;
       }
       else
       {
         Kp=33;
-        Kd =18;
+        Kd =17;
       }
     }
     else if(All_Black<32)

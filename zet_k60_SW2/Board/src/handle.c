@@ -103,6 +103,7 @@ uint8 stop_line_num = 0;
 //uint8 Ring_Flag=0;
 uint8 ring_time = 0;
 uint32 sum_time = 0;
+uint8 cross_time = 0;
 uint8 Cross_Cnt=0;
 uint8 cross_num = 0;
 uint8 white_Left_cnt = 0;
@@ -1183,10 +1184,10 @@ void Search_Line(void)
       }
     }
     
-      if(Ring_width_2-Ring_width_1>Ring_width)
-      {
-        Ring_width = Ring_width_2-Ring_width_1;
-      }
+    if(Ring_width_2-Ring_width_1>Ring_width)
+    {
+      Ring_width = Ring_width_2-Ring_width_1;
+    }
     for(Col_Ptr=Ring_width_1;Col_Ptr<Ring_width_2; Col_Ptr++)
     {
       if(img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==0)
