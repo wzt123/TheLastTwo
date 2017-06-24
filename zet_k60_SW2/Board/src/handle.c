@@ -103,9 +103,9 @@ uint8 stop_line_num = 0;
 //uint8 Ring_Flag=0;
 uint8 ring_time = 0;
 uint32 sum_time = 0;
+uint8 cross_time = 0;
 uint8 Cross_Cnt=0;
 uint8 cross_num = 0;
-uint8 cross_time = 0;
 uint8 cross_Time = 0;
 uint8 white_Left_cnt = 0;
 uint8 white_Right_cnt = 0;
@@ -1178,6 +1178,36 @@ void Search_Line(void)
     }
     //if(  (Row_Ptr>All_Black+6)&&(Cross_Flag!=3||Cross_Flag!=4))
     
+    if(Ring_width_2-Ring_width_1>Ring_width)
+    {
+      Ring_width = Ring_width_2-Ring_width_1;
+    }
+    for(Col_Ptr=Ring_width_1;Col_Ptr<Ring_width_2; Col_Ptr++)
+    {
+      if(img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==0)
+      {
+        break;
+      }
+    }
+    if(abs(Ring_width_2-Col_Ptr)<3)//障碍
+    {      
+      if(/*Ring_width>10&&Stop_Flag!=0&&sum_time>1000&&*/White_Cnt>3&&ring_time>0)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
+            {
+              Cross_Flag=3;/////标记为小圆环
+            }
+      else if(ring_num>5)
+      {
+        if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
+        {
+          Cross_Flag=5;
+        }
+        else if(Road_Right[Row_Ptr]-Ring_width_2<Ring_width_1-Road_Left[Row_Ptr])
+        {
+          Cross_Flag=6;
+        }
+        
+      }
+    }
     //入圆环前两边拐点   
     Left_J=0;
     Left_Y=0;
