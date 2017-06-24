@@ -153,16 +153,54 @@ void Motor_Out(void)
   { 
     if(stop_time==0)
     {
+      
       if(abs(error)<4)
       {
-        speed_goal_R=3700;
-        speed_goal_L=3700;
+        if(Status==0)
+        {
+          speed_goal_R=3700;
+          speed_goal_L=3700;
+        }
+        else if(Status==1)
+        {
+          speed_goal_R=4000;
+          speed_goal_L=4000;
+        }
+        else if(Status==2)
+        {
+          speed_goal_R=4400;
+          speed_goal_L=4400;
+        }
+        
+        else if(Status==3)
+        {
+          speed_goal_R=4400;
+          speed_goal_L=4400;
+        }
       }
       
       else
       {
-        speed_goal_R=3700;
-        speed_goal_L=3700;
+        if(Status==0)
+        {
+          speed_goal_R=3700;
+          speed_goal_L=3700;
+        }
+        else if(Status==1)
+        {
+          speed_goal_R=4000;
+          speed_goal_L=4000;
+        }
+        else if(Status==2)
+        {
+          speed_goal_R=4000;
+          speed_goal_L=4000;
+        }
+        else if(Status==3)
+        {
+          speed_goal_R=4300;
+          speed_goal_L=4300;
+        }
       }
       
       /*if(Car==2)
@@ -331,34 +369,35 @@ void Chaoche_stop(){
 }
 
 //拨码开关初始化
+
 void Switch_Init()
 {
   	
-	gpio_init(PTE10,GPI,0);
-	gpio_init(PTE9,GPI,0);
-	gpio_init(PTE8,GPI,0);
-	gpio_init(PTE7,GPI,0);
-        gpio_init(PTE6,GPI,0);
+	gpio_init(PTE4,GPI,0);
+	gpio_init(PTE3,GPI,0);
+	gpio_init(PTE2,GPI,0);
+	gpio_init(PTE1,GPI,0);
+        gpio_init(PTE0,GPI,0);
 	
-	port_init_NoALT(PTE10,PULLUP);
-	port_init_NoALT(PTE9,PULLUP);
-	port_init_NoALT(PTE8,PULLUP);
-	port_init_NoALT(PTE7,PULLUP);
-        port_init_NoALT(PTE6,PULLUP);
+	port_init_NoALT(PTE4,PULLUP);
+	port_init_NoALT(PTE3,PULLUP);
+	port_init_NoALT(PTE2,PULLUP);
+	port_init_NoALT(PTE1,PULLUP);
+        port_init_NoALT(PTE0,PULLUP);
 }
 //获取拨码开关值
 uint8 Get_Switch(void)
 {
   uint8 Num=0;
-  Num|=gpio_get(PTE10);
+  Num|=gpio_get(PTE4);
   Num=Num<<1;
-  Num|=gpio_get(PTE9);
+  Num|=gpio_get(PTE3);
   Num=Num<<1;
-  Num|=gpio_get(PTE8);
+  Num|=gpio_get(PTE2);
   Num=Num<<1;
-  Num|=gpio_get(PTE7);
+  Num|=gpio_get(PTE1);
   Num=Num<<1;
-  Num|=gpio_get(PTE6);
+  Num|=gpio_get(PTE0);
   return Num;
 }
 /*
