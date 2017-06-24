@@ -45,11 +45,10 @@ void xx_bluetooth();
 void uart5_handler(void);
 void chaoShenBo_init(void);
 void stopLine_init(void);
-
+void Switch_Init();
+uint8 Get_Switch(void);
 void PIT0_IRQHandler(void)
 {
-  
-  
   if(Cross_Flag==3&&stop_Flag !=1&&stop_Place==1)
   {
     //stop_Car();
@@ -76,9 +75,11 @@ void Init_All(void)
   pit_init_ms(PIT0, 50);                             //初始化PIT0，定时时间为： 1000ms       
   set_vector_handler(PIT0_VECTORn ,PIT0_IRQHandler);       //设置PIT0的中断服务函数为 PIT_IRQHandler
   stopLine_init();
+  Switch_Init();
   while(!nrf_init());
   set_vector_handler(PORTC_VECTORn ,PORTC_IRQHandler);                //设置 PORTE 的中断服务函数为 PORTE_VECTORn
   chaoShenBo_init();
+  Status=Get_Switch();
   enable_irq(PORTC_IRQn);
   enable_irq (PIT0_IRQn);                                //使能PIT0中断
 }
@@ -108,12 +109,6 @@ void Motor_Init(void)
     ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
     
 }
-
-
-/*
-*       电机PID输出
-*
-*/
 /*
 *       电机PID输出
 *
@@ -122,24 +117,6 @@ void Motor_Out(void)
 {
   
   speed_PWM=6550;
-  /*if(Car==2)
-  {
-  if(ABDistance<Distance-100)
-  speed_PWM -=100;
-    else if(ABDistance>Distance+100)
-  speed_PWM +=100;
-}
-  else 
-  {
-  if(buff[2]==1)
-  {
-  speed_PWM +=50;
-}
-    else if(buff[2]==2)
-  {
-  speed_PWM -=50;
-}
-}*/
   uint8 speed_Ki=15;
   uint8 speed_Kd=3;
   uint8 speed_Kp=3;
@@ -175,14 +152,14 @@ void Motor_Out(void)
     {
       if(abs(error)<4)
       {
-        speed_goal_R=3300;
-        speed_goal_L=3300;
+        speed_goal_R=3700;
+        speed_goal_L=3700;
       }
       
       else
       {
-        speed_goal_R=3900;
-        speed_goal_L=3900;
+        speed_goal_R=3700;
+        speed_goal_L=3700;
       }
       
       /*if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
@@ -346,6 +323,38 @@ void Chaoche_stop(){
     ChaoChe_stop=0;
     return;
   }
+}
+//拨码开关初始化
+void Switch_Init()
+{
+  	
+	gpio_init(PTE10,GPI,0);
+	gpio_init(PTE9,GPI,0);
+	gpio_init(PTE8,GPI,0);
+	gpio_init(PTE7,GPI,0);
+        gpio_init(PTE6,GPI,0);
+	
+	port_init_NoALT(PTE10,PULLUP);
+	port_init_NoALT(PTE9,PULLUP);
+	port_init_NoALT(PTE8,PULLUP);
+	port_init_NoALT(PTE7,PULLUP);
+        port_init_NoALT(PTE6,PULLUP);
+}
+//获取拨码开关值
+uint8 Get_Switch(void)
+{
+   uint8 Num=0;
+
+	Num|=gpio_get(PTE10);
+	Num=Num<<1;
+	Num|=gpio_get(PTE9);
+	Num=Num<<1;
+	Num|=gpio_get(PTE8);
+        Num=Num<<1;
+	Num|=gpio_get(PTE7);
+	Num=Num<<1;
+	Num|=gpio_get(PTE6);
+	return Num;
 }
 /*
 * 蓝牙初始化

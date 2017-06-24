@@ -10,6 +10,8 @@ extern void stop_Car(void);
 extern void stop1(void);
 extern void stop2(void);
 extern void xx_bluetooth();
+extern void Switch_Init();
+extern uint8 Get_Switch(void);
 //extern uint16 speed_get;
 extern uint16 var;//∫ÏÕ‚≤‚æ‡£ª
 //extern uint16 speed_goal;

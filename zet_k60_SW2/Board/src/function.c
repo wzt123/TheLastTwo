@@ -45,7 +45,8 @@ void xx_bluetooth();
 void uart5_handler(void);
 void chaoShenBo_init(void);
 void stopLine_init(void);
-
+void Switch_Init();
+uint8 Get_Switch(void);
 void PIT0_IRQHandler(void)
 {
   
@@ -79,6 +80,7 @@ void Init_All(void)
   while(!nrf_init());
   set_vector_handler(PORTC_VECTORn ,PORTC_IRQHandler);                //设置 PORTE 的中断服务函数为 PORTE_VECTORn
   chaoShenBo_init();
+  Status=Get_Switch();
   enable_irq(PORTC_IRQn);
   enable_irq (PIT0_IRQn);                                //使能PIT0中断
 }
@@ -118,24 +120,6 @@ void Motor_Out(void)
 {
   
   speed_PWM=6550;
-  /*if(Car==2)
-  {
-  if(ABDistance<Distance-100)
-  speed_PWM -=100;
-    else if(ABDistance>Distance+100)
-  speed_PWM +=100;
-}
-  else 
-  {
-  if(buff[2]==1)
-  {
-  speed_PWM +=50;
-}
-    else if(buff[2]==2)
-  {
-  speed_PWM -=50;
-}
-}*/
   uint8 speed_Ki=15;
   uint8 speed_Kd=3;
   uint8 speed_Kp=3;
@@ -171,14 +155,14 @@ void Motor_Out(void)
     {
       if(abs(error)<4)
       {
-        speed_goal_R=6000;
-        speed_goal_L=6000;
+        speed_goal_R=3700;
+        speed_goal_L=3700;
       }
       
       else
       {
-        speed_goal_R=6000;
-        speed_goal_L=6000;
+        speed_goal_R=3700;
+        speed_goal_L=3700;
       }
       
       /*if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
@@ -187,12 +171,11 @@ void Motor_Out(void)
           stop1();
         else if((All_Black>2&&All_Black<8)||Cross_Flag==3)
         {
-          stop2();
+          stop1();
         }
           
         return;
       }*/
-      
       speed_err_R_lastlast = speed_err_R_last;
       speed_err_R_last = speed_err_R;
       
@@ -233,15 +216,18 @@ void Motor_Out(void)
   speed_PWM_L = speed_goal_L+100;
 }
 }*/
-  if(speed_get_R<50)
+  if(speed_get_L<50||speed_get_R<50)
   {
+    if(speed_get_L<50)
+    { 
+      speed_PWM_L = 0;
+    }
     if(speed_get_R<50)
     {
       speed_PWM_R = 0;
-      speed_PWM_L = 0;
     }
   }
-  else if(speed_get_R<100||speed_get_R<100)
+  else if(speed_get_R<100||speed_get_L<100)
   {
     speed_PWM_R = 6500;
     speed_PWM_L = 6500;
@@ -340,6 +326,38 @@ void Chaoche_stop(){
     ChaoChe_stop=0;
     return;
   }
+}
+
+//拨码开关初始化
+void Switch_Init()
+{
+  	
+	gpio_init(PTE10,GPI,0);
+	gpio_init(PTE9,GPI,0);
+	gpio_init(PTE8,GPI,0);
+	gpio_init(PTE7,GPI,0);
+        gpio_init(PTE6,GPI,0);
+	
+	port_init_NoALT(PTE10,PULLUP);
+	port_init_NoALT(PTE9,PULLUP);
+	port_init_NoALT(PTE8,PULLUP);
+	port_init_NoALT(PTE7,PULLUP);
+        port_init_NoALT(PTE6,PULLUP);
+}
+//获取拨码开关值
+uint8 Get_Switch(void)
+{
+  uint8 Num=0;
+  Num|=gpio_get(PTE10);
+  Num=Num<<1;
+  Num|=gpio_get(PTE9);
+  Num=Num<<1;
+  Num|=gpio_get(PTE8);
+  Num=Num<<1;
+  Num|=gpio_get(PTE7);
+  Num=Num<<1;
+  Num|=gpio_get(PTE6);
+  return Num;
 }
 /*
 * 蓝牙初始化

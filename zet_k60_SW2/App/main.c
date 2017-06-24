@@ -57,7 +57,7 @@ void  main(void)
   uint8 IR1_last = 0;
   uint8 IR2_last = 0;
   
-  //uint32 time2 = 0;
+  //uint32 time2 =  0;
   DisableInterrupts;
   NVIC_SetPriority(PORTA_IRQn,1);
   NVIC_SetPriority(DMA0_IRQn,2);
