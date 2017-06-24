@@ -101,6 +101,7 @@ uint8 Cross_Flag_Last=0;
 uint8 start_line_num[60] = {0};
 uint8 stop_line_num = 0;
 //uint8 Ring_Flag=0;
+uint8 ring_time = 0;
 uint32 sum_time = 0;
 uint8 Cross_Cnt=0;
 uint8 cross_num = 0;
@@ -108,7 +109,6 @@ uint8 white_Left_cnt = 0;
 uint8 white_Right_cnt = 0;
 int16 Servo_error = 0;
 int16 Servo_errorerror = 0;
-uint8 ring_time = 0;
 uint8 weight_num_Cross [60]=
 {
   10,10,10,10,10,
@@ -231,6 +231,20 @@ void Calculate_Slope()
 */
 void Servo_control(void)
 {  
+  if(Cross_Flag_Last==31&&Cross_Flag!=31)
+  {
+    ring_time++;
+  }
+  if(ring_time>0&&Cross_Flag!=3)
+  {
+    ring_time++;
+  }
+  
+  if(All_Black>2&ring_time>0)
+  {
+    ring_time=0;
+  }
+  
   uint8 Row_Ptr=0;
   error=0;
   error1=0;
@@ -312,17 +326,19 @@ void Servo_control(void)
       Kp =86;
       Servo_temp=Kp*error/10-100;
     }
-    else if(Cross_Flag==31||Cross_Flag==3)
+    else if(ring_time>0)
     {
-      if(Car == 1)
-      {
-          //Servo_temp=Servo_temp-Ring_First_Row*55/10;
+      if(Ring_First_Row>24)
+      {  
+        if(Car == 1)
+        {
           Servo_temp=-Ring_First_Row*100/10-30;
-      }
-      else
-      {
-          //Servo_temp=Servo_temp+Ring_First_Row*55/10;
+        }
+        else
+        {
+          //Servo_temp=Ring_First_Row*100/10+30;
           Servo_temp=-Ring_First_Row*100/10-30;
+        }
       }
     }
     else if(Cross_Flag==1)
@@ -1180,7 +1196,11 @@ void Search_Line(void)
     }
     if(abs(Ring_width_2-Col_Ptr)<3)//障碍
     {      
-      if(ring_num>5)
+      if(/*Ring_width>10&&Stop_Flag!=0&&sum_time>1000&&*/White_Cnt>3&&ring_time>0)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
+            {
+              Cross_Flag=3;/////标记为小圆环
+            }
+      else if(ring_num>5)
       {
         if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
         {
@@ -1253,16 +1273,16 @@ void Search_Line(void)
     }
     
       
-    if(abs(Ring_width_2-Col_Ptr)<3)////从黑块的左边往右找，如果Col_Ptr接近了黑块最右边，说明圆环上面有白的，判断为圆环
+    /*if(abs(Ring_width_2-Col_Ptr)<3)////从黑块的左边往右找，如果Col_Ptr接近了黑块最右边，说明圆环上面有白的，判断为圆环
     {      
         if(ring_num>5)
         {
-            if(/*Ring_width>10&&*/Stop_Flag!=0&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
+            if(Ring_width>10&&Stop_Flag!=0&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
             {
               Cross_Flag=3;/////标记为小圆环
             }
         }
-    }
+    }*/
     if(ring_num>4&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10)
     {
       Cross_Flag=31;/////标记为大圆环
