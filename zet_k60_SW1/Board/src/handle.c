@@ -103,6 +103,7 @@ uint8 start_line_num[60] = {0};
 uint8 stop_line_num = 0;
 //uint8 Ring_Flag=0;
 uint8 ring_time = 0;
+uint8 cross_time = 0;
 uint32 sum_time = 0;
 uint8 Cross_Cnt=0;
 uint8 Cross3_Cnt=0;
@@ -242,8 +243,14 @@ void Servo_control(void)
     ring_time++;
   }
   
-  if(All_Black>2&ring_time>0)
+  if((Cross_Flag_Last==2||Cross_Flag_Last==4)&&(Cross_Flag!=2&&Cross_Flag!=4))
+    cross_time++;
+  if(cross_time!=0&&abs(error)<5)
+   cross_time=0;
+  
+  if(Ring_First_Row==0&&ring_time>0)
   {
+    DELAY_MS(300);
     ring_time=0;
   }
   uint8 Row_Ptr=0;
@@ -269,21 +276,16 @@ void Servo_control(void)
   {
     Servomiddle=8808;
   }
-  if(cross_num>15)
+  
+  if(All_Black>2)
   {
-      Lastline=cross_num;
+    Lastline=All_Black;
   }
   else
   {
-    if(All_Black>2)
-    {
-      Lastline=All_Black;
-    }
-    else
-    {
-      Lastline=2;
-    }
+    Lastline=2;
   }
+  
   l = 59-Lastline;
 
   for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
@@ -304,12 +306,12 @@ void Servo_control(void)
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
     
-    if(Cross_Flag==2)
+    if(Cross_Flag==2||cross_time>0)
     {
       Kp =86;
       Servo_temp=Kp*error/10+90;
     }
-    else if(Cross_Flag==4)
+    else if(Cross_Flag==4||cross_time>0)
     {
       Kp =86;
       Servo_temp=Kp*error/10-90;
@@ -1311,7 +1313,7 @@ void Search_Line(void)
             {
               Cross_Flag=3;/////标记为小圆环
             }
-      else if(ring_num>5)
+      else if(ring_num>5&&ring_time==0)
       {
         if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
         {

@@ -27,7 +27,7 @@ uint8 Status=0;
 uint16 var;
 uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
-uint32 Distance = 2500;
+uint32 Distance = 900;
 uint8 stop_time = 0;
 uint8 ChaoChe_stop=0;
 uint8 ChaoChe_stop_time = 0;
@@ -152,16 +152,28 @@ void Motor_Out(void)
     {
       if(abs(error)<4)
       {
-        speed_goal_R=3700;
-        speed_goal_L=3700;
+        speed_goal_R=4000;
+        speed_goal_L=4000;
       }
       
       else
       {
-        speed_goal_R=3700;
-        speed_goal_L=3700;
+        speed_goal_R=4000;
+        speed_goal_L=4000;
       }
-      
+      /*if(Car==2)
+      {
+        if(ABDistance<Distance-200)
+        {
+          speed_PWM_R = speed_goal_R-300;
+          speed_PWM_L = speed_goal_L-300;
+        }
+        else if(ABDistance>Distance+200)
+        {
+          speed_PWM_R = speed_goal_R+150;
+          speed_PWM_L = speed_goal_L+150;
+        }
+      }*/
       /*if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
       {
         if(abs(error)<8&&abs(error)>=4)
@@ -200,19 +212,7 @@ void Motor_Out(void)
       stop_time=0;
   }
   //}
-  /*if(Car==2)
-  {
-  if(ABDistance<Distance-200)
-  {
-  speed_PWM_R = speed_goal_R-200;
-  speed_PWM_L = speed_goal_L-200;
-}
-         else if(ABDistance>Distance+200)
-  {
-  speed_PWM_R = speed_goal_R+100;
-  speed_PWM_L = speed_goal_L+100;
-}
-}*/
+  
   if(speed_get_L<50||speed_get_R<50)
   {
     if(speed_get_L<50)
