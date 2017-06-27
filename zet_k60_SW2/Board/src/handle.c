@@ -330,7 +330,7 @@ void Servo_control(void)
       Servo_temp=Kp*error/10-90;
     }
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
-    else if(Cross_Flag==31&&Ring_First_Row>18)
+    else if(Cross_Flag==31&&Ring_First_Row>21)
     {
         if(Car == 1)
         {
@@ -1203,31 +1203,31 @@ void Search_Line(void)
     else*/
     
     
-    if((Left_Flag[Row_Ptr+2]==3 && Right_Flag[Row_Ptr+2]==3)&&
-       (Left_Flag[Row_Ptr+1]==3 && Right_Flag[Row_Ptr+1]==3)&&
-         (Left_Flag[Row_Ptr]==3 && Right_Flag[Row_Ptr]==3)&&(
-                                                             (Left_Flag[Row_Ptr-1]==1 && Right_Flag[Row_Ptr-1]==1)||
-                                                               (Left_Flag[Row_Ptr-2]==1 && Right_Flag[Row_Ptr-2]==1)||
-                                                                 (Left_Flag[Row_Ptr-3]==1 && Right_Flag[Row_Ptr-3]==1)||
-                                                                   (Left_Flag[Row_Ptr-4]==1 && Right_Flag[Row_Ptr-4]==1)||
-                                                                     (Left_Flag[Row_Ptr-5]==1 && Right_Flag[Row_Ptr-5]==1)||
-                                                                       (Left_Flag[Row_Ptr-6]==1 && Right_Flag[Row_Ptr-6]==1))&&Row_Ptr>All_Black)//如果四行后两行丢线前两行重新找到线，十字
+    if(Row_Ptr<50&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
+       (Left_Flag[Row_Ptr+7]==3 && Right_Flag[Row_Ptr+7]==3)&&
+         (Left_Flag[Row_Ptr+6]==3 && Right_Flag[Row_Ptr+6]==3)&&(
+                                                             (Left_Flag[Row_Ptr+5]==1 && Right_Flag[Row_Ptr+5]==1)||
+                                                               (Left_Flag[Row_Ptr+4]==1 && Right_Flag[Row_Ptr+4]==1)||
+                                                                 (Left_Flag[Row_Ptr+3]==1 && Right_Flag[Row_Ptr+3]==1)||
+                                                                   (Left_Flag[Row_Ptr+2]==1 && Right_Flag[Row_Ptr+2]==1)||
+                                                                     (Left_Flag[Row_Ptr+1]==1 && Right_Flag[Row_Ptr+1]==1)||
+                                                                       (Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1))&&Row_Ptr>All_Black)//如果四行后两行丢线前两行重新找到线，十字
     {
       Cross_Flag=1;
       Cross_flag++;
       // Cross_Flag_Last=Cross_Flag;
-      if(Left_Flag[Row_Ptr-1]==1 && Right_Flag[Row_Ptr-1]==1)
-        StopRow=Row_Ptr-1;
-      else if(Left_Flag[Row_Ptr-2]==1 && Right_Flag[Row_Ptr-2]==1)
-        StopRow=Row_Ptr-2;
-      else if(Left_Flag[Row_Ptr-3]==1 && Right_Flag[Row_Ptr-3]==1)
-        StopRow=Row_Ptr-3;
-      else if(Left_Flag[Row_Ptr-4]==1 && Right_Flag[Row_Ptr-4]==1)
-        StopRow=Row_Ptr-4;
-      else if(Left_Flag[Row_Ptr-5]==1 && Right_Flag[Row_Ptr-5]==1)
-        StopRow=Row_Ptr-5;
-      else if(Left_Flag[Row_Ptr-6]==1 && Right_Flag[Row_Ptr-6]==1)
-        StopRow=Row_Ptr-6;
+      if(Left_Flag[Row_Ptr+5]==1 && Right_Flag[Row_Ptr+5]==1)
+        StopRow=Row_Ptr+5;
+      else if(Left_Flag[Row_Ptr+4]==1 && Right_Flag[Row_Ptr+4]==1)
+        StopRow=Row_Ptr+4;
+      else if(Left_Flag[Row_Ptr+3]==1 && Right_Flag[Row_Ptr+3]==1)
+        StopRow=Row_Ptr+3;
+      else if(Left_Flag[Row_Ptr+2]==1 && Right_Flag[Row_Ptr+2]==1)
+        StopRow=Row_Ptr+2;
+      else if(Left_Flag[Row_Ptr+1]==1 && Right_Flag[Row_Ptr+1]==1)
+        StopRow=Row_Ptr+1;
+      else if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
+        StopRow=Row_Ptr;
     }
     else if(Left_Flag[Row_Ptr+4]==3 &&Right_Flag[Row_Ptr+4] ==1&&
             Left_Flag[Row_Ptr+3]==3 &&Right_Flag[Row_Ptr+3] ==1&&
