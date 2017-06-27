@@ -177,6 +177,7 @@ void  main(void)
     ///À¶ÑÀ´«ËÍ±àÂëÆ÷µÄÖµ
     send_data[0] = speed_get_L;
     send_data[1] = speed_get_R;
+    //uart_putchar(UART5,speed_get_R);
     //send_data[2] = Cross_Flag*500;
     //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
     

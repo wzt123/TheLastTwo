@@ -42,8 +42,8 @@ uint8 Change_Flag;
 uint8 CrossRow=0;
 
 uint16 Servomiddle=8808;
-uint32 Servo_max=8970;
-uint32 Servo_min=8660;
+uint32 Servo_max=8935;
+uint32 Servo_min=8652;
 float CenterLineSlope=0;
 
 int16 error=0;
@@ -241,7 +241,7 @@ void Servo_control(void)
     ring_time++;
     cross_Time=0;
   }
-  if(ring_time>0/*&&Cross_Flag!=3*/)
+  if(ring_time>0)
   {
     Cross_Flag=31;
     ring_time++;
@@ -250,6 +250,7 @@ void Servo_control(void)
   if(Ring_First_Row==0&&ring_time>0)
   {
     ring_time=0;
+    Cross_Flag=0;
   }
   
   if((Cross_Flag_Last==2||Cross_Flag_Last==4)&&(Cross_Flag!=2&&Cross_Flag!=4))
@@ -1342,9 +1343,9 @@ void Search_Line(void)
     //入圆环前两边拐点   
     Left_J=0;
     Left_Y=0;
-    if(Left_left!=1&&Row_Ptr<53&&Row_Ptr>8) //左拐点确定
+    if(Left_left!=1&&Row_Ptr<48) //左拐点确定
     {
-      for(Col_Ptr=Row_Ptr;Col_Ptr<Row_Ptr+5;Col_Ptr++)
+      for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
       {
         if(Road_Left[Col_Ptr]<Road_Left[Col_Ptr+1]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr+1]==0)
         {
@@ -1353,7 +1354,7 @@ void Search_Line(void)
         }
         else if(Road_Left[Col_Ptr]>Road_Left[Col_Ptr+1]) Left_J=1;
       }
-      for(Col_Ptr=Row_Ptr;Col_Ptr>Row_Ptr-5;Col_Ptr--)
+      for(Col_Ptr=Row_Ptr+5;Col_Ptr>Row_Ptr;Col_Ptr--)
       {
         if(Road_Left[Col_Ptr-1]>Road_Left[Col_Ptr]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr-1]==0)
         {
@@ -1375,9 +1376,9 @@ void Search_Line(void)
     }
     Right_J=0;
     Right_Y=0;
-    if(Right_right!=1&&Row_Ptr<53&&Row_Ptr>8) //右拐点确定
+    if(Right_right!=1&&Row_Ptr<48) //右拐点确定
     {
-      for(Col_Ptr=Row_Ptr;Col_Ptr<Row_Ptr+5;Col_Ptr++)
+      for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
       {
         if(Road_Right[Col_Ptr]>Road_Right[Col_Ptr+1]||Road_Right[Col_Ptr]==79||Road_Right[Col_Ptr+1]==79)
         {
@@ -1386,7 +1387,7 @@ void Search_Line(void)
         }
         else if(Road_Right[Col_Ptr]<Road_Right[Col_Ptr+1]) Right_J=1;
       }
-      for(Col_Ptr=Row_Ptr;Col_Ptr>Row_Ptr-5;Col_Ptr--)
+      for(Col_Ptr=Row_Ptr+5;Col_Ptr>Row_Ptr;Col_Ptr--)
       {
         if(Road_Right[Col_Ptr-1]<Road_Right[Col_Ptr]||Road_Right[Col_Ptr]==79||Road_Right[Col_Ptr-1]==79)
         {
@@ -1417,7 +1418,7 @@ void Search_Line(void)
             }
         }
     }*/
-    if(ring_num>0&&Right_right==1&&Left_left==1&&White_Cnt>3&&(abs(Right_xian-Left_xian))<10)
+    if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10)
     {
       Cross_Flag=31;/////标记为大圆环
     }
