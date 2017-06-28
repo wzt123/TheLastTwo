@@ -70,7 +70,8 @@ void  main(void)
   set_vector_handler(PORTA_VECTORn , PORTA_IRQHandler);  
   set_vector_handler(DMA0_VECTORn , DMA0_IRQHandler);    
   int a=nrf_link_check();
-  uint8 IR1=0,IR2=0;
+  //uint8 Chaoche_stop_time=0;
+  uint8 Chaoche_start_time=0;
   while(a)
   {
     pit_time_start(PIT1);
@@ -80,8 +81,6 @@ void  main(void)
     Find_Middle();
     
     Servo_control();
-    IR1_last = IR1;
-    IR1 = gpio_get(PTE10);///读一边的红外对管
     
     speed_get_L = abs(ftm_quad_get(FTM1));          //获取FTM 正交解码 的脉冲数(负数表示反方向)
     if(Edge_L[0]!=0){
@@ -124,8 +123,6 @@ void  main(void)
     }
     ftm_quad_clean(FTM1);
     lptmr_pulse_clean();
-    IR2_last = IR2;
-    IR2 = gpio_get(PTE9);///隔一下再读另一边的红外对管
         
     if(stop_Flag !=1&&ChaoChe_stop!=1)//超车的时候电机不输出
     {  
@@ -174,6 +171,8 @@ void  main(void)
       race[1]=1;
     }
     */
+    
+ 
     ///蓝牙传送编码器的值
     //send_data[0] = speed_get_L;
     //send_data[1] = speed_get_R;
@@ -204,23 +203,24 @@ void  main(void)
     Overtake_judge();
     dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
 
-    OLED_Print_Num1(88, 1, All_Black);
-    OLED_Print_Num1(88, 2, error);
-    OLED_Print_Num1(88, 3, errorerror);
-    OLED_Print_Num1(88, 4, ABDistance);
-    OLED_Print_Num1(88, 5, Kd);
+    OLED_Print_Num1(88, 1, sum_time);
+    OLED_Print_Num1(88, 2, stopLine_temp);
+    OLED_Print_Num1(88, 3, Cross_Flag);
+    OLED_Print_Num1(88, 4, Servomiddle);
+    OLED_Print_Num1(88, 5, ChaoChe_temp);
 
     //wzt_bluetooth(); 
     
     
-    time1 = pit_time_get(PIT1)*100/(9*1024*1024);
-    if(Stop_Flag==1)
+    time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
+    
+    if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {
-      sum_time +=time1; 
-    }    
+      sum_time++; 
+    }
     pit_close(PIT1);
     nrf_data = race[1];
-    OLED_Print_Num1(88, 6, Cross_Flag);
+    OLED_Print_Num1(88, 6, ChaoChe_stop_time);
     
     //OLED_Print_Num1(88, 6, nrf_data);
   }
@@ -262,5 +262,66 @@ void PORTA_IRQHandler()
 void DMA0_IRQHandler()
 {
   camera_dma();
+}
+
+void zhidaochaoche(){
+  //复制到main函数里
+  /*   if(Car==1)
+    {
+      if(sum_time>0&&sum_time<100&&stopLine_temp==0&&Chaoche_start_time==0)
+      {        
+        if(Cross_Flag!=5&&Cross_Flag!=6&&speed_get_R!=0&&speed_get_L!=0)
+        {
+          Chaoche_stop();
+          ChaoChe_stop_time++;
+          //stop_Flag=0;
+          //Chaoche_start();
+        }
+      }
+    }
+    else if(Car==2)
+    {
+      if(sum_time>0&&sum_time<100&&stopLine_temp==0&&Chaoche_start_time==0)
+      {
+        if(Cross_Flag!=5&&Cross_Flag!=6&&speed_get_R!=0&&speed_get_L!=0)
+        {
+          Chaoche_stop();
+          ChaoChe_stop_time++;
+          //stop_Flag=0;
+          
+        }
+      }
+    }
+    
+    if(ChaoChe_stop_time>0&&ChaoChe_stop_time<50)
+      ChaoChe_stop_time++;
+    else if(ChaoChe_stop_time>=50)
+    {
+      ChaoChe_stop_time=0;
+      stop_Flag=0;
+      Chaoche_start();
+      Chaoche_start_time++;
+    }
+    
+    if(Chaoche_start_time>0&&Chaoche_start_time<25)
+      Chaoche_start_time++;
+    else if(Chaoche_start_time>=25)    {
+      Chaoche_start_time=0;
+    }
+    if(sum_time>0&&sum_time<100)
+    {
+      ChaoChe_temp=1;
+      if(Car==1)
+      {
+        Servomiddle=8750;
+      }
+      else if(Car==2)
+        Servomiddle=8560;
+    }
+    else
+    {
+      ChaoChe_temp=0;
+    }
+*/
 }
 

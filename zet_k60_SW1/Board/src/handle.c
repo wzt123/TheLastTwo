@@ -110,7 +110,7 @@ uint8 Cross_Cnt=0;
 uint8 Cross3_Cnt=0;
 uint8 Out_Left=0;
 uint8 Out_Right=0;
-
+uint8 stopLine_temp=0;
 uint8 cross_num = 0;
 uint8 white_Left_cnt = 0;
 uint8 white_Right_cnt = 0;
@@ -284,7 +284,7 @@ void Servo_control(void)
   {
     Servomiddle=8750;
   }
-  else
+  else if(ChaoChe_temp==0)
   {
     Servomiddle=8808;
   }
@@ -924,7 +924,7 @@ void Search_Line(void)
   ring_num=0;
   white_Left_cnt = 0;
   white_Right_cnt = 0;
-
+  stopLine_temp=0;
   ///////////////////////
   //前三行搜线开始
   for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
@@ -950,6 +950,7 @@ void Search_Line(void)
       }
       if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
       {
+        stopLine_temp=1;
         if(sum_time>8000)
         {
           Stop_Flag=2;
@@ -957,6 +958,7 @@ void Search_Line(void)
       }
       else if(stop_line_num>=3&&Stop_Flag==0)
       {
+        stopLine_temp=1;
         Stop_Flag=1;
       }
     
@@ -1028,6 +1030,7 @@ void Search_Line(void)
       }
       if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
       {
+        stopLine_temp=1;
         if(sum_time>8000)
         {
           Stop_Flag=2;
@@ -1035,6 +1038,7 @@ void Search_Line(void)
       }
       else if(stop_line_num>=3&&Stop_Flag==0)
       {
+        stopLine_temp=1;
         Stop_Flag=1;
       }
     }

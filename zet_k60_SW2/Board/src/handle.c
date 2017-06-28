@@ -100,6 +100,7 @@ uint8 Ring_width_1 = 0;
 uint8 Ring_width_2 = 0;
 uint8 Cross_Flag_Last=0;
 uint8 start_line_num[60] = {0};
+uint8 stopLine_temp=0;
 uint8 stop_line_num = 0;
 //uint8 Ring_Flag=0;
 uint8 ring_time = 0;
@@ -283,7 +284,7 @@ void Servo_control(void)
   {
     Servomiddle=8450;
   }
-  else
+  else if(ChaoChe_temp==0)
   {
     Servomiddle=8508;
   }
@@ -381,7 +382,7 @@ void Servo_control(void)
         {
           Kp = 35;
           Kd = 5;
-        }
+        } 
         else
         {
           Kp = 35;
@@ -893,7 +894,7 @@ void Search_Line(void)
   ring_num=0;
   white_Left_cnt = 0;
   white_Right_cnt = 0;
-
+  stopLine_temp=0;
   ///////////////////////
   //前三行搜线开始
   for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
@@ -997,6 +998,7 @@ void Search_Line(void)
       }
       if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
       {
+        stopLine_temp=1;
         if(sum_time>8000)
         {
           Stop_Flag=2;
@@ -1004,6 +1006,7 @@ void Search_Line(void)
       }
       else if(stop_line_num>=3&&Stop_Flag==0)
       {
+        stopLine_temp=1;
         Stop_Flag=1;
       }
     }

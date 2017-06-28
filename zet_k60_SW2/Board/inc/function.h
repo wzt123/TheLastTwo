@@ -12,6 +12,7 @@ extern void stop2(void);
 extern void xx_bluetooth();
 extern void Switch_Init();
 extern uint8 Get_Switch(void);
+extern void Chaoche_start();
 //extern uint16 speed_get;
 extern uint16 var;//∫ÏÕ‚≤‚æ‡£ª
 //extern uint16 speed_goal;
@@ -31,5 +32,6 @@ extern uint16 send_data[3][8];
 extern void Chaoche_stop();
 extern uint8 ChaoChe_stop;
 extern uint8 ChaoChe_stop_time;
+extern uint8 ChaoChe_temp;
 ////
 #endif

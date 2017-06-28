@@ -76,6 +76,7 @@ extern uint8 white_Right_cnt;
 extern uint8 Ring_width_1;
 extern uint8 Ring_width_2;
 extern uint8 Cross_Cnt;
+extern uint8 stopLine_temp;
 /////////////////////////////////////////
 //extern int32 All_Black;
 extern uint16 Servo_value;

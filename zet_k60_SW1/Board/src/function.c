@@ -31,6 +31,7 @@ uint32 Distance = 900;
 uint8 stop_time = 0;
 uint8 ChaoChe_stop=0;
 uint8 ChaoChe_stop_time = 0;
+uint8 ChaoChe_temp = 0;
 /*uint8 Edge_R[3]= {0};
 uint8 Edge_L[3]= {0};   
 uint8 stopline_num = 0;
@@ -324,10 +325,10 @@ void stop_Car(void)
   gpio_set(PTC2,1);//驱动反向使能
   gpio_set(PTB17,1);//驱动反向使能
   gpio_set(PTB16,0);//驱动反向使能
-  ftm_pwm_duty(FTM2,FTM_CH0,7800);//B2
-  ftm_pwm_duty(FTM2,FTM_CH1,7800);//B1
+  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
   ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
-  DELAY_MS(130);
+  DELAY_MS(200);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
   stop_Flag  = 1;
@@ -338,8 +339,8 @@ void stop_Car(void)
 *超车停车
 */
 void Chaoche_stop(){
-  if(ChaoChe_stop_time<7)
-  {
+  //if(ChaoChe_stop_time<7)
+  //{
     if(speed_get_L>10||speed_get_R>10)
     {
       
@@ -347,21 +348,32 @@ void Chaoche_stop(){
       gpio_set(PTC2,1);//驱动反向使能
       gpio_set(PTB17,1);//驱动反向使能
       gpio_set(PTB16,0);//驱动反向使能
-      ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
-      ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
-      ChaoChe_stop_time++;
+      ftm_pwm_duty(FTM2,FTM_CH0,8000);//B2
+      ftm_pwm_duty(FTM2,FTM_CH1,8000);//B1
+      //ChaoChe_stop_time++;
     }
-  }
+  //}
   else
   {
     gpio_set(PTC3,1);//驱动正向
     gpio_set(PTC2,0);//驱动正向
     gpio_set(PTB17,0);//驱动反向
     gpio_set(PTB16,1);//驱动正向
-    ChaoChe_stop=0;
+    //ChaoChe_stop=0;
     return;
   }
 }
+
+void Chaoche_start()
+{
+  gpio_set(PTC3,1);
+  gpio_set(PTC2,0);
+  gpio_set(PTB17,0);
+  gpio_set(PTB16,1);
+  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2左电机
+  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1右电机
+}
+
 //拨码开关初始化
 
 void Switch_Init()
