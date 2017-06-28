@@ -46,7 +46,7 @@ extern uint8 C;
 extern uint16 Servomiddle;
 extern uint8 Turn_Left;
 extern uint8 Overtake;
-
+extern uint8 ring_num;
 
 extern uint8 CrossRow;
 //

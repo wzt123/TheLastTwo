@@ -48,7 +48,7 @@ uint16 speed_rember_L[3] = {0};
 void  main(void)
 {
   //zet_bluetooth();
-  uint16 send_data[3] = {0};
+  uint16 send_data[4] = {0};
   uint8 time1=0;
   sum_time = 0;
   char nrf_data=0;
@@ -174,12 +174,13 @@ void  main(void)
     
  
     ///蓝牙传送编码器的值
-    //send_data[0] = speed_get_L;
-    //send_data[1] = speed_get_R;
-      send_data[0] = Cross_Flag*50+50;
+    send_data[0] = Cross_Flag;
+    send_data[1] = Right_xian;
+    send_data[2] = Left_xian;
+    send_data[3] = ring_num;
     if(speed_get_R>50&&Cross_Flag!=0)
     uart_putchar(UART5,Cross_Flag);
-      //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
+    //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
    
     nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
     nrf_data = buff[1];
@@ -203,11 +204,11 @@ void  main(void)
     Overtake_judge();
     dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
 
-    OLED_Print_Num1(88, 1, sum_time);
-    OLED_Print_Num1(88, 2, stopLine_temp);
+    OLED_Print_Num1(88, 1, All_Black);
+    OLED_Print_Num1(88, 2, error);
     OLED_Print_Num1(88, 3, Cross_Flag);
-    OLED_Print_Num1(88, 4, Servomiddle);
-    OLED_Print_Num1(88, 5, ChaoChe_temp);
+    OLED_Print_Num1(88, 4, Right_xian);
+    OLED_Print_Num1(88, 5, Left_xian);
 
     //wzt_bluetooth(); 
     
@@ -220,8 +221,11 @@ void  main(void)
     }
     pit_close(PIT1);
     nrf_data = race[1];
-    OLED_Print_Num1(88, 6, ChaoChe_stop_time);
-    
+    OLED_Print_Num1(88, 6, ring_num);
+    uart_putchar   (UART5 , Cross_Flag);
+    uart_putchar   (UART5 , Right_xian);
+    uart_putchar   (UART5 , Left_xian);
+    uart_putchar   (UART5 , ring_num);
     //OLED_Print_Num1(88, 6, nrf_data);
   }
 }
