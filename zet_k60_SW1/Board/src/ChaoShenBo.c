@@ -60,21 +60,21 @@ void PORTE_IRQHandler(void)
     chaoshengboTime = (0xFFFFFFFF - PIT_CVAL0)/90;//50M总线时钟，计算得到时间，单位是微秒
     ABDistance = chaoshengboTime * 340/1000;//一秒钟的声音速度假设为340米，由于chaoshengboTime单位是微秒，/1000后得到单位是mm
     ////
-    if(ABDistance<300)
+    /*if(ABDistance<300)
     {
       ABDistance = ABDistance_last;
     }
     else if(abs(ABDistance_last-ABDistance)<400)
-    {
+    {*/
       ABDistance_A = ABDistance_B;
       ABDistance_B = ABDistance_C;
       ABDistance_C = ABDistance_last;
       ABDistance_last = ABDistance;
-    }
+    /*}
     else
     {
       ABDistance = ABDistance_last;
-    }
+    }*/
     
     filter[0] = ABDistance_A;
     filter[1] = ABDistance_B; 

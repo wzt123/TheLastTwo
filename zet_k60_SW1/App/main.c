@@ -76,6 +76,7 @@ uint16 speed_rember_L[3] = {0};
   while(a)
   {
     pit_time_start(PIT1);
+    ABDistance=0;
     camera_get_img();                                   //摄像头获取图像
     img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
     Search_Line();
@@ -211,7 +212,6 @@ uint16 speed_rember_L[3] = {0};
     }
     
     
-    
     Overtake_judge();
     dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
 
@@ -221,9 +221,7 @@ uint16 speed_rember_L[3] = {0};
     OLED_Print_Num1(88, 4, Servomiddle);
     OLED_Print_Num1(88, 5, ChaoChe_temp);
 
-    //wzt_bluetooth(); 
-    
-    
+    //wzt_bluetooth();      
     time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
     
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
@@ -232,7 +230,7 @@ uint16 speed_rember_L[3] = {0};
     }
     pit_close(PIT1);
     nrf_data = race[1];
-    OLED_Print_Num1(88, 6, ChaoChe_stop_time);
+    OLED_Print_Num1(88, 6, nrf_data);
     
     //OLED_Print_Num1(88, 6, nrf_data);
   }

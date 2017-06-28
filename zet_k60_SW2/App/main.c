@@ -75,6 +75,7 @@ void  main(void)
   while(a)
   {
     pit_time_start(PIT1);
+    ABDistance=0;
     camera_get_img();                                   //摄像头获取图像
     img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
     Search_Line();
@@ -174,18 +175,19 @@ void  main(void)
     
  
     ///蓝牙传送编码器的值
-    send_data[0] = Cross_Flag;
+    send_data[0] = ABDistance;
     send_data[1] = Right_xian;
     send_data[2] = Left_xian;
     send_data[3] = ring_num;
-    if(speed_get_R>50&&Cross_Flag!=0)
-    uart_putchar(UART5,Cross_Flag);
-    //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
+    //if(speed_get_R>50&&Cross_Flag!=0)
+    //uart_putchar(UART5,Cross_Flag);
+    vcan_sendware((uint16_t *)send_data, sizeof(send_data));
    
     nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
-    nrf_data = buff[1];
+    nrf_data = buff[0];
+    
     ////////////////后车检测到超声波信号，buff[1]发来一个1，表明超车成功
-    if(buff[1]==1)
+    /*if(buff[1]==1)
     {
       Car=1;
       race[0]=0;
@@ -198,9 +200,9 @@ void  main(void)
       gpio_set(PTE25,1);//后车开启超声波
       gpio_set(PTE24,1);
     }
-    
-    
-    
+    */
+    //if(Car==2)
+    //race[0]=1;
     Overtake_judge();
     dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
 
@@ -220,12 +222,12 @@ void  main(void)
       sum_time++; 
     }
     pit_close(PIT1);
-    nrf_data = race[1];
-    OLED_Print_Num1(88, 6, ring_num);
-    uart_putchar   (UART5 , Cross_Flag);
+    //nrf_data = race[1];
+    OLED_Print_Num1(88, 6, nrf_data);
+    /*uart_putchar   (UART5 , Cross_Flag);
     uart_putchar   (UART5 , Right_xian);
     uart_putchar   (UART5 , Left_xian);
-    uart_putchar   (UART5 , ring_num);
+    uart_putchar   (UART5 , ring_num);*/
     //OLED_Print_Num1(88, 6, nrf_data);
   }
 }
