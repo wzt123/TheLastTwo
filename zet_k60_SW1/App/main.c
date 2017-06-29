@@ -76,7 +76,6 @@ uint16 speed_rember_L[3] = {0};
   while(a)
   {
     pit_time_start(PIT1);
-    ABDistance=0;
     camera_get_img();                                   //摄像头获取图像
     img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
     Search_Line();

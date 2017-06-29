@@ -69,13 +69,12 @@ void  main(void)
   
   set_vector_handler(PORTA_VECTORn , PORTA_IRQHandler);  
   set_vector_handler(DMA0_VECTORn , DMA0_IRQHandler);    
-  int a=nrf_link_check();
+  int a=nrf_link_check(); 
   //uint8 Chaoche_stop_time=0;
   uint8 Chaoche_start_time=0;
   while(a)
   {
     pit_time_start(PIT1);
-    ABDistance=0;
     camera_get_img();                                   //摄像头获取图像
     img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
     Search_Line();

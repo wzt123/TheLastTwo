@@ -200,19 +200,19 @@ void Motor_Out(void)
           speed_goal_L=4300;
         }
       }
-      /*if(Car==2)
+      if(Car==2)
       {
         if(ABDistance<Distance-200)
         {
-          speed_PWM_R = speed_goal_R-300;
-          speed_PWM_L = speed_goal_L-300;
+          speed_goal_R = speed_goal_R-300;
+          speed_goal_L = speed_goal_L-300;
         }
         else if(ABDistance>Distance+200)
         {
-          speed_PWM_R = speed_goal_R+150;
-          speed_PWM_L = speed_goal_L+150;
+          speed_goal_R = speed_goal_R+300;
+          speed_goal_L = speed_goal_L+300;
         }
-      }*/
+      }
       /*if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
       {
         if(abs(error)<8&&abs(error)>=4)
