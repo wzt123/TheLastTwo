@@ -588,7 +588,7 @@ void Find_Middle()
   Overtake=0;
   //
   Out_Right=0;
-  //Out_Left=0;
+  Out_Left=0;
   /////
   uint8 repair_R[60]= {0}; /////右边丢失的求斜率的数组
   uint8 repair_L[60]= {0}; /////左边丢失的求斜率的数组
@@ -596,7 +596,6 @@ void Find_Middle()
   repair_slope_L=0;
   /////
   //filter_Middle(Road_Center);
-  
   //斜入十字判断
   if(Cross_Flag==1&&StopRow>All_Black)
   {
@@ -669,7 +668,6 @@ void Find_Middle()
   else if(Cross_Flag_Last!=31)
   {
     if(Cross3_Cnt==1) Cross3_Cnt=2;//进入圆环
-    //else if(Cross3_Cnt==2) Cross3_Cnt=3;
   }
   //if(Cross3_Cnt==2&&error>10) Cross3_Cnt=4;//右边过
   //if(Cross3_Cnt==2) Cross3_Cnt=5;//左边过
@@ -783,7 +781,11 @@ void Find_Middle()
         break;
       }
     }
-    if(Left_left==0) Out_Left=1;
+    if(Left_left==0) 
+    {
+      Cross3_Cnt=0;
+      Out_Left=1;
+    }
   }
   /*else if(Cross3_Cnt==9)
   {

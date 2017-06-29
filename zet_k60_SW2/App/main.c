@@ -224,10 +224,6 @@ void  main(void)
     }
     pit_close(PIT1);
     //nrf_data = race[1];
-<<<<<<< HEAD
-    OLED_Print_Num1(88, 6, Out_Left);
-=======
->>>>>>> 9b66335ae94922985e835d655338b611e5514832
     /*uart_putchar   (UART5 , Cross_Flag);
     uart_putchar   (UART5 , Right_xian);
     uart_putchar   (UART5 , Left_xian);
