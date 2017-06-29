@@ -322,15 +322,15 @@ void Servo_control(void)
     if(Cross_Flag==2||cross_time>0)
     {
       Kp =86;
-      Servo_temp=Kp*error/10+90;
+      Servo_temp=Kp*error/10+80;
     }
     else if(Cross_Flag==4||cross_time>0)
     {
       Kp =86;
-      Servo_temp=Kp*error/10-90;
+      Servo_temp=Kp*error/10-100;
     }
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
-    else if(Cross_Flag==31&&Ring_First_Row>18)
+    else if(Cross_Flag==31&&Ring_First_Row>15)
     {
         if(Car == 1)
         {
@@ -396,12 +396,12 @@ void Servo_control(void)
       if(error<0)
       {
         Kp = 30;
-        Kd = 7;
+        Kd = 10;
       }
-      else
+      else   //срв╙
       {
-        Kp = 25;
-        Kd=4;
+        Kp = 30;
+        Kd = 10;
       }
       
     }

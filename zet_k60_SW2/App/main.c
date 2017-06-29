@@ -207,9 +207,9 @@ void  main(void)
 
     OLED_Print_Num1(88, 1, All_Black);
     OLED_Print_Num1(88, 2, error);
-    OLED_Print_Num1(88, 3, Cross_Flag);
-    OLED_Print_Num1(88, 4, Right_xian);
-    OLED_Print_Num1(88, 5, Left_xian);
+    OLED_Print_Num1(88, 3, errorerror);
+    OLED_Print_Num1(88, 4, Kp);
+    OLED_Print_Num1(88, 5, Kd);
 
     //wzt_bluetooth(); 
     
@@ -222,7 +222,7 @@ void  main(void)
     }
     pit_close(PIT1);
     //nrf_data = race[1];
-    OLED_Print_Num1(88, 6, nrf_data);
+    OLED_Print_Num1(88, 6, Servo_temp);
     /*uart_putchar   (UART5 , Cross_Flag);
     uart_putchar   (UART5 , Right_xian);
     uart_putchar   (UART5 , Left_xian);

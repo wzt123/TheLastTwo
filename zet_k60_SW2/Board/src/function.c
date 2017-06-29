@@ -136,6 +136,8 @@ void Motor_Out(void)
 }
   else
   {*/
+  
+  //·½Ïò
   gpio_set(PTC3,1);
   gpio_set(PTC2,0);
   gpio_set(PTB17,0);
