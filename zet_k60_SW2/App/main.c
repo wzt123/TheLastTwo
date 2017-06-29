@@ -174,7 +174,7 @@ void  main(void)
     
  
     ///À¶ÑÀ´«ËÍ±àÂëÆ÷µÄÖµ
-    send_data[0] = Cross_Flag*500;
+    send_data[0] = Out_Left*500;
     send_data[1] = Right_xian;
     send_data[2] = Left_xian;
     send_data[3] = ring_num;
