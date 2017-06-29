@@ -241,8 +241,8 @@ void Motor_Out(void)
       speed_increment_L= speed_Kp*(speed_err_L-speed_err_L_last)/10+
                           speed_Ki*speed_err_L/10+
                             speed_Kd*(speed_err_L-2*speed_err_L_last+speed_err_L_lastlast)/10;
-      speed_PWM_R=speed_PWM_R+speed_increment_R;
-      speed_PWM_L=speed_PWM_R+speed_increment_L;
+      speed_PWM_R=6100+speed_increment_R;
+      speed_PWM_L=6100+speed_increment_L;
       
     }
     else if(stop_time<3)

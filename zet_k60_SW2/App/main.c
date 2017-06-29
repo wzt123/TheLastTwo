@@ -203,18 +203,20 @@ void  main(void)
     //if(Car==2)
     //race[0]=1;
     Overtake_judge();
-    dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-
-    OLED_Print_Num1(88, 1, All_Black);
-    OLED_Print_Num1(88, 2, error);
-    OLED_Print_Num1(88, 3, errorerror);
-    OLED_Print_Num1(88, 4, Kp);
-    OLED_Print_Num1(88, 5, Kd);
-
-    //wzt_bluetooth(); 
+    if(speed_get_R<60&&speed_get_L<60)
+    {
+      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
+      
+      OLED_Print_Num1(88, 1, All_Black);
+      OLED_Print_Num1(88, 2, error);
+      OLED_Print_Num1(88, 3, errorerror);
+      OLED_Print_Num1(88, 4, Kp);
+      OLED_Print_Num1(88, 5, Kd);
+      time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
+      //wzt_bluetooth();     
+      OLED_Print_Num1(88, 6, Servo_temp);
+    }
     
-    
-    time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
     
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {
@@ -222,7 +224,6 @@ void  main(void)
     }
     pit_close(PIT1);
     //nrf_data = race[1];
-    OLED_Print_Num1(88, 6, Servo_temp);
     /*uart_putchar   (UART5 , Cross_Flag);
     uart_putchar   (UART5 , Right_xian);
     uart_putchar   (UART5 , Left_xian);
