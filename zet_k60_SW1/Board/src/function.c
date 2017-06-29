@@ -17,10 +17,10 @@ uint16 speed_PWM_R = 0;
 uint16 speed_PWM_L = 0;
 int16  speed_err_R = 0;
 int16  speed_err_L = 0;
-uint8 speed_err_R_last = 0;
-uint8 speed_err_L_last = 0;
-uint8 speed_err_R_lastlast = 0;
-uint8 speed_err_L_lastlast = 0;
+int16 speed_err_R_last = 0;
+int16 speed_err_L_last = 0;
+int16 speed_err_R_lastlast = 0;
+int16 speed_err_L_lastlast = 0;
 int16 speed_increment_R;
 int16 speed_increment_L;
 uint8 Status=0;
@@ -154,51 +154,55 @@ void Motor_Out(void)
       
       if(abs(error)<4)
       {
-        if(Status==0)
-        {
-          speed_goal_R=3700;
-          speed_goal_L=3700;
-        }
-        else if(Status==1)
-        {
-          speed_goal_R=4000;
-          speed_goal_L=4000;
-        }
-        else if(Status==2)
-        {
-          speed_goal_R=4400;
-          speed_goal_L=4400;
-        }
-        
-        else if(Status==3)
-        {
-          speed_goal_R=4400;
-          speed_goal_L=4400;
-        }
+//        if(Status==0)
+//        {
+//          speed_goal_R=3700;
+//          speed_goal_L=3700;
+//        }
+//        else if(Status==1)
+//        {
+//          speed_goal_R=4000;
+//          speed_goal_L=4000;
+//        }
+//        else if(Status==2)
+//        {
+//          speed_goal_R=4400;
+//          speed_goal_L=4400;
+//        }
+//        
+//        else if(Status==3)
+//        {
+//          speed_goal_R=4400;
+//          speed_goal_L=4400;
+//        }
+        speed_goal_R=3700;
+        speed_goal_L=3700;
       }
       
       else
       {
-        if(Status==0)
-        {
-          speed_goal_R=3700;
-          speed_goal_L=3700;
-        }
-        else if(Status==1)
-        {
-          speed_goal_R=4000;
-          speed_goal_L=4000;
-        }
-        else if(Status==2)
-        {
-          speed_goal_R=4000;
-          speed_goal_L=4000;
-        }
-        else if(Status==3)
-        {
-          speed_goal_R=4300;
-          speed_goal_L=4300;
-        }
+        speed_goal_R=3700;
+        speed_goal_L=3700;
+//        if(Status==0)
+//        {
+//          speed_goal_R=3700;
+//          speed_goal_L=3700;
+//        }
+//        else if(Status==1)
+//        {
+//          speed_goal_R=4000;
+//          speed_goal_L=4000;
+//        }
+//        else if(Status==2)
+//        {
+//          speed_goal_R=4000;
+//          speed_goal_L=4000;
+//        }
+//        else if(Status==3)
+//        {
+//          speed_goal_R=4300;
+//          speed_goal_L=4300;
+//        }
       }
       if(Car==2)
       {

@@ -79,7 +79,7 @@ void  main(void)
     img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
     Search_Line();
     Find_Middle();
-    
+    Road_Type();
     Servo_control();
     
     speed_get_L = abs(ftm_quad_get(FTM1));          //获取FTM 正交解码 的脉冲数(负数表示反方向)
@@ -203,18 +203,20 @@ void  main(void)
     //if(Car==2)
     //race[0]=1;
     Overtake_judge();
-    dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
 
-    OLED_Print_Num1(88, 1, Cross_Flag);
-    OLED_Print_Num1(88, 2, error);
-    OLED_Print_Num1(88, 3, errorerror);
-    OLED_Print_Num1(88, 4, Out_Left);
-    OLED_Print_Num1(88, 5, Cross3_Cnt);
-
-    //wzt_bluetooth(); 
-    
-    
-    time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
+    if(speed_get_R<60&&speed_get_L<60)
+    {
+      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
+      
+      OLED_Print_Num1(88, 1, All_Black);
+      OLED_Print_Num1(88, 2, error);
+      OLED_Print_Num1(88, 3, errorerror);
+      OLED_Print_Num1(88, 4, Kp);
+      OLED_Print_Num1(88, 5, Kd);
+      time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
+      //wzt_bluetooth();     
+      OLED_Print_Num1(88, 6, Servo_temp);
+    }
     
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {
@@ -222,7 +224,10 @@ void  main(void)
     }
     pit_close(PIT1);
     //nrf_data = race[1];
+<<<<<<< HEAD
     OLED_Print_Num1(88, 6, Out_Left);
+=======
+>>>>>>> 9b66335ae94922985e835d655338b611e5514832
     /*uart_putchar   (UART5 , Cross_Flag);
     uart_putchar   (UART5 , Right_xian);
     uart_putchar   (UART5 , Left_xian);

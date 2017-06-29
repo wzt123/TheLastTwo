@@ -17,10 +17,10 @@ uint16 speed_PWM_R = 0;
 uint16 speed_PWM_L = 0;
 int16  speed_err_R = 0;
 int16  speed_err_L = 0;
-uint8 speed_err_R_last = 0;
-uint8 speed_err_L_last = 0;
-uint8 speed_err_R_lastlast = 0;
-uint8 speed_err_L_lastlast = 0;
+int16 speed_err_R_last = 0;
+int16 speed_err_L_last = 0;
+int16 speed_err_R_lastlast = 0;
+int16 speed_err_L_lastlast = 0;
 int16 speed_increment_R;
 int16 speed_increment_L;
 uint8 Status=0;
@@ -136,6 +136,8 @@ void Motor_Out(void)
 }
   else
   {*/
+  
+  //·½Ïò
   gpio_set(PTC3,1);
   gpio_set(PTC2,0);
   gpio_set(PTB17,0);
