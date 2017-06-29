@@ -1032,7 +1032,7 @@ void Search_Line(void)
       if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
       {
         stopLine_temp=1;
-        if(sum_time>8000)
+        if(sum_time>100)
         {
           Stop_Flag=2;
         }
