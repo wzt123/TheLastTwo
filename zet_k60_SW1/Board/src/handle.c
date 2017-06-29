@@ -1422,7 +1422,7 @@ void Search_Line(void)
             }
         }
     }*/
-    if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10)
+    if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row)
     {
       Cross_Flag=31;/////标记为大圆环
     }
