@@ -174,7 +174,7 @@ void  main(void)
     
  
     ///À¶ÑÀ´«ËÍ±àÂëÆ÷µÄÖµ
-    send_data[0] = ABDistance;
+    send_data[0] = Cross_Flag*500;
     send_data[1] = Right_xian;
     send_data[2] = Left_xian;
     send_data[3] = ring_num;
@@ -205,11 +205,11 @@ void  main(void)
     Overtake_judge();
     dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
 
-    OLED_Print_Num1(88, 1, All_Black);
+    OLED_Print_Num1(88, 1, Cross_Flag);
     OLED_Print_Num1(88, 2, error);
     OLED_Print_Num1(88, 3, errorerror);
-    OLED_Print_Num1(88, 4, Right_xian);
-    OLED_Print_Num1(88, 5, Left_xian);
+    OLED_Print_Num1(88, 4, Out_Left);
+    OLED_Print_Num1(88, 5, Cross3_Cnt);
 
     //wzt_bluetooth(); 
     
@@ -222,7 +222,7 @@ void  main(void)
     }
     pit_close(PIT1);
     //nrf_data = race[1];
-    OLED_Print_Num1(88, 6, stopLine_temp);
+    OLED_Print_Num1(88, 6, Out_Left);
     /*uart_putchar   (UART5 , Cross_Flag);
     uart_putchar   (UART5 , Right_xian);
     uart_putchar   (UART5 , Left_xian);
