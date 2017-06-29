@@ -80,7 +80,7 @@ uint16 speed_rember_L[3] = {0};
     img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
     Search_Line();
     Find_Middle();
-    
+    Road_Type();
     Servo_control();
     IR1_last = IR1;
     IR1 = gpio_get(PTE10);///读一边的红外对管

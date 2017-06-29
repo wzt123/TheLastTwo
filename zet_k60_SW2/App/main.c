@@ -79,7 +79,7 @@ void  main(void)
     img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
     Search_Line();
     Find_Middle();
-    
+    Road_Type();
     Servo_control();
     
     speed_get_L = abs(ftm_quad_get(FTM1));          //获取FTM 正交解码 的脉冲数(负数表示反方向)

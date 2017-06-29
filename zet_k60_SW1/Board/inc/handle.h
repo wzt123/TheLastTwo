@@ -58,6 +58,7 @@ extern void Edge_Filter(void);
 extern void Servo_control(void);
 extern void Overtake_judge();
 extern void Cross_Search(void);
+extern void Road_Type(void);
 extern int16 error;
 //////////////////////////////////////////
 extern uint8 Bend_Right;

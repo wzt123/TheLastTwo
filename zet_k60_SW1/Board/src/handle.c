@@ -1442,4 +1442,24 @@ void Search_Line(void)
 }
 //寻线函数结束
 
-//寻线函数结束
+//赛道类型判断
+uint32 Road_Type_sum_error;
+uint8  Road_Type_error;
+void Road_Type(void)
+{
+  Road_type=0;
+  Road_Type_sum_error=0;
+  uint8 l=(59-All_Black)/4;
+  uint8 last_i=59;
+  Road_Type_error=0;
+  for(int i=55;i>=All_Black;i=i-4)
+  {
+    Road_Type_sum_error=Road_Type_sum_error+abs(Road_Center[last_i]-Road_Center[i]);
+    last_i = i;
+  }
+  Road_Type_error=Road_Type_sum_error/l;
+  if(All_Black<2&&Road_Type_error<2)
+    Road_type=1;//直道
+  else
+    Road_type=2;//其他赛道
+}
