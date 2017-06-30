@@ -1179,7 +1179,7 @@ void Search_Line(void)
         break;
       }
     }//结束for_搜右边
-    if(Cross_flag<2)
+    /*if(Cross_flag<2)
     {
       if(img[Row_Ptr][Road_Right[Row_Ptr+1]]==255&&Right_Flag[Row_Ptr+1]==3)
       {
@@ -1191,7 +1191,7 @@ void Search_Line(void)
         Road_Left[Row_Ptr]=Road_Left[Row_Ptr+1];
         Left_Flag[Row_Ptr]=3;
       }
-    }
+    }*/
     if(Col_Ptr==REnd && img[Row_Ptr][39] ==0 && img[Row_Ptr][40]==0 && img[Row_Ptr][41]==0) Right_Flag[Row_Ptr]=2;//在搜线范围内没找到_全黑行
     if(Col_Ptr==REnd&& img[Row_Ptr][39]==255 && img[Row_Ptr][40]==255 && img[Row_Ptr][41]==255) Right_Flag[Row_Ptr]=3;//在搜线范围内没找到_全白行
     if(Row_Ptr==30&&Col_Ptr==REnd&&img[Row_Ptr][70]==255) Right_sign=1;
