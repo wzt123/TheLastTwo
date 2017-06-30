@@ -46,10 +46,10 @@ uint32 Servo_max=8935;
 uint32 Servo_min=8652;
 float CenterLineSlope=0;
 
-int16 error=0;
-int32 error1=0;
-int32 error2=0;
-int16 errorerror=0;
+int16 error=0;   //0~40左右
+int32 error1=0;  //
+int32 error2=0;  //
+int16 errorerror=0; //0~35左右
 uint8 Flag_L=0;
 uint8 Flag_R=0;
 
@@ -327,7 +327,7 @@ void Servo_control(void)
     else if(Cross_Flag==4||cross_time>0)
     {
       Kp =86;
-      Servo_temp=Kp*error/10-100;
+      Servo_temp=Kp*error/10-110;
     }
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
     else if(Cross_Flag==31&&Ring_First_Row>15)
@@ -364,7 +364,7 @@ void Servo_control(void)
         Kd = 10;
       }
     }
-    else if(All_Black<12)
+    else if(All_Black<12)//长直道进弯道
     {
       if(error<0)
       {
@@ -396,12 +396,12 @@ void Servo_control(void)
       if(error<0)
       {
         Kp = 30;
-        Kd = 10;
+        Kd = 11;
       }
       else   //右转
       {
         Kp = 30;
-        Kd = 10;
+        Kd = 11;
       }
       
     }
@@ -433,20 +433,20 @@ void Servo_control(void)
       }
     }*/
     
-    else if(All_Black<27)
+    else if(All_Black<27)//弯道内部
     {
       if(error<0)
       {
-        Kp=33;
+        Kp=30;
         Kd=18;
       }
       else
       {
-        Kp=33;
+        Kp=30;
         Kd =18;
       }
     }
-    else if(All_Black<32)
+    else if(All_Black<32)//靠弯道外边
     {
       if(error<0)
       {
@@ -459,7 +459,7 @@ void Servo_control(void)
         Kd =20;
       }
     }
-    else if(All_Black<36)
+    else if(All_Black<36)//靠弯道外边
     {
       if(error<0)
       {
