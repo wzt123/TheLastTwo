@@ -46,10 +46,10 @@ uint32 Servo_max=8935;
 uint32 Servo_min=8652;
 float CenterLineSlope=0;
 
-int16 error=0;
-int32 error1=0;
-int32 error2=0;
-int16 errorerror=0;
+int16 error=0;   //0~40左右
+int32 error1=0;  //
+int32 error2=0;  //
+int16 errorerror=0; //0~35左右
 uint8 Flag_L=0;
 uint8 Flag_R=0;
 
@@ -332,7 +332,7 @@ void Servo_control(void)
     else if(Cross_Flag==4||cross_time>0)
     {
       Kp =86;
-      Servo_temp=Kp*error/10-100;
+      Servo_temp=Kp*error/10-110;
     }
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
     else if(Cross_Flag==31&&Ring_First_Row>15)
@@ -369,7 +369,7 @@ void Servo_control(void)
         Kd = 10;
       }
     }
-    else if(All_Black<12)
+    else if(All_Black<12)//长直道进弯道
     {
       if(error<0)
       {
@@ -401,12 +401,12 @@ void Servo_control(void)
       if(error<0)
       {
         Kp = 30;
-        Kd = 10;
+        Kd = 11;
       }
       else   //右转
       {
         Kp = 30;
-        Kd = 10;
+        Kd = 11;
       }
       
     }
@@ -438,20 +438,20 @@ void Servo_control(void)
       }
     }*/
     
-    else if(All_Black<27)
+    else if(All_Black<27)//弯道内部
     {
       if(error<0)
       {
-        Kp=33;
+        Kp=30;
         Kd=18;
       }
       else
       {
-        Kp=33;
+        Kp=30;
         Kd =18;
       }
     }
-    else if(All_Black<32)
+    else if(All_Black<32)//靠弯道外边
     {
       if(error<0)
       {
@@ -464,7 +464,7 @@ void Servo_control(void)
         Kd =20;
       }
     }
-    else if(All_Black<36)
+    else if(All_Black<36)//靠弯道外边
     {
       if(error<0)
       {
@@ -604,6 +604,9 @@ void Edge_Filter()
 void Find_Middle()
 {
   Row_Ptr=0;
+  uint8 Left_J=0;
+  uint8 Left_Y=0;
+  uint8 Left_left=0;
   uint8 CutLen=8;
   uint8 Cut=0;
   uint8 Edge[3]= {0};
@@ -688,95 +691,99 @@ void Find_Middle()
   }
   //************************//
   //出圆环判断
-  /*if(Cross_Flag==3)
+  if(Cross_Flag==31)
   {
     if(Cross3_Cnt==0) Cross3_Cnt=1;//遇到圆环
-    else if(Cross3_Cnt>1) Cross3_Cnt=1;
   }
-  else if(Cross_Flag!=3)
+  else if(Cross_Flag_Last!=31)
   {
-    if(Cross3_Cnt==1) Cross3_Cnt=2;//第一个十字路口结束
-    //else if(Cross3_Cnt==2) Cross3_Cnt=3;
+    if(Cross3_Cnt==1) Cross3_Cnt=2;//进入圆环
   }
-  if(Cross3_Cnt==2&&error>10) Cross3_Cnt=4;//右边过
-  else if(Cross3_Cnt==2&&error<-10) Cross3_Cnt=5;//左边过
-  if(Cross3_Cnt==4&&error<-10) Cross3_Cnt=6; //右边过
-  else if(Cross3_Cnt==5&&error>10) Cross3_Cnt=7; //左边过
+  if(Cross3_Cnt==2&&error>10) Cross3_Cnt=7; //左边过
   if(Cross3_Cnt==7) //左边过找左线
   {
-    for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
+    for(Row_Ptr=48;Row_Ptr>3;Row_Ptr--)
     {
-      if(Road_Left[Row_Ptr]>Road_Left[Row_Ptr+1]&&
-         Road_Left[Row_Ptr+1]>Road_Left[Row_Ptr+2]&&
-           Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
-              Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
-               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
-               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2])
+      Left_J=0;
+      Left_Y=0;
+      //左拐点确定
+      
+      for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
       {
-        Cross3_Cnt=8; //左转找到拐点
+        if(Road_Left[Col_Ptr]<Road_Left[Col_Ptr+1]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr+1]==0)
+        {
+          Left_J=0;
+          break;
+        }
+        else if(Road_Left[Col_Ptr]>Road_Left[Col_Ptr+1]) Left_J=1;
+      }
+      for(Col_Ptr=Row_Ptr+5;Col_Ptr>Row_Ptr;Col_Ptr--)
+      {
+        if(Road_Left[Col_Ptr-1]>Road_Left[Col_Ptr]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr-1]==0)
+        {
+          
+          Left_Y=0;
+          break;
+        }
+        else if(Road_Left[Col_Ptr-1]<Road_Left[Col_Ptr]) 
+        {
+          Left_Y=1;
+          break;
+        }
+      }
+      if(Left_J==1&&Left_Y==1)
+      {
+        
+        Cross3_Cnt=8;
         break;
       }
     }
   }
-  else if(Cross3_Cnt==6) //右边过判断右线
+  else if(Cross3_Cnt==8)
   {
-    for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
+    Left_left=0;
+    for(Row_Ptr=48;Row_Ptr>3;Row_Ptr--)
     {
-      if(Road_Right[Row_Ptr]<Road_Right[Row_Ptr+1]&&
-         Road_Right[Row_Ptr+1]<Road_Right[Row_Ptr+2]&&
-           Road_Right[Row_Ptr+2]<Road_Right[Row_Ptr+3]&&
-              Road_Right[Row_Ptr-1]>=Road_Right[Row_Ptr]&&
-               Road_Right[Row_Ptr-2]>=Road_Right[Row_Ptr-1]&&
-               Road_Right[Row_Ptr-3]>Road_Right[Row_Ptr-2])
+      Left_J=0;
+      Left_Y=0;
+      //左拐点确定
+      
+      for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
       {
-        Cross3_Cnt=9; //右转找到拐点
+        if(Road_Left[Col_Ptr]<Road_Left[Col_Ptr+1]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr+1]==0)
+        {
+          Left_J=0;
+          break;
+        }
+        else if(Road_Left[Col_Ptr]>Road_Left[Col_Ptr+1]) Left_J=1;
+      }
+      for(Col_Ptr=Row_Ptr+5;Col_Ptr>Row_Ptr;Col_Ptr--)
+      {
+        if(Road_Left[Col_Ptr-1]>Road_Left[Col_Ptr]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr-1]==0)
+        {
+          
+          Left_Y=0;
+          break;
+        }
+        else if(Road_Left[Col_Ptr-1]<Road_Left[Col_Ptr]) 
+        {
+          Left_Y=1;
+          break;
+        }
+      }
+      if(Left_J==1&&Left_Y==0)
+      {
+        
+        Left_left=1;
         break;
       }
+    }
+    if(Left_left==0) 
+    {
+      Cross3_Cnt=0;
+      Out_Left=1;//出圆环标志
     }
   }
-  if(Cross3_Cnt==8)
-  {
-    for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
-    {
-      if(Road_Left[Row_Ptr]>Road_Left[Row_Ptr+1]&&
-         Road_Left[Row_Ptr+1]>Road_Left[Row_Ptr+2]&&
-           Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
-              Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
-               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
-               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2])
-      {
-                //左转找到拐点
-        break;
-      }
-    }
-    if(Row_Ptr==All_Black)
-    {
-      Out_Left=1; //左转出圆环标志
-     // Cross3_Cnt=0;
-    }
-  }
-  else if(Cross3_Cnt==9)
-  {
-    for(Row_Ptr=52;Row_Ptr>All_Black;Row_Ptr--)
-    {
-      if(Road_Left[Row_Ptr]>Road_Left[Row_Ptr+1]&&
-         Road_Left[Row_Ptr+1]>Road_Left[Row_Ptr+2]&&
-           Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
-              Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
-               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
-               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2])
-      {
-                //左转找到拐点
-        break;
-      }
-    }
-    if(Row_Ptr==All_Black)
-    {
-      Out_Right=1; //右转出圆环标志
-     // Cross3_Cnt=0;
-    }
-  }*/
-
   //*******************// 
     for(Row_Ptr=59; Row_Ptr>56; Row_Ptr--)
     {

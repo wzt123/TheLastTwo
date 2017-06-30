@@ -174,7 +174,7 @@ void  main(void)
     
  
     ///À¶ÑÀ´«ËÍ±àÂëÆ÷µÄÖµ
-    send_data[0] = ABDistance;
+    send_data[0] = Out_Left*500;
     send_data[1] = Right_xian;
     send_data[2] = Left_xian;
     send_data[3] = ring_num;
@@ -203,6 +203,7 @@ void  main(void)
     //if(Car==2)
     //race[0]=1;
     Overtake_judge();
+
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
@@ -216,7 +217,6 @@ void  main(void)
       //wzt_bluetooth();     
       OLED_Print_Num1(88, 6, Servo_temp);
     }
-    
     
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {

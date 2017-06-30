@@ -36,6 +36,8 @@ extern uint8 Road_Change;
 extern uint8 Stop_Flag;
 extern uint8 Road_type;
 //extern uint8 l;
+extern uint8 Out_Left;
+extern uint8 Cross3_Cnt;
 extern uint8 Lastline;
 extern uint8 Car;
 extern uint8 race[4];
