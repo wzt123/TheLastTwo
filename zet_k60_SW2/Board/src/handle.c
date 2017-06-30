@@ -382,46 +382,46 @@ void Servo_control(void)
           Kd = 15;
         }
       }*/
-      else if(All_Black<10)
+      else if(All_Black<10)//长直道进弯道
       {
         if(error<0)
         {
-          Kp = 35;
-          Kd = 5;
+          Kp = 36;
+          Kd = 12;
         } 
         else
         {
-          Kp = 35;
-          Kd = 5;
+          Kp = 36;
+          Kd = 12;
         }
       }
-      else if(All_Black<17)
+      else if(All_Black<17)//直道入弯道或者270度时提前转角
       {
         if(error<0)
         {
-          Kp = 35;
-          Kd = 11;
+          Kp = 40;
+          Kd = 12;
         }
         else
         {
-          Kp = 35;
-          Kd=11;
+          Kp = 40;
+          Kd=12;
         }
       }
-      else if(All_Black<22)
+      else if(All_Black<22)////弯道入直道的时候
       {
         if(error<0)
         {
           Kp = 45;
-          Kd = 19;
+          Kd = 20;
         }
         else
         {
           Kp = 45;
-          Kd=19;
+          Kd=20;
         }
       }
-      else if(All_Black<25)
+      else if(All_Black<25)//弯道入直道的时候
       {
         if(error<0)
         {
@@ -435,16 +435,30 @@ void Servo_control(void)
         }
       }
       
-      else if(All_Black<32)
+      else if(All_Black<27)//弯道内部
+    {
+      if(error<0)
+      {
+        Kp=38;
+        Kd=10;
+      }
+      else
+      {
+        Kp=38;
+        Kd =10;
+      }
+    }
+    
+      else if(All_Black<32)//靠弯道外边
       {
         if(error<0)
         {
-          Kp=50;
+          Kp=60;
           Kd=25;
         }
         else
         {
-          Kp=50;
+          Kp=60;
           Kd =25;
         }
       }
@@ -452,12 +466,12 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp = 55;
+          Kp = 65;
           Kd = 30;
         }
         else
         {
-          Kp = 55;
+          Kp = 65;
           Kd = 30;
         }
       }
