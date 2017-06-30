@@ -318,6 +318,11 @@ void Servo_control(void)
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
+    if(errorerror*error<0&&abs(error-errorerror)>15&&Cross_Flag==0)
+    {
+      errorerror=errorerror*5/10;
+      error = error*50/10;
+    }
     
     if(Cross_Flag==2||cross_time>0)
     {
