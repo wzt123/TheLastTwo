@@ -168,14 +168,14 @@ void Motor_Out(void)
         }
         else if(Status==2)
         {
-          speed_goal_R=4400;
-          speed_goal_L=4400;
+          speed_goal_R=4500;
+          speed_goal_L=4500;
         }
         
         else if(Status==3)
         {
-          speed_goal_R=4400;
-          speed_goal_L=4400;
+          speed_goal_R=4600;
+          speed_goal_L=4600;
         }
       }
       
