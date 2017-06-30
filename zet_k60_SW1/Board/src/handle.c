@@ -41,9 +41,9 @@ uint8 Cross_Flag=0;
 uint8 Change_Flag;
 uint8 CrossRow=0;
 
-uint16 Servomiddle=8808;
-uint32 Servo_max=8935;
-uint32 Servo_min=8652;
+uint16 Servomiddle=8768;
+uint32 Servo_max=8938;
+uint32 Servo_min=8612;
 float CenterLineSlope=0;
 
 int16 error=0;   //0~40×óÓÒ
@@ -287,7 +287,7 @@ void Servo_control(void)
   }
   else if(ChaoChe_temp==0)
   {
-    Servomiddle=8808;
+    Servomiddle=8768;
   }
   
   if(All_Black>2)
@@ -318,6 +318,11 @@ void Servo_control(void)
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
+    if(errorerror*error<0&&abs(error-errorerror)>15&&Cross_Flag==0)
+    {
+      errorerror=errorerror*5/10;
+      error = error*50/10;
+    }
     
     if(Cross_Flag==2||cross_time>0)
     {
@@ -856,7 +861,8 @@ void Find_Middle()
     a=Road_Left[Row_Ptr]+2;
     img[Row_Ptr][a]=0;
     a=Road_Right[Row_Ptr]-2;
-    img[Row_Ptr][a]=0;
+    img[Row_Ptr][a]=0;       
+    img[Row_Ptr][40]=0;
   }
   //filter_Middle(Road_Center);
   //½áÊøfor_ÂËÖÐÏß
