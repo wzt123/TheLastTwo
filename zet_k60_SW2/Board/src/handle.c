@@ -835,6 +835,7 @@ void Find_Middle()
     img[Row_Ptr][a]=0;
     a=Road_Right[Row_Ptr]-2;
     img[Row_Ptr][a]=0;
+    img[Row_Ptr][40]=0;
   }
   //filter_Middle(Road_Center);
   //½áÊøfor_ÂËÖĞÏß
