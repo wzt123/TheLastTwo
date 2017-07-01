@@ -386,12 +386,12 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp = 36;
+          Kp = 38;
           Kd = 12;
         } 
         else
         {
-          Kp = 36;
+          Kp = 38;
           Kd = 12;
         }
       }
@@ -399,12 +399,12 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp = 40;
+          Kp = 42;
           Kd = 12;
         }
         else
         {
-          Kp = 40;
+          Kp = 42;
           Kd=12;
         }
       }

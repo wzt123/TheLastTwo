@@ -335,7 +335,7 @@ void Servo_control(void)
       Servo_temp=Kp*error/10-110;
     }
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
-    else if(Cross_Flag==31&&Ring_First_Row>15)
+    else if(Cross_Flag==31&&Ring_First_Row>19)
     {
         if(Car == 1)
         {
@@ -373,29 +373,29 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp = 25;
-        Kd = 0;
+        Kp = 29;
+        Kd = 2;
       }
       else
       {
-        Kp = 25;
-        Kd = 0;
+        Kp = 29;
+        Kd = 2;
       }
     }
-    /*else if(All_Black<16) ////直道入弯道或者270度时提前转角
+    else if(All_Black<16) ////直道入弯道或者270度时提前转角
     {
       if(error<0)
       {
-        Kp = 30;
-        Kd = 10;
+        Kp = 32;
+        Kd = 12;
       }
       else
       {
-        Kp = 30;
-        Kd=10;
+        Kp = 32;
+        Kd=12;
       }
       
-    }*/
+    }
     else if(All_Black<21) ////弯道入直道的时候
     {
       if(error<0)
@@ -442,12 +442,12 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp=30;
+        Kp=33;
         Kd=18;
       }
       else
       {
-        Kp=30;
+        Kp=33;
         Kd =18;
       }
     }
@@ -455,12 +455,12 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp=45;
+        Kp=48;
         Kd=20;
       }
       else
       {
-        Kp=45;
+        Kp=48;
         Kd =20;
       }
     }
@@ -468,25 +468,25 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp = 50;
-        Kd = 28;
+        Kp = 52;
+        Kd = 29;
       }
       else
       {
-        Kp = 50;
-        Kd = 28;
+        Kp = 52;
+        Kd = 29;
       }
     }
     else if(All_Black<41)
     {
       if(error<0)
       {
-        Kp = 55;
+        Kp = 56;
         Kd = 30;
       }
       else
       {
-        Kp = 55;
+        Kp = 56;
         Kd = 30;
       }
     }

@@ -285,8 +285,8 @@ void Motor_Out(void)
 //  
 //  ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
 //  ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
-  ftm_pwm_duty(FTM2,FTM_CH0,6750);//B2左电机
-  ftm_pwm_duty(FTM2,FTM_CH1,6750);//B1右电机
+  ftm_pwm_duty(FTM2,FTM_CH0,6850);//B2左电机
+  ftm_pwm_duty(FTM2,FTM_CH1,6850);//B1右电机
 }
 
 /*
