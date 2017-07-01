@@ -319,17 +319,19 @@ void Servo_control(void)
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
-    if(errorerror*error<0&&abs(error-errorerror)>15&&Cross_Flag==0)
+    if(errorerror*error<0/*&&abs(error-errorerror)>15*/&&Cross_Flag==0)
     {
-      errorerror=errorerror*5/10;
-      error = error*50/10;
+//      errorerror=errorerror*5/10;
+//      error = error*50/10;
+      errorerror= - errorerror*15/2;
+      error = error;
     }
-    if(Cross_Flag==2||cross_time>0)
+    if(Cross_Flag==2||cross_time>0) //向右强拐
     {
       Kp =86;
       Servo_temp=Kp*error/10+90;
     }
-    else if(Cross_Flag==4||cross_time>0)
+    else if(Cross_Flag==4||cross_time>0) //向左强拐
     {
       Kp =86;
       Servo_temp=Kp*error/10-90;
@@ -360,13 +362,13 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp = 45;
-          Kd = 0;
+          Kp = 27;
+          Kd = 2;
         }
         else
         {
-          Kp = 45;
-          Kd = 0;
+          Kp = 27;
+          Kd = 2;
         }
       }
       /*else if(All_Black<6)
@@ -386,12 +388,12 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp = 36;
+          Kp = 39;
           Kd = 12;
         } 
         else
         {
-          Kp = 36;
+          Kp = 39;
           Kd = 12;
         }
       }
@@ -399,12 +401,12 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp = 40;
+          Kp = 42;
           Kd = 12;
         }
         else
         {
-          Kp = 40;
+          Kp = 42;
           Kd=12;
         }
       }
@@ -412,18 +414,18 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp = 45;
-          Kd = 20;
+          Kp = 35;
+          Kd = 12;
         }
         else
         {
-          Kp = 45;
-          Kd=20;
+          Kp = 35;
+          Kd=12;
         }
       }
       else if(All_Black<25)//弯道入直道的时候
       {
-        if(error<0)
+        if(error<0)     //左转
         {
           Kp=50;
           Kd=20;
@@ -439,13 +441,13 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp=38;
-        Kd=10;
+        Kp=36;
+        Kd=17;
       }
       else
       {
-        Kp=38;
-        Kd =10;
+        Kp=36;
+        Kd =17;
       }
     }
     
@@ -453,15 +455,30 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp=60;
-          Kd=25;
+          Kp=48;
+          Kd=20;
         }
         else
         {
-          Kp=60;
-          Kd =25;
+          Kp=48;
+          Kd =20;
         }
       }
+      
+    else if(All_Black<36)       //靠弯道外边
+    {
+      if(error<0)
+      {
+        Kp = 52;
+        Kd = 29;
+      }
+      else
+      {
+        Kp = 52;
+        Kd = 29;
+      }
+    }
+    
       else if(All_Black<41)
       {
         if(error<0)

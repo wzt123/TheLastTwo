@@ -161,48 +161,61 @@ void Motor_Out(void)
       {
         if(Status==0)
         {
-          speed_goal_R=3700;
-          speed_goal_L=3700;
+          speed_goal_R = 3900;
+          speed_goal_L = 3900;
         }
         else if(Status==1)
         {
-          speed_goal_R=3700;
-          speed_goal_L=3700;
+          speed_goal_R = 4100;
+          speed_goal_L = 4100;
         }
-        else if(Status==2)
+        else if(Status == 2)
         {
-          speed_goal_R=4500;
-          speed_goal_L=4500;
+          speed_goal_R = 4400;
+          speed_goal_L = 4400;
         }
         
-        else if(Status==3)
+        else if(Status == 3)
         {
-          speed_goal_R=4600;
-          speed_goal_L=4600;
+          speed_goal_R = 4500;
+          speed_goal_L = 4500;
+        }
+        
+        else if(Status == 4)
+        {
+          speed_goal_R = 4700;
+          speed_goal_L = 4700;
         }
       }
       
       else
       {
-        if(Status==0)
+        if(Status == 0)
         {
-          speed_goal_R=3700;
-          speed_goal_L=3700;
+          speed_goal_R = 3900;
+          speed_goal_L = 3900;
         }
         else if(Status==1)
         {
-          speed_goal_R=4000;
-          speed_goal_L=4000;
+          speed_goal_R=4100;
+          speed_goal_L=4100;
         }
         else if(Status==2)
         {
-          speed_goal_R=4000;
-          speed_goal_L=4000;
+          speed_goal_R=4400;
+          speed_goal_L=4400;
         }
+        
         else if(Status==3)
         {
-          speed_goal_R=4300;
-          speed_goal_L=4300;
+          speed_goal_R=4500;
+          speed_goal_L=4500;
+        }
+        
+         else if(Status == 4)
+        {
+          speed_goal_R = 4700;
+          speed_goal_L = 4700;
         }
       }
 //      if(Car==2)
@@ -336,12 +349,13 @@ void stop_Car(void)
   gpio_set(PTC2,1);//驱动反向使能
   gpio_set(PTB17,1);//驱动反向使能
   gpio_set(PTB16,0);//驱动反向使能
-  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
-  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
+//  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
+//  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
   ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
-  DELAY_MS(200);
+  
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
+  DELAY_MS(50);
   stop_Flag  = 1;
   
   //disable_irq(PIT0_IRQn);
