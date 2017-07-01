@@ -758,7 +758,7 @@ void Find_Middle()
           break;
         }
       }
-      if(Left_J==1&&Left_Y==0)
+      if(Left_J==1&&Left_Y==1)
       {
         
         Left_left=1;

@@ -178,17 +178,17 @@ uint16 speed_rember_L[3] = {0};
     */
     
     ///À¶ÑÀ´«ËÍ±àÂëÆ÷µÄÖµ
-    send_data[0] = speed_get_L;
-    send_data[1] = speed_get_R;
+    send_data[0] = Cross_Flag*500;
+    send_data[1] = Out_Left*500;
     //uart_putchar(UART5,speed_get_R);
-    //send_data[2] = Cross_Flag*500;
-    //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
+    send_data[2] = Cross3_Cnt*500;
+    vcan_sendware((uint16_t *)send_data, sizeof(send_data));
     
 
     ///À¶ÑÀ´«ËÍ±àÂëÆ÷µÄÖµ
     //send_data[0] = speed_get_L;
     //send_data[1] = speed_get_R;
-      send_data[0] = Cross_Flag*50+50;
+      //send_data[0] = Cross_Flag*50+50;
     if(speed_get_R>50&&Cross_Flag!=0)
     uart_putchar(UART5,Cross_Flag);
       //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
@@ -218,10 +218,10 @@ uint16 speed_rember_L[3] = {0};
       OLED_Print_Num1(88, 1, All_Black);
       OLED_Print_Num1(88, 2, error);
       OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, Kp);
-      OLED_Print_Num1(88, 5, Kd);
+      OLED_Print_Num1(88, 4, Cross_Flag);
+      OLED_Print_Num1(88, 5, Out_Left);
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
-      OLED_Print_Num1(88, 6, Servo_temp);
+      OLED_Print_Num1(88, 6, Cross3_Cnt);
     }
     //wzt_bluetooth();      
     

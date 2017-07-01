@@ -83,7 +83,7 @@ uint8 Overtake2=0;
 uint16 L_Cnt=0;
 uint8 C=0;
 uint8 Turn_Left=0;
-
+uint8 Left_IPcnt=0;
 //////////////////////////
 uint8 Kp=0;
 uint8 Kd=0;
@@ -618,7 +618,7 @@ void Find_Middle()
   Overtake=0;
   //
   Out_Right=0;
-  Out_Left=0;
+  //Out_Left=0;
   /////
   uint8 repair_R[60]= {0}; /////右边丢失的求斜率的数组
   uint8 repair_L[60]= {0}; /////左边丢失的求斜率的数组
@@ -771,17 +771,21 @@ void Find_Middle()
           break;
         }
       }
-      if(Left_J==1&&Left_Y==0)
+      if(Left_J==1&&Left_Y==1)
       {
-        
         Left_left=1;
         break;
       }
     }
     if(Left_left==0) 
     {
+      Left_IPcnt++;
+    }
+    if(Left_IPcnt>2)
+    {
       Cross3_Cnt=0;
       Out_Left=1;//出圆环标志
+      Left_IPcnt=0;
     }
   }
   //*******************// 
