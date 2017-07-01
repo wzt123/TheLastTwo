@@ -178,6 +178,7 @@ void  main(void)
     send_data[1] = speed_PWM_L;
     send_data[2] = 0;
     send_data[3] = 0;
+
     //if(speed_get_R>50&&Cross_Flag!=0)
     //uart_putchar(UART5,Cross_Flag);
     vcan_sendware((uint16_t *)send_data, sizeof(send_data));

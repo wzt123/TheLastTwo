@@ -124,7 +124,7 @@ void Motor_Out(void)
   uint8 speed_Kd=0; //3
   uint8 speed_Kp=1; //3
 
-  /*if(Overtake2==1||buff[1]==2)
+/*if(Overtake2==1||buff[1]==2)
   {
   if(buff[1]==2&&Car==2)
   DELAY_MS(500);
@@ -278,6 +278,7 @@ void Motor_Out(void)
 //    speed_PWM_R = 6500;
 //    speed_PWM_L = 6500;
 //  }
+
   
   if(speed_PWM_R<0)
     speed_PWM_R=0;
