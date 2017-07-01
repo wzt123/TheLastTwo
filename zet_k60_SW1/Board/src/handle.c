@@ -326,16 +326,16 @@ void Servo_control(void)
     
     if(Cross_Flag==2||cross_time>0)
     {
-      Kp =86;
+      Kp =88;
       Servo_temp=Kp*error/10+80;
     }
     else if(Cross_Flag==4||cross_time>0)
     {
-      Kp =86;
+      Kp =88;
       Servo_temp=Kp*error/10-110;
     }
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
-    else if(Cross_Flag==31&&Ring_First_Row>19)
+    else if(Cross_Flag==31&&Ring_First_Row>17)
     {
         if(Car == 1)
         {
@@ -350,7 +350,7 @@ void Servo_control(void)
     }
     else if(Cross_Flag==1)
     {
-      Kp =66;
+      Kp =69;
       Kd = 35;
       Servo_temp=Kp*error/10+Kd*errorerror/10;
     }
@@ -358,9 +358,9 @@ void Servo_control(void)
     {      
       if(All_Black==0)
     {
-      if(error<0)
+      if(error<0)       //左转
       {
-        Kp = 35;
+        Kp = 37;
         Kd = 10;
       }
       else
@@ -391,8 +391,8 @@ void Servo_control(void)
       }
       else
       {
-        Kp = 32;
-        Kd=12;
+        Kp = 34;
+        Kd = 12;
       }
       
     }
@@ -863,6 +863,7 @@ void Find_Middle()
     a=Road_Right[Row_Ptr]-2;
     img[Row_Ptr][a]=0;       
     img[Row_Ptr][40]=0;
+    img[Row_Ptr][40+error]=0;
   }
   //filter_Middle(Road_Center);
   //结束for_滤中线
