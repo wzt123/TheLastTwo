@@ -15,6 +15,8 @@ uint16 speed_lasterr=0;
 uint16 speed_PWM=0;
 uint16 speed_PWM_R = 0;
 uint16 speed_PWM_L = 0;
+uint16 speed_PWM_R_Last = 0;
+uint16 speed_PWM_L_Last = 0;
 int16  speed_err_R = 0;
 int16  speed_err_L = 0;
 int16 speed_err_R_last = 0;
@@ -119,8 +121,8 @@ void Motor_Out(void)
   
   speed_PWM=6550;
   uint8 speed_Ki=15;
-  uint8 speed_Kd=3;
-  uint8 speed_Kp=3;
+  uint8 speed_Kd=5;
+  uint8 speed_Kp=5;
   /*if(Overtake2==1||buff[1]==2)
   {
   if(buff[1]==2&&Car==2)
@@ -241,8 +243,18 @@ void Motor_Out(void)
       speed_increment_L= speed_Kp*(speed_err_L-speed_err_L_last)/10+
                           speed_Ki*speed_err_L/10+
                             speed_Kd*(speed_err_L-2*speed_err_L_last+speed_err_L_lastlast)/10;
+//      if(speed_PWM_R_Last>8700)
+//        speed_increment_R=0;
+//      if(speed_PWM_R_Last<2600&&speed_PWM_R_Last>0)
+//        speed_increment_R=0;
+//      if(speed_PWM_L_Last>8700)
+//        speed_increment_L=0;
+//      if(speed_PWM_L_Last<2600&&speed_PWM_L_Last>0)
+//        speed_increment_L=0;
       speed_PWM_R=6100+speed_increment_R;
       speed_PWM_L=6100+speed_increment_L;
+      speed_PWM_R_Last=speed_PWM_R;
+      speed_PWM_L_Last=speed_PWM_L;
       
     }
     else if(stop_time<3)
@@ -264,11 +276,6 @@ void Motor_Out(void)
     {
       speed_PWM_R = 0;
     }
-  }
-  else if(speed_get_R<100||speed_get_L<100)
-  {
-    speed_PWM_R = 6500;
-    speed_PWM_L = 6500;
   }
   
   if(speed_PWM_R<0)

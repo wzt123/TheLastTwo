@@ -40,9 +40,9 @@ uint8 Change_Flag;
 uint8 CrossRow=0;
 
 
-uint16 Servomiddle=8508;
-uint32 Servo_max=8645;
-uint32 Servo_min=8345;
+uint16 Servomiddle=8531;
+uint32 Servo_max=8685;
+uint32 Servo_min=8375;
 float CenterLineSlope=0;
 
 int16 error=0;
@@ -280,15 +280,15 @@ void Servo_control(void)
   ///¹ýÕÏ°­
   if(Cross_Flag==5)
   {
-    Servomiddle=8550;
+    Servomiddle=8580;
   }
   else if(Cross_Flag==6)
   {
-    Servomiddle=8450;
+    Servomiddle=8475;
   }
   else if(ChaoChe_temp==0)
   {
-    Servomiddle=8508;
+    Servomiddle=8531;
   }
   
   if(All_Black>2)

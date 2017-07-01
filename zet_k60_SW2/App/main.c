@@ -174,8 +174,8 @@ void  main(void)
     
  
     ///À¶ÑÀ´«ËÍ±àÂëÆ÷µÄÖµ
-    send_data[0] = Out_Left*500;
-    send_data[1] = Right_xian;
+    send_data[0] = speed_PWM_R;
+    send_data[1] = speed_PWM_L;
     send_data[2] = Left_xian;
     send_data[3] = ring_num;
     //if(speed_get_R>50&&Cross_Flag!=0)
