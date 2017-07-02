@@ -318,10 +318,10 @@ void Servo_control(void)
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
-    if(errorerror*error<0&&abs(error-errorerror)>15&&Cross_Flag==0)
+    if(errorerror*error<0/*&&abs(error-errorerror)>15*/&&Cross_Flag==0)
     {
-      errorerror=errorerror*5/10;
-      error = error*50/10;
+      errorerror= - errorerror*19/2;
+      error = error;
     }
     
 //    if(Cross_Flag==2||cross_time>0)
@@ -352,7 +352,8 @@ void Servo_control(void)
     {
       Kp =69;
       Kd = 35;
-      Servo_temp=Kp*error/10+Kd*errorerror/10;
+      Servo_temp = Kp*error+Kd*errorerror;
+      Servo_temp = Servo_temp/10;
     }
     else
     {      
@@ -424,31 +425,18 @@ void Servo_control(void)
       }
       
     }
-    /*else if(All_Black<26)
-    {
-      if(error<0)
-      {
-        Kp=40;
-        Kd=15;
-      }
-      else
-      {
-        Kp=40;
-        Kd =15;
-      }
-    }*/
     
     else if(All_Black<25)       //弯道内部
     {
       if(error<0)
       {
-        Kp=36;
-        Kd=18;
+        Kp=37;
+        Kd=20;
       }
       else
       {
-        Kp=36;
-        Kd =18;
+        Kp=37;
+        Kd =20;
       }
     }
     else if(All_Black<32)       //靠弯道外边

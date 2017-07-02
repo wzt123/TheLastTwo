@@ -233,7 +233,7 @@ void Motor_Out(void)
 //      
 //      speed_err_L_lastlast = speed_err_L_last;
 //      speed_err_L_last = speed_err_L;
-//      
+//         
 //      speed_err_R = speed_goal_R-speed_get_R*10;
 //      speed_err_L = speed_goal_L-speed_get_L*10;
 //      
@@ -326,14 +326,14 @@ void stop2(void)
 */
 void stop_Car(void)
 {
-  gpio_set(PTC3,0);//驱动反向使能
-  gpio_set(PTC2,1);//驱动反向使能
-  gpio_set(PTB17,1);//驱动反向使能
-  gpio_set(PTB16,0);//驱动反向使能
-  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
-  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
-  ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
-  DELAY_MS(200);
+//  gpio_set(PTC3,0);//驱动反向使能
+//  gpio_set(PTC2,1);//驱动反向使能
+//  gpio_set(PTB17,1);//驱动反向使能
+//  gpio_set(PTB16,0);//驱动反向使能
+//  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
+//  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
+//  ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+//  DELAY_MS(200);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
   stop_Flag  = 1;
