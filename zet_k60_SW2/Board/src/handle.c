@@ -324,8 +324,8 @@ void Servo_control(void)
     {
 //      errorerror=errorerror*5/10;
 //      error = error*50/10;
-      errorerror= - errorerror*15/2;
-      error = error;
+//      errorerror= - errorerror*15/2;
+//      error = error;
     }
 //    if(Cross_Flag==2||cross_time>0)
 //    {
