@@ -59,6 +59,7 @@ void PIT0_IRQHandler(void)
   //Find_Middle();
   //Servo_control();
   //zf_oled( val);
+
   PIT_Flag_Clear(PIT0);       //清中断标志位
 }
 
