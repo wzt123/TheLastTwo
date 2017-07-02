@@ -83,7 +83,7 @@ uint8 Overtake2=0;
 uint16 L_Cnt=0;
 uint8 C=0;
 uint8 Turn_Left=0;
-
+uint8 Left_IPcnt=0;
 //////////////////////////
 uint8 Kp=0;
 uint8 Kd=0;
@@ -358,36 +358,36 @@ void Servo_control(void)
     {      
       if(All_Black==0)
     {
-      if(error<0)       //左转
+      if(error<0)               //左转
       {
         Kp = 37;
-        Kd = 10;
-      }
-      else
-      {
-        Kp = 35;
-        Kd = 10;
-      }
-    }
-    else if(All_Black<12)//长直道进弯道
-    {
-      if(error<0)
-      {
-        Kp = 29;
-        Kd = 2;
-      }
-      else
-      {
-        Kp = 29;
-        Kd = 2;
-      }
-    }
-    else if(All_Black<16) ////直道入弯道或者270度时提前转角
-    {
-      if(error<0)
-      {
-        Kp = 32;
         Kd = 12;
+      }
+      else
+      {
+        Kp = 38;
+        Kd = 10;
+      }
+    }
+    else if(All_Black<12)       //长直道进弯道
+    {
+      if(error<0)
+      {
+        Kp = 30;
+        Kd = 4;
+      }
+      else
+      {
+        Kp = 30;
+        Kd = 4;
+      }
+    }
+    else if(All_Black<16)       //直道入弯道或者270度时提前转角
+    {
+      if(error<0)               //左转
+      {
+        Kp = 34;
+        Kd = 14;
       }
       else
       {
@@ -396,11 +396,11 @@ void Servo_control(void)
       }
       
     }
-    else if(All_Black<21) ////弯道入直道的时候
+    else if(All_Black<21)       //弯道入直道的时候
     {
       if(error<0)
       {
-        Kp = 30;
+        Kp = 33;
         Kd = 11;
       }
       else   //右转
@@ -410,7 +410,7 @@ void Servo_control(void)
       }
       
     }
-    else if(All_Black<23) ////弯道入直道的时候
+    else if(All_Black<23)       //弯道入直道的时候
     {
       if(error<0)
       {
@@ -438,20 +438,20 @@ void Servo_control(void)
       }
     }*/
     
-    else if(All_Black<27)//弯道内部
+    else if(All_Black<25)       //弯道内部
     {
       if(error<0)
       {
-        Kp=33;
+        Kp=36;
         Kd=18;
       }
       else
       {
-        Kp=33;
+        Kp=36;
         Kd =18;
       }
     }
-    else if(All_Black<32)//靠弯道外边
+    else if(All_Black<32)       //靠弯道外边
     {
       if(error<0)
       {
@@ -464,7 +464,7 @@ void Servo_control(void)
         Kd =20;
       }
     }
-    else if(All_Black<36)//靠弯道外边
+    else if(All_Black<36)       //靠弯道外边
     {
       if(error<0)
       {
@@ -481,12 +481,12 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp = 56;
+        Kp = 58;
         Kd = 30;
       }
       else
       {
-        Kp = 56;
+        Kp = 58;
         Kd = 30;
       }
     }
@@ -622,7 +622,7 @@ void Find_Middle()
   Overtake=0;
   //
   Out_Right=0;
-  Out_Left=0;
+  //Out_Left=0;
   /////
   uint8 repair_R[60]= {0}; /////右边丢失的求斜率的数组
   uint8 repair_L[60]= {0}; /////左边丢失的求斜率的数组
@@ -810,17 +810,21 @@ void Find_Middle()
           break;
         }
       }
-      if(Left_J==1&&Left_Y==0)
+      if(Left_J==1&&Left_Y==1)
       {
-        
         Left_left=1;
         break;
       }
     }
     if(Left_left==0) 
     {
+      Left_IPcnt++;
+    }
+    if(Left_IPcnt>2)
+    {
       Cross3_Cnt=0;
       Out_Left=1;//出圆环标志
+      Left_IPcnt=0;
     }
   }
   //*******************// 
