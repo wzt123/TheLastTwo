@@ -1498,8 +1498,8 @@ void Search_Line(void)
         }
     }*/
     if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row
-       /*&&img[Ring_First_Row][(Road_Left[Left_xian]+Road_Right[Right_xian])/2]==0
-         &&img[Ring_First_Row+1][(Road_Left[Left_xian]+Road_Right[Right_xian])/2]==0*/)
+       &&img[Ring_First_Row][(Road_Left[Left_xian]+Road_Right[Right_xian])/2]==0
+         &&img[Ring_First_Row+1][(Road_Left[Left_xian]+Road_Right[Right_xian])/2]==0)
     {
       
       Cross_Flag=31;/////标记为大圆环
