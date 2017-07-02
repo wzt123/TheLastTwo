@@ -651,10 +651,7 @@ void Find_Middle()
   {
     if(Cross_Cnt==2) Cross_Cnt=3;//第一个十字路口结束
     else if(Cross_Cnt==3) Cross_Cnt=4;
-    else if(Cross_Cnt==4) Cross_Cnt=5;
   }
-  if(Cross_Cnt==5&&error>10) Cross_Cnt=6;//右转
-  else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
   if(Cross_Cnt==4)
   {
   
@@ -1435,17 +1432,6 @@ void Search_Line(void)
       }
     }
     
-      
-    /*if(abs(Ring_width_2-Col_Ptr)<3)////从黑块的左边往右找，如果Col_Ptr接近了黑块最右边，说明圆环上面有白的，判断为圆环
-    {      
-        if(ring_num>5)
-        {
-            if(Ring_width>10&&Stop_Flag!=0&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
-            {
-              Cross_Flag=3;/////标记为小圆环
-            }
-        }
-    }*/
     if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row)
     {
       Cross_Flag=31;/////标记为大圆环
