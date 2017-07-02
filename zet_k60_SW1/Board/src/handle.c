@@ -320,8 +320,8 @@ void Servo_control(void)
     errorerror = error2-error1;
     if(errorerror*error<0/*&&abs(error-errorerror)>15*/&&Cross_Flag==0)
     {
-      errorerror= - errorerror*19/2;
-      error = error;
+//      errorerror= - errorerror*19/2;
+//      error = error;
     }
     
 //    if(Cross_Flag==2||cross_time>0)
@@ -350,7 +350,7 @@ void Servo_control(void)
     }
     else if(Cross_Flag==1)
     {
-      Kp =69;
+      Kp =70;
       Kd = 35;
       Servo_temp = Kp*error+Kd*errorerror;
       Servo_temp = Servo_temp/10;
@@ -361,38 +361,38 @@ void Servo_control(void)
     {
       if(error<0)               //左转
       {
-        Kp = 37;
+        Kp = 39;
         Kd = 12;
       }
       else
       {
         Kp = 38;
-        Kd = 10;
+        Kd = 12;
       }
     }
     else if(All_Black<12)       //长直道进弯道
     {
       if(error<0)
       {
-        Kp = 30;
-        Kd = 4;
+        Kp = 36;
+        Kd = 6;
       }
       else
       {
-        Kp = 30;
-        Kd = 4;
+        Kp = 36;
+        Kd = 6;
       }
     }
     else if(All_Black<16)       //直道入弯道或者270度时提前转角
     {
       if(error<0)               //左转
       {
-        Kp = 34;
+        Kp = 36;
         Kd = 14;
       }
       else
       {
-        Kp = 34;
+        Kp = 36;
         Kd = 12;
       }
       
@@ -402,12 +402,12 @@ void Servo_control(void)
       if(error<0)
       {
         Kp = 33;
-        Kd = 11;
+        Kd = 12;
       }
       else   //右转
       {
-        Kp = 30;
-        Kd = 11;
+        Kp = 33;
+        Kd = 12;
       }
       
     }
@@ -430,13 +430,13 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp=37;
-        Kd=20;
+        Kp=42;
+        Kd=18;
       }
       else
       {
-        Kp=37;
-        Kd =20;
+        Kp=42;
+        Kd =18;
       }
     }
     else if(All_Black<32)       //靠弯道外边
@@ -456,12 +456,12 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp = 52;
+        Kp = 53;
         Kd = 29;
       }
       else
       {
-        Kp = 52;
+        Kp = 53;
         Kd = 29;
       }
     }
