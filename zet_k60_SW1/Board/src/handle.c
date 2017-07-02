@@ -647,8 +647,8 @@ void Find_Middle()
   }
   //if(Cross_Cnt==5&&error>10) Cross_Cnt=6;//右转
   //else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
-  if(Cross_Cnt==4)  
-  {
+  //if(Cross_Cnt==4)  
+  //{
   
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
@@ -688,7 +688,7 @@ void Find_Middle()
     {      
       Cross_Cnt=0;
     }
-  }
+  //}
   
   //************************//
   //出圆环判断
@@ -964,7 +964,7 @@ void Search_Line(void)
           start_line_num[Row_Ptr] ++;
         }      
       }
-      if(start_line_num[Row_Ptr]>6)
+      if(start_line_num[Row_Ptr]>4)
       {
         stop_line_num++;
       }
@@ -1032,7 +1032,7 @@ void Search_Line(void)
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
     //从左到右检测起跑线
-    if(Row_Ptr>25)
+    if(Row_Ptr>10)
     {
       
       start_line_num[Row_Ptr] = 0;
@@ -1044,7 +1044,7 @@ void Search_Line(void)
           start_line_num[Row_Ptr] ++;
         }      
       }
-      if(start_line_num[Row_Ptr]>6)
+      if(start_line_num[Row_Ptr]>4)
       {
         stop_line_num++;
       }

@@ -29,7 +29,7 @@ uint8 White_Cnt=0;//全白行计数_所有的
 uint8 White_Ren=0;
 uint8 Right_xian=0;
 uint8 Left_xian=0;
-uint16 Servo_value=8508;//舵机输出pwm值
+uint16 Servo_value=8619;//舵机输出pwm值
 
 
 uint8 Hinder_Start=0;
@@ -40,9 +40,9 @@ uint8 Change_Flag;
 uint8 CrossRow=0;
 
 
-uint16 Servomiddle=8531;
-uint32 Servo_max=8685;
-uint32 Servo_min=8375;
+uint16 Servomiddle=8619;
+uint32 Servo_max=8775;
+uint32 Servo_min=8465;
 float CenterLineSlope=0;
 
 int16 error=0;
@@ -281,15 +281,15 @@ void Servo_control(void)
   ///过障碍
   if(Cross_Flag==5)
   {
-    Servomiddle=8580;
+    Servomiddle=8670;
   }
   else if(Cross_Flag==6)
   {
-    Servomiddle=8475;
+    Servomiddle=8570;
   }
   else if(ChaoChe_temp==0)
   {
-    Servomiddle=8531;
+    Servomiddle=8619;
   }
   
   if(All_Black>2)
@@ -652,9 +652,9 @@ void Find_Middle()
     if(Cross_Cnt==2) Cross_Cnt=3;//第一个十字路口结束
     else if(Cross_Cnt==3) Cross_Cnt=4;
   }
-  if(Cross_Cnt==4)
-  {
-  
+//  if(Cross_Cnt==4)
+//  {
+//  
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
       if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr-6]==1&&Left_Flag[Row_Ptr-12]==1)
@@ -689,11 +689,11 @@ void Find_Middle()
         }
       }
     }
-    if(Cross_Cnt>0&&All_Black<3)
-    {      
-      Cross_Cnt=0;
-    }
-  }
+//    if(Cross_Cnt>0&&All_Black<3)
+//    {      
+//      Cross_Cnt=0;
+//    }
+//  }
   //************************//
   //出圆环判断
   if(Cross_Flag==31)
@@ -964,12 +964,13 @@ void Search_Line(void)
         start_line_num[Row_Ptr] ++;
       }      
     }
-    if(start_line_num[Row_Ptr]>6)
+    if(start_line_num[Row_Ptr]>4)
     {
       stop_line_num++;
     }
     if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
     {
+      stopLine_temp=1;
       if(sum_time>8000)
       {
         Stop_Flag=2;
@@ -977,6 +978,7 @@ void Search_Line(void)
     }
     else if(stop_line_num>=3&&Stop_Flag==0)
     {
+      stopLine_temp=1;
       Stop_Flag=1;
     }
     
@@ -1031,7 +1033,8 @@ void Search_Line(void)
     Road_Center[Row_Ptr]=0;
     //从左到右检测起跑线
     
-    
+    if(Row_Ptr>10)
+    {
     start_line_num[Row_Ptr] = 0;
     for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
     {      
@@ -1041,7 +1044,7 @@ void Search_Line(void)
         start_line_num[Row_Ptr] ++;
       }      
     }
-    if(start_line_num[Row_Ptr]>6)
+    if(start_line_num[Row_Ptr]>4)
     {
       stop_line_num++;
     }
@@ -1059,7 +1062,7 @@ void Search_Line(void)
       Stop_Flag=1;
     }
     
-    
+    }
     
     //确定左边下一行的搜范围
     if(Row_Ptr>30)
