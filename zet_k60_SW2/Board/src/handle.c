@@ -640,7 +640,7 @@ void Find_Middle()
   /////
   //filter_Middle(Road_Center);
   //斜入十字判断
-  if(Cross_Flag==1&&StopRow>All_Black)
+  if(Cross_Flag==1&&StopRow>All_Black&&Cross_Flag_Last!=3)
   {
     Calculate_Slope();
     if(Cross_Cnt==0) Cross_Cnt=1;//一个十字路口
@@ -1500,9 +1500,7 @@ void Search_Line(void)
             }
         }
     }*/
-    if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row
-       &&img[Ring_First_Row][(Road_Left[Left_xian]+Road_Right[Right_xian])/2]==0
-         &&img[Ring_First_Row+1][(Road_Left[Left_xian]+Road_Right[Right_xian])/2]==0)
+    if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row)
     {
       
       Cross_Flag=31;/////标记为大圆环
