@@ -601,10 +601,6 @@ void Edge_Filter()
   }
 }
 //Ñ°ÖÐÏß
-int8 k1=0;
-int8 k2=0;
-int8 k3=0;
-int8 k4=0;
 void Find_Middle()
 {
   Row_Ptr=0;
@@ -619,7 +615,11 @@ void Find_Middle()
   Road_area=0;
   cross_num =0;
   FirstBlackinCenter=0;
-  Overtake=0;
+  Overtake=0;  
+  int8 k1=0;
+  int8 k2=0;
+  int8 k3=0;
+  int8 k4=0;
   //
   Out_Right=0;
   //Out_Left=0;

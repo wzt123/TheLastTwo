@@ -609,10 +609,6 @@ void Edge_Filter()
   }
 }
 
-int k1=0;
-int k2=0;
-int k3=0;
-int k4=0;
 //寻中线
 void Find_Middle()
 {
@@ -626,7 +622,11 @@ void Find_Middle()
   uint8 CutPos=0;//中线断开位置
   uint8 Var=0;
   Road_area=0;
-  cross_num =0;
+  cross_num =0;  
+  int8 k1=0;
+  int8 k2=0;
+  int8 k3=0;
+  int8 k4=0;
   FirstBlackinCenter=0;
   Overtake=0;
   //
