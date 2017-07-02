@@ -242,10 +242,10 @@ void Motor_Out(void)
           
         return;
       }*/
-      speed_err_R_lastlast = speed_err_R_last*3;
+      speed_err_R_lastlast = speed_err_R_last;
       speed_err_R_last = speed_err_R;
       
-      speed_err_L_lastlast = speed_err_L_last*3;
+      speed_err_L_lastlast = speed_err_L_last;
       speed_err_L_last = speed_err_L;
       
       speed_err_R = speed_goal_R-speed_get_R;
@@ -258,8 +258,8 @@ void Motor_Out(void)
                           speed_Ki*speed_err_L/10+
                             speed_Kd*(speed_err_L-2*speed_err_L_last+speed_err_L_lastlast)/10;
       
-      speed_PWM_R = speed_goal_R + 2600 + speed_increment_R;
-      speed_PWM_L = speed_goal_L + 2600 + speed_increment_L;
+      speed_PWM_R = 6100 + speed_increment_R;
+      speed_PWM_L = 6100 + speed_increment_L;
       
       
 //      LastDuty_L = speed_PWM_L;
@@ -303,8 +303,8 @@ void Motor_Out(void)
   if(speed_PWM_L>8800)
     speed_PWM_L=8800;
   
-  ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
-  ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
+  ftm_pwm_duty(FTM2,FTM_CH0,6850);//B2左电机
+  ftm_pwm_duty(FTM2,FTM_CH1,6850);//B1右电机
   
 }
 

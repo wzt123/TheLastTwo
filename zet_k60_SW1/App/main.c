@@ -86,44 +86,44 @@ uint16 speed_rember_L[3] = {0};
     IR1 = gpio_get(PTE10);///读一边的红外对管
     
     speed_get_L = abs(ftm_quad_get(FTM1));          //获取FTM 正交解码 的脉冲数(负数表示反方向)
-    if(Edge_L[0]!=0){
-      if(abs(speed_get_L-speed_rember_L[2])<20)
-      {
-        speed_rember_L[0] = speed_rember_L[1];
-        speed_rember_L[1] = speed_rember_L[2];
-        speed_rember_L[2] = speed_get_L;
-        
-        Edge_L[0]=speed_rember_L[0];
-        Edge_L[1]=speed_rember_L[1];
-        Edge_L[2]=speed_rember_L[2];          
-        speed_get_L=GetMedianNum(Edge_L,3);////左编码器滤波
-      }
-      else
-      {
-        speed_get_L = speed_rember_L[2];
-      } 
-      
-    }
+//    if(Edge_L[0]!=0){
+//      if(abs(speed_get_L-speed_rember_L[2])<20)
+//      {
+//        speed_rember_L[0] = speed_rember_L[1];
+//        speed_rember_L[1] = speed_rember_L[2];
+//        speed_rember_L[2] = speed_get_L;
+//        
+//        Edge_L[0]=speed_rember_L[0];
+//        Edge_L[1]=speed_rember_L[1];
+//        Edge_L[2]=speed_rember_L[2];          
+//        speed_get_L=GetMedianNum(Edge_L,3);////左编码器滤波
+//      }
+//      else
+//      {
+//        speed_get_L = speed_rember_L[2];
+//      } 
+//      
+//    }
     speed_get_R = lptmr_pulse_get();
-    if(Edge_R[0]!=0)
-    {
-      if(abs(speed_get_R-speed_rember_R[2])<20)
-      {
-        speed_rember_R[0] = speed_rember_R[1];
-        speed_rember_R[1] = speed_rember_R[2];
-        speed_rember_R[2] = speed_get_R;
-        
-        Edge_R[0]=speed_rember_R[0];
-        Edge_R[1]=speed_rember_R[1];
-        Edge_R[2]=speed_rember_R[2];          
-        speed_get_R=GetMedianNum(Edge_R,3);////右编码器滤波          
-      }
-      else
-      {
-        speed_get_R = speed_rember_R[2];
-      }
-      
-    }
+//    if(Edge_R[0]!=0)
+//    {
+//      if(abs(speed_get_R-speed_rember_R[2])<20)
+//      {
+//        speed_rember_R[0] = speed_rember_R[1];
+//        speed_rember_R[1] = speed_rember_R[2];
+//        speed_rember_R[2] = speed_get_R;
+//        
+//        Edge_R[0]=speed_rember_R[0];
+//        Edge_R[1]=speed_rember_R[1];
+//        Edge_R[2]=speed_rember_R[2];          
+//        speed_get_R=GetMedianNum(Edge_R,3);////右编码器滤波          
+//      }
+//      else
+//      {
+//        speed_get_R = speed_rember_R[2];
+//      }
+//      
+//    }
     ftm_quad_clean(FTM1);
     lptmr_pulse_clean();
     IR2_last = IR2;
@@ -182,15 +182,15 @@ uint16 speed_rember_L[3] = {0};
     send_data[1] = Cross_Flag*50;
     //uart_putchar(UART5,speed_get_R);
     send_data[2] = 0;
-    vcan_sendware((uint16_t *)send_data, sizeof(send_data));
+    //vcan_sendware((uint16_t *)send_data, sizeof(send_data));
     
 
     ///蓝牙传送编码器的值
     //send_data[0] = speed_get_L;
     //send_data[1] = speed_get_R;
       //send_data[0] = Cross_Flag*50+50;
-    if(speed_get_R>50&&Cross_Flag!=0)
-    uart_putchar(UART5,Cross_Flag);
+    //if(speed_get_R>50&&Cross_Flag!=0)
+    //uart_putchar(UART5,Cross_Flag);
       //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
    
     nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
@@ -221,7 +221,7 @@ uint16 speed_rember_L[3] = {0};
       OLED_Print_Num1(88, 4, Cross_Flag);
       OLED_Print_Num1(88, 5, Out_Left);
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
-      OLED_Print_Num1(88, 6, Cross3_Cnt);
+      OLED_Print_Num1(88, 6, time1);
     }
     //wzt_bluetooth();      
     

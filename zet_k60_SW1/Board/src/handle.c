@@ -589,10 +589,6 @@ void Edge_Filter()
   }
 }
 //寻中线
-int8 k1=0;
-int8 k2=0;
-int8 k3=0;
-int8 k4=0;
 void Find_Middle()
 {
   Row_Ptr=0;
@@ -607,7 +603,11 @@ void Find_Middle()
   Road_area=0;
   cross_num =0;
   FirstBlackinCenter=0;
-  Overtake=0;
+  Overtake=0;  
+  int8 k1=0;
+  int8 k2=0;
+  int8 k3=0;
+  int8 k4=0;
   //
   Out_Right=0;
   //Out_Left=0;
@@ -635,24 +635,11 @@ void Find_Middle()
   }
   //if(Cross_Cnt==5&&error>10) Cross_Cnt=6;//右转
   //else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
-  if(Cross_Cnt==4)   //右转判断左线
+  if(Cross_Cnt==4)  
   {
   
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
-//      if(Road_Left[Row_Ptr]>Road_Left[Row_Ptr+1]&&
-//         Road_Left[Row_Ptr+1]>Road_Left[Row_Ptr+2]&&
-//           Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
-//              Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
-//               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
-//               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2])
-//      {
-//        Cross_Flag=2;
-//        cross_num = Row_Ptr;
-//        All_Black=Row_Ptr;
-//        Flag_L++;
-//        break;
-//      }
       if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr-6]==1&&Left_Flag[Row_Ptr-12]==1)
       {
         k1 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Left);
@@ -668,29 +655,9 @@ void Find_Middle()
         }
       }
     }
-    //if(Flag_L>0&&Cross_Flag!=2)
-    //{
-      //Flag_L=0;
-      //Cross_Cnt=0;
-    //}
-  //}
-  //else if(Cross_Cnt==7) //左转判断右线
-  //{
+    
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
-//      if(Road_Right[Row_Ptr]<Road_Right[Row_Ptr+1]&&
-//         Road_Right[Row_Ptr+1]<Road_Right[Row_Ptr+2]&&
-//           Road_Right[Row_Ptr+2]<Road_Right[Row_Ptr+3]&&
-//              Road_Right[Row_Ptr-1]>=Road_Right[Row_Ptr]&&
-//               Road_Right[Row_Ptr-2]>=Road_Right[Row_Ptr-1]&&
-//               Road_Right[Row_Ptr-3]>Road_Right[Row_Ptr-2])
-//      {
-//        Cross_Flag=4;        
-//        cross_num = Row_Ptr;
-//        All_Black=Row_Ptr;
-//        Flag_R++;
-//        break;
-//      }
       if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr-6]==1&&Right_Flag[Row_Ptr-12]==1)
       {
         k3 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Right);
@@ -705,15 +672,10 @@ void Find_Middle()
         }
       }
     }
-    if(Cross_Cnt>0&&Cross_Flag>0)
+    if(Cross_Cnt>0&&All_Black<3)
     {      
       Cross_Cnt=0;
     }
-//    if(Flag_R>0&&Cross_Flag!=4)
-//    {
-//      Flag_R=0;
-//      Cross_Cnt=0;
-//    }
   }
   
   //************************//
@@ -1376,18 +1338,18 @@ void Search_Line(void)
         //Cross_Flag=3;/////标记为小圆环
       //}
       //else 
-        if(ring_num>5&&ring_time==0)
-      {
-        if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
+        if(ring_num>5&&ring_time==0&&Road_type==1&&stopLine_temp==0)
         {
-          Cross_Flag=5;
+          if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
+          {
+            Cross_Flag=5;
+          }
+          else if(Road_Right[Row_Ptr]-Ring_width_2<Ring_width_1-Road_Left[Row_Ptr])
+          {
+            Cross_Flag=6;
+          }
+          
         }
-        else if(Road_Right[Row_Ptr]-Ring_width_2<Ring_width_1-Road_Left[Row_Ptr])
-        {
-          Cross_Flag=6;
-        }
-        
-      }
     }
     //入圆环前两边拐点   
     Left_J=0;

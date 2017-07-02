@@ -609,10 +609,6 @@ void Edge_Filter()
   }
 }
 
-int k1=0;
-int k2=0;
-int k3=0;
-int k4=0;
 //寻中线
 void Find_Middle()
 {
@@ -626,7 +622,11 @@ void Find_Middle()
   uint8 CutPos=0;//中线断开位置
   uint8 Var=0;
   Road_area=0;
-  cross_num =0;
+  cross_num =0;  
+  int8 k1=0;
+  int8 k2=0;
+  int8 k3=0;
+  int8 k4=0;
   FirstBlackinCenter=0;
   Overtake=0;
   //
@@ -651,27 +651,12 @@ void Find_Middle()
   {
     if(Cross_Cnt==2) Cross_Cnt=3;//第一个十字路口结束
     else if(Cross_Cnt==3) Cross_Cnt=4;
-    else if(Cross_Cnt==4) Cross_Cnt=5;
   }
-  if(Cross_Cnt==5&&error>10) Cross_Cnt=6;//右转
-  else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
-  //if(Cross_Cnt==6)   //右转判断左线
-  //{
+  if(Cross_Cnt==4)
+  {
+  
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
-//      if(Road_Left[Row_Ptr]>Road_Left[Row_Ptr+1]&&
-//         Road_Left[Row_Ptr+1]>Road_Left[Row_Ptr+2]&&
-//           Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
-//              Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
-//               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
-//               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2])
-//      {
-//        Cross_Flag=2;
-//        cross_num = Row_Ptr;
-//        All_Black=Row_Ptr;
-//        Flag_L++;
-//        break;
-//      }
       if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr-6]==1&&Left_Flag[Row_Ptr-12]==1)
       {
         k1 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Left);
@@ -679,57 +664,36 @@ void Find_Middle()
         
         if(k1*k2<0)
         {
-          Cross_Flag=2;
+          
           cross_num = Row_Ptr;
           All_Black=Row_Ptr;
-          Flag_L++;
+          
           break;
         }
       }
     }
-    if(Flag_L>0&&Cross_Flag!=2)
-    {
-      Flag_L=0;
-      Cross_Cnt=0;
-    }
-  //}
-  //else if(Cross_Cnt==7) //左转判断右线
-  //{
+    
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
-//      if(Road_Right[Row_Ptr]<Road_Right[Row_Ptr+1]&&
-//         Road_Right[Row_Ptr+1]<Road_Right[Row_Ptr+2]&&
-//           Road_Right[Row_Ptr+2]<Road_Right[Row_Ptr+3]&&
-//              Road_Right[Row_Ptr-1]>=Road_Right[Row_Ptr]&&
-//               Road_Right[Row_Ptr-2]>=Road_Right[Row_Ptr-1]&&
-//               Road_Right[Row_Ptr-3]>Road_Right[Row_Ptr-2])
-//      {
-//        Cross_Flag=4;        
-//        cross_num = Row_Ptr;
-//        All_Black=Row_Ptr;
-//        Flag_R++;
-//        break;
-//      }
       if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr-6]==1&&Right_Flag[Row_Ptr-12]==1)
       {
         k3 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Right);
         k4 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Right);
         if(k3*k4<0)
         {
-          Cross_Flag=4;   
+          
           cross_num = Row_Ptr;
           All_Black=Row_Ptr;
-          Flag_R++;
+          
           break;
         }
       }
     }
-    if(Flag_R>0&&Cross_Flag!=4)
-    {
-      Flag_R=0;
+    if(Cross_Cnt>0&&All_Black<3)
+    {      
       Cross_Cnt=0;
     }
-  //}
+  }
   //************************//
   //出圆环判断
   if(Cross_Flag==31)
@@ -1383,7 +1347,7 @@ void Search_Line(void)
         //Cross_Flag=3;/////标记为小圆环
       //}
       //else 
-        if(ring_num>5&&ring_time==0)
+        if(ring_num>5&&ring_time==0&&Road_type==1&&stopLine_temp==0)
       {
         if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
         {
@@ -1468,17 +1432,6 @@ void Search_Line(void)
       }
     }
     
-      
-    /*if(abs(Ring_width_2-Col_Ptr)<3)////从黑块的左边往右找，如果Col_Ptr接近了黑块最右边，说明圆环上面有白的，判断为圆环
-    {      
-        if(ring_num>5)
-        {
-            if(Ring_width>10&&Stop_Flag!=0&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
-            {
-              Cross_Flag=3;/////标记为小圆环
-            }
-        }
-    }*/
     if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row)
     {
       Cross_Flag=31;/////标记为大圆环
