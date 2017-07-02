@@ -171,6 +171,7 @@ float Slope_Calculate(uint8 begin,uint8 end,uint8 *p)
 }
 
 
+
 //补线
 void Calculate_Slope()
 {
@@ -324,16 +325,16 @@ void Servo_control(void)
       errorerror=errorerror*5/10;
       error = error*50/10;
     }
-    if(Cross_Flag==2||cross_time>0)
-    {
-      Kp =86;
-      Servo_temp=Kp*error/10+90;
-    }
-    else if(Cross_Flag==4||cross_time>0)
-    {
-      Kp =86;
-      Servo_temp=Kp*error/10-90;
-    }
+//    if(Cross_Flag==2||cross_time>0)
+//    {
+//      Kp =86;
+//      Servo_temp=Kp*error/10+90;
+//    }
+//    else if(Cross_Flag==4||cross_time>0)
+//    {
+//      Kp =86;
+//      Servo_temp=Kp*error/10-90;
+//    }
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
     else if(Cross_Flag==31&&Ring_First_Row>10)
     {
@@ -588,6 +589,11 @@ void Edge_Filter()
     }
   }
 }
+
+int k1=0;
+int k2=0;
+int k3=0;
+int k4=0;
 //寻中线
 void Find_Middle()
 {
@@ -630,21 +636,36 @@ void Find_Middle()
   }
   if(Cross_Cnt==5&&error>10) Cross_Cnt=6;//右转
   else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
-  if(Cross_Cnt==6)   //右转判断左线
-  {
+  //if(Cross_Cnt==6)   //右转判断左线
+  //{
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
-      if(Road_Left[Row_Ptr]>Road_Left[Row_Ptr+1]&&
-         Road_Left[Row_Ptr+1]>Road_Left[Row_Ptr+2]&&
-           Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
-              Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
-               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
-               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2])
+//      if(Road_Left[Row_Ptr]>Road_Left[Row_Ptr+1]&&
+//         Road_Left[Row_Ptr+1]>Road_Left[Row_Ptr+2]&&
+//           Road_Left[Row_Ptr+2]>Road_Left[Row_Ptr+3]&&
+//              Road_Left[Row_Ptr-1]<=Road_Left[Row_Ptr]&&
+//               Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
+//               Road_Left[Row_Ptr-3]<Road_Left[Row_Ptr-2])
+//      {
+//        Cross_Flag=2;
+//        cross_num = Row_Ptr;
+//        All_Black=Row_Ptr;
+//        Flag_L++;
+//        break;
+//      }
+      if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr-6]==1&&Left_Flag[Row_Ptr-12]==1)
       {
-        Cross_Flag=2;
-        cross_num = Row_Ptr;
-        Flag_L++;
-        break;
+        k1 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Left);
+        k2 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Left);
+        
+        if(k1*k2<0)
+        {
+          Cross_Flag=2;
+          cross_num = Row_Ptr;
+          All_Black=Row_Ptr;
+          Flag_L++;
+          break;
+        }
       }
     }
     if(Flag_L>0&&Cross_Flag!=2)
@@ -652,22 +673,36 @@ void Find_Middle()
       Flag_L=0;
       Cross_Cnt=0;
     }
-  }
-  else if(Cross_Cnt==7) //左转判断右线
-  {
+  //}
+  //else if(Cross_Cnt==7) //左转判断右线
+  //{
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
-      if(Road_Right[Row_Ptr]<Road_Right[Row_Ptr+1]&&
-         Road_Right[Row_Ptr+1]<Road_Right[Row_Ptr+2]&&
-           Road_Right[Row_Ptr+2]<Road_Right[Row_Ptr+3]&&
-              Road_Right[Row_Ptr-1]>=Road_Right[Row_Ptr]&&
-               Road_Right[Row_Ptr-2]>=Road_Right[Row_Ptr-1]&&
-               Road_Right[Row_Ptr-3]>Road_Right[Row_Ptr-2])
+//      if(Road_Right[Row_Ptr]<Road_Right[Row_Ptr+1]&&
+//         Road_Right[Row_Ptr+1]<Road_Right[Row_Ptr+2]&&
+//           Road_Right[Row_Ptr+2]<Road_Right[Row_Ptr+3]&&
+//              Road_Right[Row_Ptr-1]>=Road_Right[Row_Ptr]&&
+//               Road_Right[Row_Ptr-2]>=Road_Right[Row_Ptr-1]&&
+//               Road_Right[Row_Ptr-3]>Road_Right[Row_Ptr-2])
+//      {
+//        Cross_Flag=4;        
+//        cross_num = Row_Ptr;
+//        All_Black=Row_Ptr;
+//        Flag_R++;
+//        break;
+//      }
+      if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr-6]==1&&Right_Flag[Row_Ptr-12]==1)
       {
-        Cross_Flag=4;        
-        cross_num = Row_Ptr;
-        Flag_R++;
-        break;
+        k3 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Right);
+        k4 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Right);
+        if(k3*k4<0)
+        {
+          Cross_Flag=4;   
+          cross_num = Row_Ptr;
+          All_Black=Row_Ptr;
+          Flag_R++;
+          break;
+        }
       }
     }
     if(Flag_R>0&&Cross_Flag!=4)
@@ -675,7 +710,7 @@ void Find_Middle()
       Flag_R=0;
       Cross_Cnt=0;
     }
-  }
+  //}
   //************************//
   //出圆环判断
   if(Cross_Flag==31)

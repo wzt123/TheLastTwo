@@ -178,11 +178,11 @@ uint16 speed_rember_L[3] = {0};
     */
     
     ///À¶ÑÀ´«ËÍ±àÂëÆ÷µÄÖµ
-    send_data[0] = speed_get_L;
-    send_data[1] = speed_get_R;
+    send_data[0] = Cross_Cnt*50+100;
+    send_data[1] = Cross_Flag*50;
     //uart_putchar(UART5,speed_get_R);
-    //send_data[2] = Cross_Flag*500;
-    //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
+    send_data[2] = 0;
+    vcan_sendware((uint16_t *)send_data, sizeof(send_data));
     
 
     ///À¶ÑÀ´«ËÍ±àÂëÆ÷µÄÖµ
