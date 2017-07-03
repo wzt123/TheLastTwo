@@ -355,9 +355,10 @@ void Servo_control(void)
     }
     else if(Cross_Flag==1)
     {
-      Kp =66;
+      Kp =70;//66
       Kd = 35;
-      Servo_temp=Kp*error/10+Kd*errorerror/10;
+      Servo_temp = Kp*error+Kd*errorerror;
+      Servo_temp = Servo_temp/10;
     }
     else
     {      
