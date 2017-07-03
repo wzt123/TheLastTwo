@@ -202,8 +202,8 @@ void Motor_Out(void)
         }
         else if(Status==2)
         {
-          speed_goal_R=4400;
-          speed_goal_L=4400;
+          speed_goal_R=4300;
+          speed_goal_L=4300;
         }
         
         else if(Status==3)
@@ -212,11 +212,30 @@ void Motor_Out(void)
           speed_goal_L=4500;
         }
         
-         else if(Status == 4)
+        else if(Status == 4)
         {
           speed_goal_R = 4700;
           speed_goal_L = 4700;
         }
+        
+        else if(Status == 5)
+        {
+          speed_goal_R = 4900;
+          speed_goal_L = 4900;
+        }
+        
+        else if(Status == 6)
+        {
+          speed_goal_R = 5100;
+          speed_goal_L = 5100;
+        }
+        
+        else if(Status == 7)
+        {
+          speed_goal_R = 5200;
+          speed_goal_L = 5200;
+        }
+        
       }
 //      if(Car==2)
 //      {
