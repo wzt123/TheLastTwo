@@ -6,6 +6,7 @@
 
 uint16 speed_goal_R;
 uint16 speed_goal_L;
+uint16 speed_goal;
 //uint16 speed_get;
 uint16 speed_get_R=0;
 uint16 speed_get_L=0;
@@ -153,30 +154,25 @@ void Motor_Out(void)
   else
   { 
     if(stop_time==0)
-    {
-      
+    {      
       if(abs(error)<4)
       {
         if(Status==0)
         {
-          speed_goal_R=3800;
-          speed_goal_L=3800;
+          speed_goal=3800;
         }
         else if(Status==1)
         {
-          speed_goal_R=4000;
-          speed_goal_L=4000;
+          speed_goal=4200;
         }
-        else if(Status==2)
+        else if(Status==2)//入弯减速
         {
-          speed_goal_R=4400;
-          speed_goal_L=4400;
+          speed_goal=4600;
         }
         
         else if(Status==3)
         {
-          speed_goal_R=4400;
-          speed_goal_L=4400;
+          speed_goal=5000;
         }
       }
       
@@ -184,25 +180,23 @@ void Motor_Out(void)
       {
         if(Status==0)
         {
-          speed_goal_R=3800;
-          speed_goal_L=3800;
+          speed_goal=3800;
         }
         else if(Status==1)
         {
-          speed_goal_R=4000;
-          speed_goal_L=4000;
+          speed_goal=4200;
         }
-        else if(Status==2)
+        else if(Status==2)//入弯减速
         {
-          speed_goal_R=4000;
-          speed_goal_L=4000;
+          speed_goal=4300;
         }
         else if(Status==3)
         {
-          speed_goal_R=4300;
-          speed_goal_L=4300;
+          speed_goal=5000;
         }
-      }
+      }     
+      speed_goal_R=speed_goal;
+      speed_goal_L=speed_goal;
       
       /*if(Car==2)
       {

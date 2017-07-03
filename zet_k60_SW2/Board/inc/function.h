@@ -18,6 +18,7 @@ extern uint16 var;//ºìÍâ²â¾à£»
 //extern uint16 speed_goal;
 extern uint16 speed_goal_R;
 extern uint16 speed_goal_L;
+extern uint16 speed_goal;
 extern uint8 Status;
 extern uint16 speed_PWM_R;
 extern uint16 speed_PWM_L;
