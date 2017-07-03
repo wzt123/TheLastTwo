@@ -178,11 +178,11 @@ uint16 speed_rember_L[3] = {0};
     */
     
     ///À¶ÑÀ´«ËÍ±àÂëÆ÷µÄÖµ
-    send_data[0] = Cross_Cnt*50+100;
-    send_data[1] = Cross_Flag*50;
+    send_data[0] = 0;
+    send_data[1] = Cross_Flag*500;
     //uart_putchar(UART5,speed_get_R);
     send_data[2] = 0;
-    //vcan_sendware((uint16_t *)send_data, sizeof(send_data));
+    vcan_sendware((uint16_t *)send_data, sizeof(send_data));
     
 
     ///À¶ÑÀ´«ËÍ±àÂëÆ÷µÄÖµ
@@ -215,13 +215,13 @@ uint16 speed_rember_L[3] = {0};
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, All_Black);
-      OLED_Print_Num1(88, 2, error);
+      OLED_Print_Num1(88, 1, (Road_Left[Left_xian]+Road_Right[Right_xian])/2);
+      OLED_Print_Num1(88, 2, Ring_First_Row);
       OLED_Print_Num1(88, 3, errorerror);
       OLED_Print_Num1(88, 4, Cross_Flag);
-      OLED_Print_Num1(88, 5, Out_Left);
+      OLED_Print_Num1(88, 5, Right_xian);
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
-      OLED_Print_Num1(88, 6, time1);
+      OLED_Print_Num1(88, 6, Left_xian);
     }
     //wzt_bluetooth();      
     

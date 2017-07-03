@@ -119,9 +119,10 @@ void Motor_Out(void)
 {
   
   speed_PWM=6550;
-  uint8 speed_Ki=15;
-  uint8 speed_Kd=3;
-  uint8 speed_Kp=3;
+  uint8 speed_Ki=5;
+  uint8 speed_Kp=20;  
+  uint8 speed_Kd=5;
+  
   /*if(Overtake2==1||buff[1]==2)
   {
   if(buff[1]==2&&Car==2)
@@ -142,152 +143,153 @@ void Motor_Out(void)
   gpio_set(PTB17,0);
   gpio_set(PTB16,1);
   
-//  if(All_Black>=40)
-//  {
-//    speed_PWM_R=0;
-//    speed_PWM_L =0;
-//    
-//  }
-//  else
-//  { 
-//    if(stop_time==0)
-//    {
-//      
-//      if(abs(error)<4)
-//      {
-////        if(Status==0)
-////        {
-////          speed_goal_R=3700;
-////          speed_goal_L=3700;
-////        }
-////        else if(Status==1)
-////        {
-////          speed_goal_R=4000;
-////          speed_goal_L=4000;
-////        }
-////        else if(Status==2)
-////        {
-////          speed_goal_R=4400;
-////          speed_goal_L=4400;
-////        }
-////        
-////        else if(Status==3)
-////        {
-////          speed_goal_R=4400;
-////          speed_goal_L=4400;
-////        }
-//        speed_goal_R=3700;
-//        speed_goal_L=3700;
-//      }
-//      
-//      else
-//      {
-//        speed_goal_R=3700;
-//        speed_goal_L=3700;
-////        if(Status==0)
-////        {
-////          speed_goal_R=3700;
-////          speed_goal_L=3700;
-////        }
-////        else if(Status==1)
-////        {
-////          speed_goal_R=4000;
-////          speed_goal_L=4000;
-////        }
-////        else if(Status==2)
-////        {
-////          speed_goal_R=4000;
-////          speed_goal_L=4000;
-////        }
-////        else if(Status==3)
-////        {
-////          speed_goal_R=4300;
-////          speed_goal_L=4300;
-////        }
-//      }
-//      if(Car==2)
-//      {
-//        if(ABDistance<Distance-200)
+  if(All_Black>=40)
+  {
+    speed_PWM_R=0;
+    speed_PWM_L =0;
+    
+  }
+  else
+  { 
+    if(stop_time==0)
+    {
+      speed_goal_R=3800;
+      speed_goal_L=3800;
+      if(abs(error)<4)
+      {
+//        if(Status==0)
 //        {
-//          speed_goal_R = speed_goal_R-300;
-//          speed_goal_L = speed_goal_L-300;
+//          speed_goal_R=4000;
+//          speed_goal_L=4000;
 //        }
-//        else if(ABDistance>Distance+200)
+//        else if(Status==1)
 //        {
-//          speed_goal_R = speed_goal_R+300;
-//          speed_goal_L = speed_goal_L+300;
+//          speed_goal_R=4000;
+//          speed_goal_L=4000;
 //        }
-//      }
-////      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
-////      {
-////        if(abs(error)<8&&abs(error)>=4)
-////          stop1();
-////        else if((All_Black>2&&All_Black<8)||Cross_Flag==3)
-////        {
-////          stop1();
-////        }
-////          
-////        return;
-////      }
-//      speed_err_R_lastlast = speed_err_R_last;
-//      speed_err_R_last = speed_err_R;
-//      
-//      speed_err_L_lastlast = speed_err_L_last;
-//      speed_err_L_last = speed_err_L;
-//         
-//      speed_err_R = speed_goal_R-speed_get_R*10;
-//      speed_err_L = speed_goal_L-speed_get_L*10;
-//      
-//      speed_increment_R = speed_Kp*(speed_err_R-speed_err_R_last)/10+
-//                              speed_Ki*speed_err_R/10+
-//                            speed_Kd*(speed_err_R-2*speed_err_R_last+speed_err_R_lastlast)/10;
-//      speed_increment_L= speed_Kp*(speed_err_L-speed_err_L_last)/10+
-//                          speed_Ki*speed_err_L/10+
-//                            speed_Kd*(speed_err_L-2*speed_err_L_last+speed_err_L_lastlast)/10;
-//      speed_PWM_R=6100+speed_increment_R;
-//      speed_PWM_L=6100+speed_increment_L;
-//      
-//    }
-//    else if(stop_time<3)
-//    {
-//      stop_time++;
-//    }
-//    else
-//      stop_time=0;
-//  }
-//  //}
-//  
-//  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>1000)
-//  {
-//    if(speed_get_L<50)
-//    { 
-//      speed_PWM_L = 0;
-//    }
-//    if(speed_get_R<50)
-//    {
-//      speed_PWM_R = 0;
-//    }
-//  }
-//  else if(speed_get_R<100||speed_get_L<100)
-//  {
-//    speed_PWM_R = 6500;
-//    speed_PWM_L = 6500;
-//  }
-//  
-//  if(speed_PWM_R<0)
-//    speed_PWM_R=0;
-//  if(speed_PWM_R>8800)
-//    speed_PWM_R=8800;
-//  
-//  if(speed_PWM_L<0)
-//    speed_PWM_L=0;
-//  if(speed_PWM_L>8800)
-//    speed_PWM_L=8800;
-//  
-//  ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
-//  ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
-  ftm_pwm_duty(FTM2,FTM_CH0,6850);//B2左电机
-  ftm_pwm_duty(FTM2,FTM_CH1,6850);//B1右电机
+//        else if(Status==2)
+//        {
+//          speed_goal_R=4400;
+//          speed_goal_L=4400;
+//        }
+//        
+//        else if(Status==3)
+//        {
+//          speed_goal_R=4400;
+//          speed_goal_L=4400;
+//        }
+      }
+      
+      else
+      {
+        
+      speed_goal_R=3800;
+      speed_goal_L=3800;
+//        if(Status==0)
+//        {
+//          speed_goal_R=4000;
+//          speed_goal_L=4000;
+//        }
+//        else if(Status==1)
+//        {
+//          speed_goal_R=4000;
+//          speed_goal_L=4000;
+//        }
+//        else if(Status==2)
+//        {
+//          speed_goal_R=4000;
+//          speed_goal_L=4000;
+//        }
+//        else if(Status==3)
+//        {
+//          speed_goal_R=4300;
+//          speed_goal_L=4300;
+//        }
+      }
+      
+      /*if(Car==2)
+      {
+        if(ABDistance<Distance-200)
+        {
+          speed_PWM_R = speed_goal_R-300;
+          speed_PWM_L = speed_goal_L-300;
+        }
+        else if(ABDistance>Distance+200)
+        {
+          speed_PWM_R = speed_goal_R+150;
+          speed_PWM_L = speed_goal_L+150;
+        }
+      }*/
+      
+      /*if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
+      {
+        if(abs(error)<8&&abs(error)>=4)
+          stop1();
+        else if((All_Black>2&&All_Black<8)||Cross_Flag==3)
+        {
+          stop1();
+        }
+          
+        return;
+      }*/
+      speed_err_R_lastlast = speed_err_R_last;
+      speed_err_R_last = speed_err_R;
+      
+      speed_err_L_lastlast = speed_err_L_last;
+      speed_err_L_last = speed_err_L;
+      
+      speed_err_R = speed_goal_R-speed_get_R*10;
+      speed_err_L = speed_goal_L-speed_get_L*10;
+      
+      speed_increment_R = speed_Kp*(speed_err_R-speed_err_R_last)/10+
+                              speed_Ki*speed_err_R/10+
+                            speed_Kd*(speed_err_R-2*speed_err_R_last+speed_err_R_lastlast)/10;
+      speed_increment_L= speed_Kp*(speed_err_L-speed_err_L_last)/10+
+                          speed_Ki*speed_err_L/10+
+                            speed_Kd*(speed_err_L-2*speed_err_L_last+speed_err_L_lastlast)/10;
+      speed_PWM_R=6100+speed_increment_R;
+      speed_PWM_L=6100+speed_increment_L;
+      
+    }
+    else if(stop_time<3)
+    {
+      stop_time++;
+    }
+    else
+      stop_time=0;
+  }
+  //}
+  
+  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>1000)
+  {
+    if(speed_get_L<50)
+    { 
+      speed_PWM_L = 0;
+    }
+    if(speed_get_R<50)
+    {
+      speed_PWM_R = 0;
+    }
+  }
+  else if(speed_get_R<100||speed_get_L<100)
+  {
+    speed_PWM_R = 6500;
+    speed_PWM_L = 6500;
+  }
+  
+  if(speed_PWM_R<0)
+    speed_PWM_R=0;
+  if(speed_PWM_R>8800)
+    speed_PWM_R=8800;
+  
+  if(speed_PWM_L<0)
+    speed_PWM_L=0;
+  if(speed_PWM_L>8800)
+    speed_PWM_L=8800;
+  
+  ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
+  ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
+  
 }
 
 /*

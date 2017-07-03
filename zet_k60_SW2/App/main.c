@@ -181,7 +181,7 @@ void  main(void)
 
     //if(speed_get_R>50&&Cross_Flag!=0)
     //uart_putchar(UART5,Cross_Flag);
-    vcan_sendware((uint16_t *)send_data, sizeof(send_data));
+    //vcan_sendware((uint16_t *)send_data, sizeof(send_data));
    
     nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
     nrf_data = buff[0];
@@ -216,7 +216,7 @@ void  main(void)
       OLED_Print_Num1(88, 5, Kd);
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
       //wzt_bluetooth();     
-      OLED_Print_Num1(88, 6, Servo_temp);
+      OLED_Print_Num1(88, 6, Cross_Flag);
     }
     
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)

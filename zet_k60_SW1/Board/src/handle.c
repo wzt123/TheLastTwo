@@ -41,7 +41,7 @@ uint8 Cross_Flag=0;
 uint8 Change_Flag;
 uint8 CrossRow=0;
 
-uint16 Servomiddle=8768;
+uint16 Servomiddle=8767;
 uint32 Servo_max=8938;
 uint32 Servo_min=8612;
 float CenterLineSlope=0;
@@ -287,7 +287,7 @@ void Servo_control(void)
   }
   else if(ChaoChe_temp==0)
   {
-    Servomiddle=8768;
+    Servomiddle=8767;
   }
   
   if(All_Black>2)
@@ -620,7 +620,7 @@ void Find_Middle()
   //filter_Middle(Road_Center);
   
   //斜入十字判断
-  if(Cross_Flag==1&&StopRow>All_Black)
+  if(Cross_Flag==1&&StopRow>All_Black&&Cross_Flag_Last!=3)
   {
     Calculate_Slope();
     if(Cross_Cnt==0) Cross_Cnt=1;//一个十字路口
@@ -635,9 +635,10 @@ void Find_Middle()
   }
   //if(Cross_Cnt==5&&error>10) Cross_Cnt=6;//右转
   //else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
-  if(Cross_Cnt==4)  
+  //if(Cross_Cnt==4)  
+  //{
+  if(Cross_Flag_Last!=3)
   {
-  
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
       if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr-6]==1&&Left_Flag[Row_Ptr-12]==1)
@@ -677,6 +678,7 @@ void Find_Middle()
       Cross_Cnt=0;
     }
   }
+  //}
   
   //************************//
   //出圆环判断
@@ -882,8 +884,16 @@ void Search_Line(void)
   uint8 Right_right=0;
   uint8 Left_J=0;
   uint8 Left_Y=0;
+  uint8 Left_J0=0;
+  uint8 Left_J1=0;
+  uint8 Left_Y0=0;
+  uint8 Left_Y1=0;
   uint8 Right_J=0;
   uint8 Right_Y=0;
+  uint8 Right_J0=0;
+  uint8 Right_J1=0;
+  uint8 Right_Y0=0;
+  uint8 Right_Y1=0;
   Cross_flag=0;
   
   a=1;
@@ -952,7 +962,7 @@ void Search_Line(void)
           start_line_num[Row_Ptr] ++;
         }      
       }
-      if(start_line_num[Row_Ptr]>6)
+      if(start_line_num[Row_Ptr]>4)
       {
         stop_line_num++;
       }
@@ -1020,7 +1030,7 @@ void Search_Line(void)
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
     //从左到右检测起跑线
-    if(Row_Ptr>25)
+    if(Row_Ptr>10)
     {
       
       start_line_num[Row_Ptr] = 0;
@@ -1032,7 +1042,7 @@ void Search_Line(void)
           start_line_num[Row_Ptr] ++;
         }      
       }
-      if(start_line_num[Row_Ptr]>6)
+      if(start_line_num[Row_Ptr]>4)
       {
         stop_line_num++;
       }
@@ -1354,29 +1364,50 @@ void Search_Line(void)
     //入圆环前两边拐点   
     Left_J=0;
     Left_Y=0;
+    Left_J0=0;
+    Left_J1=0;
+    Left_Y0=0;
+    Left_Y1=0;
+    
     if(Left_left!=1&&Row_Ptr<48) //左拐点确定
     {
       for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
       {
         if(Road_Left[Col_Ptr]<Road_Left[Col_Ptr+1]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr+1]==0)
         {
-          Left_J=0;
-          break;
+          Left_J0++;
+          if(Left_J0>1)
+          {
+            Left_J=0;
+            break;
+          }
         }
-        else if(Road_Left[Col_Ptr]>Road_Left[Col_Ptr+1]) Left_J=1;
+        else if(Road_Left[Col_Ptr]>Road_Left[Col_Ptr+1])
+        {
+          Left_J1++;
+          if(Left_J1>1)
+              Left_J=1;
+        }
       }
       for(Col_Ptr=Row_Ptr+5;Col_Ptr>Row_Ptr;Col_Ptr--)
       {
         if(Road_Left[Col_Ptr-1]>Road_Left[Col_Ptr]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr-1]==0)
         {
-
-          Left_Y=0;
-          break;
+          Left_Y0++;
+          if(Left_Y0>1)
+          {
+             Left_Y=0;
+             break;
+          }
         }
         else if(Road_Left[Col_Ptr-1]<Road_Left[Col_Ptr]) 
         {
-          Left_Y=1;
-          break;
+          Left_Y1++;
+          if(Left_Y1>1)
+          {
+            Left_Y=1;
+            break;
+          }  
         }
       }
       if(Left_J==1&&Left_Y==1)
@@ -1387,28 +1418,53 @@ void Search_Line(void)
     }
     Right_J=0;
     Right_Y=0;
+    Right_J0=0;
+    Right_J1=0;
+    Right_Y0=0;
+    Right_Y1=0;
     if(Right_right!=1&&Row_Ptr<48) //右拐点确定
     {
       for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
       {
         if(Road_Right[Col_Ptr]>Road_Right[Col_Ptr+1]||Road_Right[Col_Ptr]==79||Road_Right[Col_Ptr+1]==79)
         {
-          Right_J=0;
-          break;
+          Right_J0++;
+          if(Right_J0>1)
+          {
+            Right_J=0;
+            break;
+          }
+          
         }
-        else if(Road_Right[Col_Ptr]<Road_Right[Col_Ptr+1]) Right_J=1;
+        else if(Road_Right[Col_Ptr]<Road_Right[Col_Ptr+1]) 
+        {
+          Right_J1++;
+          if(Right_J1>1)
+          {
+            Right_J=1;
+          }
+          
+        }
       }
       for(Col_Ptr=Row_Ptr+5;Col_Ptr>Row_Ptr;Col_Ptr--)
       {
         if(Road_Right[Col_Ptr-1]<Road_Right[Col_Ptr]||Road_Right[Col_Ptr]==79||Road_Right[Col_Ptr-1]==79)
         {
-          Right_Y=0;
-          break;
+          Right_Y0++;
+          if(Right_Y0>1)
+          {
+            Right_Y=0;
+            break;
+          }
         }
         else if(Road_Right[Col_Ptr-1]>Road_Right[Col_Ptr]) 
         {
-          Right_Y=1;
-          break;
+          Right_Y1++;
+          if(Right_Y1>1)
+          {
+            Right_Y=1;
+            break;
+          }
         }
       }
       if(Right_J==1&&Right_Y==1)
@@ -1429,11 +1485,21 @@ void Search_Line(void)
             }
         }
     }*/
+    
     if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row)
     {
-      Cross_Flag=31;/////标记为大圆环
+      for(i=Left_xian;i>Ring_First_Row;i--)
+      {
+        if(img[i][Road_Left[i]]==0&&img[i+1][Road_Left[i+1]]==0) break;
+      }
+      for(j=Right_xian;j>Ring_First_Row;j--)
+      {
+        if(img[j][Road_Right[j]]==0&&img[j+1][Road_Right[j+1]]==0) break;
+      }
+      if(i==Ring_First_Row&&j==Ring_First_Row)
+        Cross_Flag=31;/////标记为大圆环
     }
-
+    
     /*if(samll_Ring_temp==1&&cross_Time==0&&(Right_right==1||Left_left==1)&&Stop_Flag!=0&&sum_time>1000)
     {
       Cross_Flag=3;
