@@ -257,7 +257,7 @@ void Motor_Out(void)
   }
   //}
   
-  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>1000)
+  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>10)
   {
     if(speed_get_L<50)
     { 
