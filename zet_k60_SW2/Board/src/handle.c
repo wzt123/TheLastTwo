@@ -289,7 +289,7 @@ void Servo_control(void)
   }
   else if(ChaoChe_temp==0)
   {
-    Servomiddle=8619;
+    Servomiddle=8622;
   }
   
   if(All_Black>2)
