@@ -30,7 +30,7 @@ uint8 Status=0;
 uint16 var;
 uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
-uint32 Distance = 900;
+uint32 Distance = 2300;
 uint8 stop_time = 0;
 uint8 ChaoChe_stop=0;
 uint8 ChaoChe_stop_time = 0;
@@ -163,7 +163,7 @@ void Motor_Out(void)
         }
         else if(Status==1)
         {
-          speed_goal=4200;
+          speed_goal=4100;
         }
         else if(Status==2)//入弯减速
         {
@@ -178,18 +178,19 @@ void Motor_Out(void)
       
       else
       {
-        if(Status==0)
+       if(Status==0)
         {
           speed_goal=3800;
         }
         else if(Status==1)
         {
-          speed_goal=4200;
+          speed_goal=4100;
         }
         else if(Status==2)//入弯减速
         {
           speed_goal=4300;
         }
+        
         else if(Status==3)
         {
           speed_goal=5000;
@@ -198,19 +199,20 @@ void Motor_Out(void)
       speed_goal_R=speed_goal;
       speed_goal_L=speed_goal;
       
-      /*if(Car==2)
+      if(Car==2)
       {
-        if(ABDistance<Distance-200)
+        if(ABDistance<Distance-50)
         {
           speed_PWM_R = speed_goal_R-300;
           speed_PWM_L = speed_goal_L-300;
         }
-        else if(ABDistance>Distance+200)
+
+        else if(ABDistance>Distance+50)
         {
-          speed_PWM_R = speed_goal_R+150;
-          speed_PWM_L = speed_goal_L+150;
+          speed_PWM_R = speed_goal_R+200;
+          speed_PWM_L = speed_goal_L+200;
         }
-      }*/
+      }
       
       /*if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
       {

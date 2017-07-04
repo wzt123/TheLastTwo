@@ -153,10 +153,11 @@ void Motor_Out(void)
   { 
     if(stop_time==0)
     {
-      speed_goal_R=3800;
-      speed_goal_L=3800;
+      
       if(abs(error)<4)
       {
+        speed_goal_R=4100;//ÉèÖÃËÙ¶È
+      speed_goal_L=4100;
 //        if(Status==0)
 //        {
 //          speed_goal_R=4000;
@@ -183,8 +184,8 @@ void Motor_Out(void)
       else
       {
         
-      speed_goal_R=3800;
-      speed_goal_L=3800;
+      speed_goal_R=4100;
+      speed_goal_L=4100;
 //        if(Status==0)
 //        {
 //          speed_goal_R=4000;
