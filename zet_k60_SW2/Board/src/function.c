@@ -145,7 +145,7 @@ void Motor_Out(void)
   gpio_set(PTB17,0);
   gpio_set(PTB16,1);
   
-  if(All_Black>=40)
+  if(All_Black>=50)
   {
     speed_PWM_R=0;
     speed_PWM_L =0;

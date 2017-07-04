@@ -969,7 +969,7 @@ void Search_Line(void)
       if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
       {
         stopLine_temp=1;
-        if(sum_time>8000)
+        if(sum_time>80)
         {
           Stop_Flag=2;
         }
@@ -1030,14 +1030,13 @@ void Search_Line(void)
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
     //从左到右检测起跑线
-    if(Row_Ptr>10)
+    if(Row_Ptr>2)
     {
       
       start_line_num[Row_Ptr] = 0;
       for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
       {      
-        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 && img[Row_Ptr][Col_Ptr+2]==0&&
-           img[Row_Ptr][Col_Ptr+3]==255&& img[Row_Ptr][Col_Ptr+4]==255&& img[Row_Ptr][Col_Ptr+5]==255)
+        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==255 )
         {
           start_line_num[Row_Ptr] ++;
         }      
@@ -1046,18 +1045,38 @@ void Search_Line(void)
       {
         stop_line_num++;
       }
-      if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
+      
+      if(Car==1)
       {
-        stopLine_temp=1;
-        if(sum_time>100)
+        if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
         {
-          Stop_Flag=2;
+          stopLine_temp=1;
+          if(sum_time>100)
+          {
+            Stop_Flag=2;
+          }
+        }
+        else if(stop_line_num>=3&&Stop_Flag==0&&Row_Ptr>15)
+        {
+          stopLine_temp=1;
+          Stop_Flag=1;
         }
       }
-      else if(stop_line_num>=3&&Stop_Flag==0)
+      else
       {
-        stopLine_temp=1;
-        Stop_Flag=1;
+        if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0&&Row_Ptr>20)
+        {
+          stopLine_temp=1;
+          if(sum_time>100)
+          {
+            Stop_Flag=2;
+          }
+        }
+        else if(stop_line_num>=3&&Stop_Flag==0&&Row_Ptr>15)
+        {
+          stopLine_temp=1;
+          Stop_Flag=1;
+        }
       }
     }
     
