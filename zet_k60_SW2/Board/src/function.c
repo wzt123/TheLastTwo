@@ -325,8 +325,8 @@ void stop_Car(void)
   gpio_set(PTC2,1);//驱动反向使能
   gpio_set(PTB17,1);//驱动反向使能
   gpio_set(PTB16,0);//驱动反向使能
-//  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
-//  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
+  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
   ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
   
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
