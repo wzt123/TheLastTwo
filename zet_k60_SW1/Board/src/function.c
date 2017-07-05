@@ -156,8 +156,8 @@ void Motor_Out(void)
       
       if(abs(error)<4)
       {
-        speed_goal_R=4100;//设置速度
-      speed_goal_L=4100;
+        speed_goal_R=4400;//设置速度
+      speed_goal_L=4400;
 //        if(Status==0)
 //        {
 //          speed_goal_R=4000;
@@ -184,8 +184,8 @@ void Motor_Out(void)
       else
       {
         
-      speed_goal_R=4100;
-      speed_goal_L=4100;
+      speed_goal_R=5800;
+      speed_goal_L=5800;
 //        if(Status==0)
 //        {
 //          speed_goal_R=4000;

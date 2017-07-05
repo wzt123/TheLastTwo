@@ -279,13 +279,13 @@ void Servo_control(void)
   ///过障碍
   if(Cross_Flag==5)
   {
-    Servomiddle=8850;
+    Servomiddle=8820;
   }
   else if(Cross_Flag==6)
   {
-    Servomiddle=8750;
+    Servomiddle=8710;
   }
-  else if(ChaoChe_temp==0)
+  else
   {
     Servomiddle=8767;
   }
@@ -335,7 +335,7 @@ void Servo_control(void)
 //      Servo_temp=Kp*error/10-110;
 //    }
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
-    else if(Cross_Flag==31&&Ring_First_Row>17)
+    else if(Cross_Flag==31&&Ring_First_Row>13)//越小转得越早
     {
         if(Car == 1)
         {
@@ -361,12 +361,12 @@ void Servo_control(void)
     {
       if(error<0)               //左转
       {
-        Kp = 39;
+        Kp = 40;
         Kd = 12;
       }
       else
       {
-        Kp = 38;
+        Kp = 39;
         Kd = 12;
       }
     }
@@ -374,25 +374,25 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp = 36;
-        Kd = 6;
+        Kp = 39;
+        Kd = 8;
       }
       else
       {
-        Kp = 36;
-        Kd = 6;
+        Kp = 39;
+        Kd = 8;
       }
     }
     else if(All_Black<16)       //直道入弯道或者270度时提前转角
     {
       if(error<0)               //左转
       {
-        Kp = 36;
+        Kp = 38;
         Kd = 14;
       }
       else
       {
-        Kp = 36;
+        Kp = 38;
         Kd = 12;
       }
       
@@ -430,13 +430,13 @@ void Servo_control(void)
     {
       if(error<0)
       {
-        Kp=42;
-        Kd=18;
+        Kp=44;
+        Kd=20;
       }
       else
       {
-        Kp=42;
-        Kd =18;
+        Kp=44;
+        Kd =20;
       }
     }
     else if(All_Black<32)       //靠弯道外边
