@@ -143,7 +143,7 @@ void Motor_Out(void)
   gpio_set(PTB17,0);
   gpio_set(PTB16,1);
   
-  if(All_Black>=40)
+  if(All_Black>=50)
   {
     speed_PWM_R=0;
     speed_PWM_L =0;
@@ -330,14 +330,14 @@ void stop2(void)
 */
 void stop_Car(void)
 {
-//  gpio_set(PTC3,0);//驱动反向使能
-//  gpio_set(PTC2,1);//驱动反向使能
-//  gpio_set(PTB17,1);//驱动反向使能
-//  gpio_set(PTB16,0);//驱动反向使能
-//  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
-//  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
-//  ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
-//  DELAY_MS(200);
+  gpio_set(PTC3,0);//驱动反向使能
+  gpio_set(PTC2,1);//驱动反向使能
+  gpio_set(PTB17,1);//驱动反向使能
+  gpio_set(PTB16,0);//驱动反向使能
+  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
+  ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+  DELAY_MS(200);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
   stop_Flag  = 1;

@@ -6,6 +6,7 @@
 
 uint16 speed_goal_R;
 uint16 speed_goal_L;
+uint16 speed_goal;
 //uint16 speed_get;
 uint16 speed_get_R=0;
 uint16 speed_get_L=0;
@@ -29,7 +30,7 @@ uint8 Status=0;
 uint16 var;
 uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
-uint32 Distance = 1800;
+uint32 Distance = 2300;
 uint8 stop_time = 0;
 uint8 ChaoChe_stop=0;
 uint8 ChaoChe_stop_time = 0;
@@ -144,7 +145,7 @@ void Motor_Out(void)
   gpio_set(PTB17,0);
   gpio_set(PTB16,1);
   
-  if(All_Black>=40)
+  if(All_Black>=50)
   {
     speed_PWM_R=0;
     speed_PWM_L =0;
@@ -153,48 +154,25 @@ void Motor_Out(void)
   else
   { 
     if(stop_time==0)
-    {
-      
+    {      
       if(abs(error)<4)
       {
         if(Status==0)
         {
-          speed_goal_R=3800;
-          speed_goal_L=3800;
+          speed_goal=3800;
         }
         else if(Status==1)
         {
-          speed_goal_R=4000;
-          speed_goal_L=4000;
+          speed_goal=4100;
         }
-        else if(Status==2)
+        else if(Status==2)//入弯减速
         {
-          speed_goal_R=4400;
-          speed_goal_L=4400;
+          speed_goal=4600;
         }
         
         else if(Status==3)
         {
-          speed_goal_R=4600;
-          speed_goal_L=4600;
-        }
-        
-        else if(Status==4)
-        {
-          speed_goal_R=4800;
-          speed_goal_L=4800;
-        }
-        
-        else if(Status==5)
-        {
-          speed_goal_R=5000;
-          speed_goal_L=5000;
-        }
-        
-        else if(Status==6)
-        {
-          speed_goal_R=5100;
-          speed_goal_L=5100;
+          speed_goal=5000;
         }
       }
       
@@ -202,54 +180,35 @@ void Motor_Out(void)
       {
        if(Status==0)
         {
-          speed_goal_R=3800;
-          speed_goal_L=3800;
+          speed_goal=3800;
         }
         else if(Status==1)
         {
-          speed_goal_R=4000;
-          speed_goal_L=4000;
+          speed_goal=4100;
         }
-        else if(Status==2)
+        else if(Status==2)//入弯减速
         {
-          speed_goal_R=4400;
-          speed_goal_L=4400;
+          speed_goal=4300;
         }
         
         else if(Status==3)
         {
-          speed_goal_R=4600;
-          speed_goal_L=4600;
+          speed_goal=5000;
         }
-        
-        else if(Status==4)
-        {
-          speed_goal_R=4800;
-          speed_goal_L=4800;
-        }
-        
-        else if(Status==5)
-        {
-          speed_goal_R=5000;
-          speed_goal_L=5000;
-        }
-        
-        else if(Status==6)
-        {
-          speed_goal_R=5100;
-          speed_goal_L=5100;
-        }
-      }
+      }     
+      speed_goal_R=speed_goal;
+      speed_goal_L=speed_goal;
       
-     if(Car==2)
+
+      if(Car==2)
       {
-        if(ABDistance<Distance-200)
+        if(ABDistance<Distance-50)
         {
           speed_PWM_R = speed_goal_R-300;
           speed_PWM_L = speed_goal_L-300;
         }
 
-        else if(ABDistance>Distance+200)
+        else if(ABDistance>Distance+50)
         {
           speed_PWM_R = speed_goal_R+200;
           speed_PWM_L = speed_goal_L+200;
@@ -295,7 +254,7 @@ void Motor_Out(void)
   }
   //}
   
-  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>1000)
+  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>10)
   {
     if(speed_get_L<50)
     { 
@@ -367,8 +326,8 @@ void stop_Car(void)
   gpio_set(PTC2,1);//驱动反向使能
   gpio_set(PTB17,1);//驱动反向使能
   gpio_set(PTB16,0);//驱动反向使能
-//  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
-//  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
+  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
   ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
   
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
