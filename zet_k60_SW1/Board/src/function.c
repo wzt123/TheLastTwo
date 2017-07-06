@@ -13,8 +13,8 @@ uint16 speed_last=0;
 uint16 speed_nexterr=0;
 uint16 speed_lasterr=0;
 uint16 speed_PWM=0;
-uint16 speed_PWM_R = 0;
-uint16 speed_PWM_L = 0;
+int16 speed_PWM_R = 0;
+int16 speed_PWM_L = 0;
 int16  speed_err_R = 0;
 int16  speed_err_L = 0;
 int16 speed_err_R_last = 0;
@@ -279,12 +279,26 @@ void Motor_Out(void)
   }
   
   if(speed_PWM_R<0)
-    speed_PWM_R=0;
+  {
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    speed_PWM_R=abs(speed_PWM_R);
+    
+  }
+  
   if(speed_PWM_R>8800)
     speed_PWM_R=8800;
   
   if(speed_PWM_L<0)
-    speed_PWM_L=0;
+  {
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    speed_PWM_L = abs(speed_PWM_L);
+  }
   if(speed_PWM_L>8800)
     speed_PWM_L=8800;
   
@@ -347,30 +361,162 @@ void stop_Car(void)
 /*
 *超车停车
 */
-void Chaoche_stop(){
-  //if(ChaoChe_stop_time<7)
-  //{
-    if(speed_get_L>10||speed_get_R>10)
-    {
-      
-      gpio_set(PTC3,0);//驱动反向使能
-      gpio_set(PTC2,1);//驱动反向使能
-      gpio_set(PTB17,1);//驱动反向使能
-      gpio_set(PTB16,0);//驱动反向使能
-      ftm_pwm_duty(FTM2,FTM_CH0,8000);//B2
-      ftm_pwm_duty(FTM2,FTM_CH1,8000);//B1
-      //ChaoChe_stop_time++;
-    }
-  //}
-  else
+
+uint8 Chaoche_stop_temp=0;
+void Chaoche_stop()
+{
+  
+  if(Chaoche_stop_temp==1&&speed_get_L<40&&speed_get_R<40)
   {
-    gpio_set(PTC3,1);//驱动正向
-    gpio_set(PTC2,0);//驱动正向
-    gpio_set(PTB17,0);//驱动反向
-    gpio_set(PTB16,1);//驱动正向
-    //ChaoChe_stop=0;
+    
+    ChaoChe_stop=1;
+    ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,0);//B1  
+    stop_Flag  = 1;
     return;
   }
+  if(speed_get_L<40&&speed_get_R<40)
+  {
+    //ChaoChe_stop=1;
+    ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,0);//B1  
+    //stop_Flag  = 1;
+    DELAY_MS(100);
+    
+    gpio_set(PTC3,1);
+    gpio_set(PTC2,0);
+    gpio_set(PTB17,0);
+    gpio_set(PTB16,1);
+    
+    ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle+150);    
+    ftm_pwm_duty(FTM2,FTM_CH0,6500);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,6500);//B1
+    DELAY_MS(400);
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    Chaoche_stop_temp=1;
+    ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
+    return;
+  }
+  
+  gpio_set(PTC3,1);
+  gpio_set(PTC2,0);
+  gpio_set(PTB17,0);
+  gpio_set(PTB16,1);
+  
+  
+  uint8 speed_Ki=5;
+  uint8 speed_Kp=20;  
+  uint8 speed_Kd=5;
+  
+  if(All_Black>=50)
+  {
+    speed_PWM_R=0;
+    speed_PWM_L =0;
+    
+  }
+  else
+  { 
+//    if(speed_get_R>100||speed_get_L>100)
+//    {
+//      speed_goal_R=100;//设置速度
+//      speed_goal_L=100;
+//    }
+//    else
+//    {
+      speed_goal_R=0;//设置速度
+      speed_goal_L=0;
+//    }
+  }
+  speed_err_R_lastlast = speed_err_R_last;
+  speed_err_R_last = speed_err_R;
+  
+  speed_err_L_lastlast = speed_err_L_last;
+  speed_err_L_last = speed_err_L;
+  
+  speed_err_R = speed_goal_R-speed_get_R*10;
+  speed_err_L = speed_goal_L-speed_get_L*10;
+  
+  speed_increment_R = speed_Kp*(speed_err_R-speed_err_R_last)/10+
+    speed_Ki*speed_err_R/10+
+      speed_Kd*(speed_err_R-2*speed_err_R_last+speed_err_R_lastlast)/10;
+  speed_increment_L= speed_Kp*(speed_err_L-speed_err_L_last)/10+
+    speed_Ki*speed_err_L/10+
+      speed_Kd*(speed_err_L-2*speed_err_L_last+speed_err_L_lastlast)/10;
+  speed_PWM_R=6100+speed_increment_R;
+  speed_PWM_L=6100+speed_increment_L;
+  
+  
+  
+  if(speed_PWM_R<0)
+  {
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    speed_PWM_R=abs(speed_PWM_R);
+    
+  }
+  if(speed_PWM_R>8800)
+    speed_PWM_R=8800;
+  
+  if(speed_PWM_L<0)
+  {
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    speed_PWM_L = abs(speed_PWM_L);
+  }
+  if(speed_PWM_L>8800)
+    speed_PWM_L=8800;
+  
+  ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
+  ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
+  
+  
+//  if(ChaoChe_stop_time<15)
+//  {
+//    //if(speed_get_L>10||speed_get_R>10)
+//    //{
+//      
+//      gpio_set(PTC3,0);//驱动反向使能
+//      gpio_set(PTC2,1);//驱动反向使能
+//      gpio_set(PTB17,1);//驱动反向使能
+//      gpio_set(PTB16,0);//驱动反向使能
+//      ftm_pwm_duty(FTM2,FTM_CH0,8800);//B2
+//      ftm_pwm_duty(FTM2,FTM_CH1,8800);//B1
+//      ChaoChe_stop_time++;
+//    //}
+//  }
+//  else if(ChaoChe_stop_time<19)
+//  {
+//    //if(speed_get_L>10||speed_get_R>10)
+//    //{
+//      
+//      gpio_set(PTC3,0);//驱动反向使能
+//      gpio_set(PTC2,1);//驱动反向使能
+//      gpio_set(PTB17,1);//驱动反向使能
+//      gpio_set(PTB16,0);//驱动反向使能
+//      ftm_pwm_duty(FTM2,FTM_CH0,6800);//B2
+//      ftm_pwm_duty(FTM2,FTM_CH1,6800);//B1
+//      ChaoChe_stop_time++;
+//    //}
+//  }
+//  else
+//  {
+////    gpio_set(PTC3,1);//驱动正向
+////    gpio_set(PTC2,0);//驱动正向
+////    gpio_set(PTB17,0);//驱动反向
+////    gpio_set(PTB16,1);//驱动正向
+//    ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+//    ftm_pwm_duty(FTM2,FTM_CH1,0);//B1  
+//    stop_Flag  = 1;
+//    return;
+//  }
 }
 
 void Chaoche_start()

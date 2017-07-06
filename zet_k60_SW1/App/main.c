@@ -45,7 +45,7 @@ uint16 speed_rember_L[3] = {0};
 */
 
 
- void  main(void)
+void  main(void)
 {
   //zet_bluetooth();
   uint16 send_data[3] = {0};
@@ -133,11 +133,27 @@ uint16 speed_rember_L[3] = {0};
     {  
       Motor_Out();
     }    
-    if(Stop_Flag==2&&stop_Flag!=1)
-    {      
-      stop_Car();
-    }
+//    if(Stop_Flag==2&&stop_Flag!=1)
+//    {      
+//      if(Car==1&&ChaoChe_stop!=1)
+//        Chaoche_stop();
+//      else
+//        stop_Car();
+//    }
      
+    if((Stop_Flag>1)&&Car==1&&ChaoChe_stop!=1)
+    {
+      Chaoche_stop();
+    }
+    
+    if((Stop_Flag==2||Stop_Flag==21)/*&&stopLine_temp==1*/)//或者前车告诉后车有起跑线
+    {
+      if(Car==1)
+        Servomiddle=Servomiddle-150;
+      else
+        Servomiddle=Servomiddle+150;
+    }
+    
     /*if(Stop_Flag==1&&sum_time>2000)
     {
       if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3)
@@ -182,7 +198,7 @@ uint16 speed_rember_L[3] = {0};
     send_data[1] = Cross_Flag*500;
     //uart_putchar(UART5,speed_get_R);
     send_data[2] = 0;
-    vcan_sendware((uint16_t *)send_data, sizeof(send_data));
+    //vcan_sendware((uint16_t *)send_data, sizeof(send_data));
     
 
     ///蓝牙传送编码器的值
@@ -194,7 +210,13 @@ uint16 speed_rember_L[3] = {0};
       //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
    
     nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
-    nrf_data = buff[1];
+    
+    uint8 nrf_data=0;
+    for(int i=0;i<sizeof(buff);i++)
+    {
+      nrf_data|=buff[i];
+      nrf_data=nrf_data<<1;
+    }
     ////////////////后车检测到超声波信号，buff[1]发来一个1，表明超车成功
     if(buff[1]==1)
     {
@@ -215,11 +237,11 @@ uint16 speed_rember_L[3] = {0};
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, (Road_Left[Left_xian]+Road_Right[Right_xian])/2);
-      OLED_Print_Num1(88, 2, Ring_First_Row);
+      OLED_Print_Num1(88, 1, All_Black);
+      OLED_Print_Num1(88, 2, error);
       OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, Cross_Flag);
-      OLED_Print_Num1(88, 5, Right_xian);
+      OLED_Print_Num1(88, 4, Stop_Flag);
+      OLED_Print_Num1(88, 5, Servo_temp);
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
       OLED_Print_Num1(88, 6, Left_xian);
     }

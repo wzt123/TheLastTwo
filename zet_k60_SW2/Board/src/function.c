@@ -203,14 +203,14 @@ void Motor_Out(void)
       {
         if(ABDistance<Distance-50)
         {
-          speed_PWM_R = speed_goal_R-300;
-          speed_PWM_L = speed_goal_L-300;
+          speed_PWM_R = speed_goal_R-600;
+          speed_PWM_L = speed_goal_L-600;
         }
 
         else if(ABDistance>Distance+50)
         {
-          speed_PWM_R = speed_goal_R+200;
-          speed_PWM_L = speed_goal_L+200;
+          speed_PWM_R = speed_goal_R+500;
+          speed_PWM_L = speed_goal_L+500;
         }
       }
       

@@ -41,7 +41,7 @@ uint8 Cross_Flag=0;
 uint8 Change_Flag;
 uint8 CrossRow=0;
 
-uint16 Servomiddle=8767;
+uint16 Servomiddle=8769;
 uint32 Servo_max=8938;
 uint32 Servo_min=8612;
 float CenterLineSlope=0;
@@ -279,15 +279,15 @@ void Servo_control(void)
   ///过障碍
   if(Cross_Flag==5)
   {
-    Servomiddle=8850;
+    Servomiddle=8853;
   }
   else if(Cross_Flag==6)
   {
-    Servomiddle=8750;
+    Servomiddle=8690;
   }
-  else if(ChaoChe_temp==0)
+  else if(stopLine_temp==0)
   {
-    Servomiddle=8767;
+    Servomiddle=8775;
   }
   
   if(All_Black>2)
@@ -354,6 +354,13 @@ void Servo_control(void)
       Kd = 35;
       Servo_temp = Kp*error+Kd*errorerror;
       Servo_temp = Servo_temp/10;
+    }
+    else if(Stop_Flag==2||Stop_Flag==21)
+    {
+      Kp =40;
+      Kd = 40;
+      Servo_temp = Kp*error/10+Kd*errorerror/10;
+      
     }
     else
     {      
@@ -790,30 +797,36 @@ void Find_Middle()
   
   for(Row_Ptr=56; Row_Ptr>All_Black; Row_Ptr--)
   { 
-    if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
+    if(Stop_Flag<2)
     {
-      Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
+      if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
+      {
+        Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
+      }
+      else if(Left_Flag[Row_Ptr]==1)//左边有线
+      {
+        Road_Center[Row_Ptr]=Road_Center[Row_Ptr+1]+(Road_Left[Row_Ptr]-Road_Left[Row_Ptr+1]);
+      }
+      else if(Right_Flag[Row_Ptr]==1)//右边有线左转
+      {
+        Road_Center[Row_Ptr]=Road_Center[Row_Ptr+1]+(Road_Right[Row_Ptr]-Road_Right[Row_Ptr+1]);
+      }
+      else
+      {
+        Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
+      }
     }
-    else if(Left_Flag[Row_Ptr]==1)//左边有线
-    {
-      Road_Center[Row_Ptr]=Road_Center[Row_Ptr+1]+(Road_Left[Row_Ptr]-Road_Left[Row_Ptr+1]);
-    }
-    else if(Right_Flag[Row_Ptr]==1)//右边有线左转
-    {
-      Road_Center[Row_Ptr]=Road_Center[Row_Ptr+1]+(Road_Right[Row_Ptr]-Road_Right[Row_Ptr+1]);
-    }
-    
-    /*else if(Left_Flag[Row_Ptr]==3 && Right_Flag[Row_Ptr]==3 &&
-    (Left_Flag[CrossRow+2]==1 || Right_Flag[CrossRow+2]==1)
-    &&(Left_Flag[Row_Ptr-3]!=1 && Right_Flag[Row_Ptr-3]!=1 ))
-    {
-    Road_Center[Row_Ptr]=Road_Center[CrossRow+2];
-  }*/
     else
     {
-      Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
+        if(Car==1)
+        {
+          Road_Center[Row_Ptr]=Road_Left[Row_Ptr]+(Road_Right[Row_Ptr]-Road_Left[Row_Ptr])/4;          
+        }
+        else
+          Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-(Road_Right[Row_Ptr]-Road_Left[Row_Ptr])/4;
+      
+      
     }
-   
     
     ////排除中线跳变
     if(Road_Center[Row_Ptr]-Road_Center[Row_Ptr+1]>30&&Cross_Flag==0&&error*errorerror<0)
@@ -1030,6 +1043,7 @@ void Search_Line(void)
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
     //从左到右检测起跑线
+    
     if(Row_Ptr>2)
     {
       
@@ -1051,31 +1065,44 @@ void Search_Line(void)
         if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
         {
           stopLine_temp=1;
-          if(sum_time>100)
+          
+          if(Stop_Flag==2)
+          {
+            Stop_Flag=21;
+          }
+          
+          if(sum_time>100&&Stop_Flag!=21)
           {
             Stop_Flag=2;
           }
+          
         }
-        else if(stop_line_num>=3&&Stop_Flag==0&&Row_Ptr>15)
+        else if(stop_line_num>=3&&Stop_Flag==0)
         {
           stopLine_temp=1;
-          Stop_Flag=1;
+          if(Row_Ptr>15)
+          {
+            Stop_Flag=1;
+          }
         }
       }
       else
       {
-        if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0&&Row_Ptr>20)
+        if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
         {
           stopLine_temp=1;
-          if(sum_time>100)
+          if(sum_time>100&&Row_Ptr>20)
           {
             Stop_Flag=2;
           }
         }
-        else if(stop_line_num>=3&&Stop_Flag==0&&Row_Ptr>15)
+        else if(stop_line_num>=3&&Stop_Flag==0)
         {
           stopLine_temp=1;
-          Stop_Flag=1;
+          if(Row_Ptr>15)
+          {
+            Stop_Flag=1;
+          }
         }
       }
     }

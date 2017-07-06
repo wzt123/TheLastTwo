@@ -281,13 +281,13 @@ void Servo_control(void)
   ///¹ýÕÏ°­
   if(Cross_Flag==5)
   {
-    Servomiddle=8670;
+    Servomiddle=8680;
   }
   else if(Cross_Flag==6)
   {
     Servomiddle=8570;
   }
-  else if(ChaoChe_temp==0)
+  else if(stopLine_temp==0)
   {
     Servomiddle=8622;
   }
@@ -1355,26 +1355,32 @@ void Search_Line(void)
             Stop_Flag=2;
           }
         }
-        else if(stop_line_num>=3&&Stop_Flag==0&&Row_Ptr>15)
+        else if(stop_line_num>=3&&Stop_Flag==0)
         {
           stopLine_temp=1;
-          Stop_Flag=1;
+          if(Row_Ptr>15)
+          {
+            Stop_Flag=1;
+          }
         }
       }
       else
       {
-        if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0&&Row_Ptr>20)
+        if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
         {
           stopLine_temp=1;
-          if(sum_time>100)
+          if(sum_time>100&&Row_Ptr>20)
           {
             Stop_Flag=2;
           }
         }
-        else if(stop_line_num>=3&&Stop_Flag==0&&Row_Ptr>15)
+        else if(stop_line_num>=3&&Stop_Flag==0)
         {
           stopLine_temp=1;
-          Stop_Flag=1;
+          if(Row_Ptr>15)
+          {
+            Stop_Flag=1;
+          }
         }
       }
     }
