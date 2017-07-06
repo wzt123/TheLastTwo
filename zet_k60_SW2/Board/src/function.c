@@ -199,6 +199,7 @@ void Motor_Out(void)
       speed_goal_R=speed_goal;
       speed_goal_L=speed_goal;
       
+
       if(Car==2)
       {
         if(ABDistance<Distance-50)
