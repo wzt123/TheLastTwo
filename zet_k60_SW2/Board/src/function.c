@@ -35,6 +35,7 @@ uint8 stop_time = 0;
 uint8 ChaoChe_stop=0;
 uint8 ChaoChe_stop_time = 0;
 uint8 ChaoChe_temp = 0;
+uint8 Distance_stop_temp=0;
 /*uint8 Edge_R[3]= {0};
 uint8 Edge_L[3]= {0};   
 uint8 stopline_num = 0;
@@ -537,16 +538,88 @@ void stop_Car1()
   ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
 }
 
-void Chaoche_start()
+
+void Distance_stop(void)
 {
+  if(speed_get_L<8&&speed_get_R<8)
+  {
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
+    Distance_stop_temp=1;//防止多次停车
+    return;
+  }
   gpio_set(PTC3,1);
   gpio_set(PTC2,0);
   gpio_set(PTB17,0);
   gpio_set(PTB16,1);
-  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2左电机
-  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1右电机
+  
+  
+  uint8 speed_Ki=10;
+  uint8 speed_Kp=20;  
+  uint8 speed_Kd=5;
+  
+  if(All_Black>=50)
+  {
+    speed_PWM_R=0;
+    speed_PWM_L =0;
+    
+  }
+  else
+  { 
+      speed_goal_R=0;//设置速度
+      speed_goal_L=0;
+  }
+  speed_err_R_lastlast = speed_err_R_last;
+  speed_err_R_last = speed_err_R;
+  
+  speed_err_L_lastlast = speed_err_L_last;
+  speed_err_L_last = speed_err_L;
+  
+  speed_err_R = speed_goal_R-speed_get_R*10;
+  speed_err_L = speed_goal_L-speed_get_L*10;
+  
+  speed_increment_R = speed_Kp*(speed_err_R-speed_err_R_last)/10+
+    speed_Ki*speed_err_R/10+
+      speed_Kd*(speed_err_R-2*speed_err_R_last+speed_err_R_lastlast)/10;
+  speed_increment_L= speed_Kp*(speed_err_L-speed_err_L_last)/10+
+    speed_Ki*speed_err_L/10+
+      speed_Kd*(speed_err_L-2*speed_err_L_last+speed_err_L_lastlast)/10;
+  speed_PWM_R=6100+speed_increment_R;
+  speed_PWM_L=6100+speed_increment_L;
+  
+  
+  
+  if(speed_PWM_R<0)
+  {
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    speed_PWM_R=abs(speed_PWM_R);
+    
+  }
+  if(speed_PWM_R>8800)
+    speed_PWM_R=8800;
+  
+  if(speed_PWM_L<0)
+  {
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    speed_PWM_L = abs(speed_PWM_L);
+  }
+  if(speed_PWM_L>8800)
+    speed_PWM_L=8800;
+  
+  ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
+  ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
+  
 }
-
 //拨码开关初始化
 
 void Switch_Init()

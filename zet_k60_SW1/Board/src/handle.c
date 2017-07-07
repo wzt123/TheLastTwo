@@ -859,8 +859,6 @@ void Find_Middle()
   
   for(Row_Ptr=56; Row_Ptr>All_Black; Row_Ptr--)
   { 
-//    if(Stop_Flag<2)
-//    {
       if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
       {
         Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
@@ -877,16 +875,6 @@ void Find_Middle()
       {
         Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
       }
-//    }
-//    else
-//    {
-//      if(Car==1)
-//      {
-//        Road_Center[Row_Ptr]=Road_Left[Row_Ptr]+(Road_Right[Row_Ptr]-Road_Left[Row_Ptr])/4;          
-//      }
-//      else
-//        Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-(Road_Right[Row_Ptr]-Road_Left[Row_Ptr])/4;
-//    }
     
     ////ÅÅ³ýÖÐÏßÌø±ä
     if(Road_Center[Row_Ptr]-Road_Center[Row_Ptr+1]>30&&Cross_Flag==0&&error*errorerror<0)

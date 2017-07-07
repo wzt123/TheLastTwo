@@ -124,26 +124,28 @@ void  main(void)
     ftm_quad_clean(FTM1);
     lptmr_pulse_clean();
         
-    if(stop_Flag !=1&&ChaoChe_stop!=1)//超车的时候电机不输出
-    {
-      Motor_Out();
-    }
-
+    
+    if(stop_Flag !=1&&ChaoChe_stop==0)//超车的时候电机不输出
+    {  
+      if(Car==1)
+        Motor_Out();
+      else if(Car==2)
+      {
+        if(ABDistance>1000)
+        {
+          Motor_Out();
+        }
+        else if(Distance_stop_temp==0&&ABDistance<=1000)
+        {
+          Distance_stop();
+        }
+      }
+    }    
+    
     if((Stop_Flag>1)&&Car==1&&ChaoChe_stop<2)
       stop_Car1();
     else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0)
       stop_Car2();
-    
-     
-    if(Stop_Flag==2&&stopLine_temp==1)//或者前车告诉后车有起跑线
-    {
-      if(Car==1)
-        Servomiddle=8550;
-//      else
-//        Servomiddle=8700;
-    }
-    
-    
     
     /*if(Stop_Flag==1&&sum_time>2000)
     {
