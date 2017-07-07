@@ -176,50 +176,110 @@ float Slope_Calculate(uint8 begin,uint8 end,uint8 *p)
 void Calculate_Slope()
 {
   uint8 i=0,j=0;
+  uint8 k=0,l=0;
   uint8 Cross_Flag_Last=0;
-  uint8 Left_stop=20;
-  uint8 Left_start=59;
-  uint8 Right_stop=20;  
-  uint8 Right_start=59;
+  uint8 Left_stop=10;
+  uint8 Left_start=58;
+  uint8 Right_stop=10;  
+  uint8 Right_start=58;
   float Left_Slope=0.0;
   float Right_Slope=0.0;
-  for(Row_Ptr=59;Row_Ptr>All_White-2;Row_Ptr--)
+  for(Row_Ptr=57;Row_Ptr>6&&Row_Ptr>StopRow;Row_Ptr--)
   {
-    if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr-1]==3&&Left_Flag[Row_Ptr-2]==3)
-      Left_start=Row_Ptr+4;
-    if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr-1]==3&&Right_Flag[Row_Ptr-2]==3)
-      Right_start=Row_Ptr+4;
-  }
-  if(Left_start>59) Left_start=59;
-  if(Right_start>59) Right_start=59;
-  for(i=All_White-White_Cnt+2;i>10;i--)
-  {
-    for(j=Road_Left[Left_start]+40;j>Road_Left[Left_start];j--)
+    if(Road_Left[Row_Ptr-1]<Road_Left[Row_Ptr]&&
+       Road_Left[Row_Ptr-2]<=Road_Left[Row_Ptr-1]&&
+         Road_Left[Row_Ptr-3]<=Road_Left[Row_Ptr-2])
     {
-      if(img[i][j]==0&&img[i][j+1]==0&&img[i][j+2]==255&&img[i][j+3]==255)
-      {Road_Left[i]=j+1;
-      
-      break;}
-    }
-    for(j=Road_Right[Right_start]-40;j<Road_Right[Right_start];j++)
-    {
-      if(img[i][j-3]==255&&img[i][j-2]==255&&img[i][j-1]==0&&img[i][j]==0)
-      {Road_Right[i]=j-1;
-      
-      break;}
+      Left_start=Row_Ptr;
+      break;
     }
   }
-  for(Row_Ptr=All_White-White_Cnt+2;Row_Ptr>=StopRow&&Row_Ptr>20;Row_Ptr--)
+  for(Row_Ptr=57;Row_Ptr>3&&Row_Ptr>StopRow;Row_Ptr--)
   {
-    if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr+1]==3&&Left_Flag[Row_Ptr+2]==3)
-      Left_stop=Row_Ptr-4;
-    if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr+1]==3&&Right_Flag[Row_Ptr+2]==3)
-      Right_stop=Row_Ptr-4;
+    if(Road_Right[Row_Ptr-1]>Road_Right[Row_Ptr]&&
+       Road_Right[Row_Ptr-2]>=Road_Right[Row_Ptr-1]&&
+         Road_Right[Row_Ptr-3]>=Road_Right[Row_Ptr-2])
+    {
+      Right_start=Row_Ptr;
+      break;
+    }
   }
-  if(Left_stop<20) Left_stop=20;
-  if(Right_stop<20) Right_stop=20;
-  Left_Slope=1.0*(Road_Left[Left_stop]-Road_Left[Left_start])/(Left_start-Left_stop);
-  Right_Slope=1.0*(Road_Right[Right_start]-Road_Right[Right_stop])/(Right_start-Right_stop);
+  k=Road_Left[Left_start];
+  Left_stop=Left_start+15;
+  if(Left_start==58)
+  {
+    for(Row_Ptr=Left_start+4;Row_Ptr>3&&Row_Ptr>All_Black;Row_Ptr--)
+    {
+      if(abs(Road_Left[Row_Ptr]-Road_Left[Row_Ptr+1])<4&&abs(Road_Left[Row_Ptr+1]-Road_Left[Row_Ptr+2])<4&&Left_Flag[Row_Ptr]==1)
+      {
+        Left_stop=Row_Ptr;
+        k=Road_Left[Row_Ptr];
+        break;
+      }
+    }
+  }
+  else
+  {
+    for(Row_Ptr=Left_start+4;Row_Ptr>3&&Row_Ptr>All_Black;Row_Ptr--)
+    {    
+      
+      if(img[Row_Ptr][Road_Left[Left_start]]==0&&img[Row_Ptr-1][Road_Left[Left_start]]==0)
+      {
+        //k=Road_Left[Left_start];
+        for(i=Road_Left[Left_start];i<Road_Right[Right_start];i++)
+        {
+          if(img[Row_Ptr+3][i]==0&&img[Row_Ptr+3][i+1]==0&&img[Row_Ptr+3][i+2]==255&&img[Row_Ptr+3][i+3]==255)
+          {
+            k=i+2;
+            Left_stop=Row_Ptr+3;
+            break;
+          }
+        }
+        if(i!=Road_Right[Right_start+3]&&All_Black) break;
+      }
+    }
+  }
+  l=Road_Right[Right_start];
+  Right_stop=Right_start+15;
+  if(Right_start==58)
+  {
+    for(Row_Ptr=Left_start+4;Row_Ptr>3&&Row_Ptr>All_Black;Row_Ptr--)
+    {
+      if(abs(Road_Right[Row_Ptr]-Road_Right[Row_Ptr]+1)<4&&abs(Road_Right[Row_Ptr+1]-Road_Right[Row_Ptr+2])<4&&Right_Flag[Row_Ptr]==1)
+      {
+        Right_stop=Row_Ptr;
+        l=Road_Right[Row_Ptr];
+        break;
+      }
+    }
+  }
+  else
+  {
+    
+    for(Row_Ptr=Right_start+4;Row_Ptr>3&&Row_Ptr>All_Black;Row_Ptr--)
+    {
+      
+      if(img[Row_Ptr][Road_Right[Right_start]]==0&&img[Row_Ptr-1][Road_Right[Right_start]]==0)
+      {
+        
+        Right_stop=Row_Ptr+3;
+        for(i=Road_Right[Right_start];i>Road_Left[Left_start];i--)
+        {
+          if(img[Row_Ptr+3][i]==0&&img[Row_Ptr+3][i-1]==0&&img[Row_Ptr+3][i-2]==255&&img[Row_Ptr+3][i-3]==255)
+          {
+            l=i-2;
+            Right_stop=Row_Ptr+3;
+            break;
+          }
+        }
+        if(i!=Road_Left[Left_start]) break;
+      }
+      
+    }
+  }
+
+  Left_Slope=1.0*(k-Road_Left[Left_start])/(Left_start-Left_stop);
+  Right_Slope=1.0*(Road_Right[Right_start]-l)/(Right_start-Right_stop);
   j=0;
   for(i=Left_start-1;i>=Left_stop;i--)
   {
@@ -281,13 +341,13 @@ void Servo_control(void)
   ///过障碍
   if(Cross_Flag==5)
   {
-    Servomiddle=8670;
+    Servomiddle=8680;
   }
   else if(Cross_Flag==6)
   {
     Servomiddle=8570;
   }
-  else if(ChaoChe_temp==0)
+  else if(stopLine_temp==0)
   {
     Servomiddle=8622;
   }
@@ -1356,26 +1416,32 @@ void Search_Line(void)
             Stop_Flag=2;
           }
         }
-        else if(stop_line_num>=3&&Stop_Flag==0&&Row_Ptr>15)
+        else if(stop_line_num>=3&&Stop_Flag==0)
         {
           stopLine_temp=1;
-          Stop_Flag=1;
+          if(Row_Ptr>15)
+          {
+            Stop_Flag=1;
+          }
         }
       }
       else
       {
-        if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0&&Row_Ptr>20)
+        if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
         {
           stopLine_temp=1;
-          if(sum_time>100)
+          if(sum_time>100&&Row_Ptr>20)
           {
             Stop_Flag=2;
           }
         }
-        else if(stop_line_num>=3&&Stop_Flag==0&&Row_Ptr>15)
+        else if(stop_line_num>=3&&Stop_Flag==0)
         {
           stopLine_temp=1;
-          Stop_Flag=1;
+          if(Row_Ptr>15)
+          {
+            Stop_Flag=1;
+          }
         }
       }
     }
@@ -1570,8 +1636,20 @@ void Search_Line(void)
   }///如果在车头连续三行丢线，十字路口另外一种情况
     else*/
     
-    
-    if(Row_Ptr<50&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
+    if(Row_Ptr<54&&(Left_Flag[Row_Ptr+2]==3 && Right_Flag[Row_Ptr+2]==3)&&
+       (Left_Flag[Row_Ptr+3]==3 && Right_Flag[Row_Ptr+3]==3)&&
+           (Left_Flag[Row_Ptr+1]==1 || Right_Flag[Row_Ptr+1]==1)&&
+             (Left_Flag[Row_Ptr]==1 || Right_Flag[Row_Ptr]==1)&&Row_Ptr>All_Black)
+    {
+      Cross_Flag=1;
+      Cross_flag++;
+      for(i=Row_Ptr+3;i>2&&i>All_Black;i--)
+      {
+        if(Left_Flag[i]==1 && Right_Flag[i]==1)
+          StopRow=i;
+      }
+    }
+    else if(Row_Ptr<50&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
        (Left_Flag[Row_Ptr+7]==3 && Right_Flag[Row_Ptr+7]==3)&&
          (Left_Flag[Row_Ptr+6]==3 && Right_Flag[Row_Ptr+6]==3)&&(
                                                              (Left_Flag[Row_Ptr+5]==1 && Right_Flag[Row_Ptr+5]==1)||

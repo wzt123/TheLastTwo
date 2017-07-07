@@ -125,14 +125,27 @@ void  main(void)
     lptmr_pulse_clean();
         
     if(stop_Flag !=1&&ChaoChe_stop!=1)//超车的时候电机不输出
-    {  
+    {
       Motor_Out();
-    }    
+    }
     if(Stop_Flag==2&&stop_Flag!=1)
-    {      
-      stop_Car();
+    {  
+      if(Car==1)
+        Chaoche_stop();
+      else
+        stop_Car();
     }
      
+    if(Stop_Flag==2&&stopLine_temp==1)//或者前车告诉后车有起跑线
+    {
+      if(Car==1)
+        Servomiddle=8550;
+      else
+        Servomiddle=8700;
+    }
+    
+    
+    
     /*if(Stop_Flag==1&&sum_time>2000)
     {
       if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3)
@@ -184,7 +197,14 @@ void  main(void)
     //vcan_sendware((uint16_t *)send_data, sizeof(send_data));
    
     nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
-    nrf_data = buff[0];
+    
+    uint8 nrf_data=0;
+    for(int i=0;i<sizeof(buff);i++)
+    {
+      nrf_data|=buff[i];
+      nrf_data=nrf_data<<1;
+    }
+    
     
     ////////////////后车检测到超声波信号，buff[1]发来一个1，表明超车成功
     /*if(buff[1]==1)
