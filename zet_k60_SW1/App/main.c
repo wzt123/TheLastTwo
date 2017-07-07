@@ -228,7 +228,7 @@ void  main(void)
       OLED_Print_Num1(88, 4, Stop_Flag);
       OLED_Print_Num1(88, 5, Servo_temp);
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
-      OLED_Print_Num1(88, 6, Left_xian);
+      OLED_Print_Num1(88, 6, Cross_Flag);
     }
     //wzt_bluetooth();      
     
