@@ -155,7 +155,7 @@ void Motor_Out(void)
   { 
     if(stop_time==0)
     {      
-      if(abs(error)<4)
+      if(abs(error)<4)//直道
       {
         if(Status==0)
         {
@@ -165,7 +165,7 @@ void Motor_Out(void)
         {
           speed_goal=4100;
         }
-        else if(Status==2)//入弯减速
+        else if(Status==2)//直道加速
         {
           speed_goal=4600;
         }
@@ -174,9 +174,14 @@ void Motor_Out(void)
         {
           speed_goal=5000;
         }
+        
+         else if(Status==4)
+        {
+          speed_goal=5200;
+        }
       }
       
-      else
+      else//弯道速度
       {
        if(Status==0)
         {
@@ -192,6 +197,11 @@ void Motor_Out(void)
         }
         
         else if(Status==3)
+        {
+          speed_goal=4800;
+        }
+       
+       else if(Status==4)
         {
           speed_goal=5000;
         }
@@ -215,17 +225,18 @@ void Motor_Out(void)
         }
       }
       
-      /*if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
-      {
-        if(abs(error)<8&&abs(error)>=4)
-          stop1();
-        else if((All_Black>2&&All_Black<8)||Cross_Flag==3)
-        {
-          stop1();
-        }
-          
-        return;
-      }*/
+//      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
+//      {
+////        if(abs(error)<8&&abs(error)>=4)
+////          stop1();
+////        else 
+//          if((All_Black>2&&All_Black<15)||Cross_Flag==31)
+//        {
+//          stop1();
+//        }
+//          
+//        return;
+//      }
       speed_err_R_lastlast = speed_err_R_last;
       speed_err_R_last = speed_err_R;
       

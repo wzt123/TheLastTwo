@@ -392,7 +392,7 @@ void Servo_control(void)
       Ring_First_Row_Compare=14;
     }
     else{
-      Ring_First_Row_Compare=12;
+      Ring_First_Row_Compare=14;
     }
 //    else if(speed_goal<4950)
 //    {
@@ -439,8 +439,8 @@ void Servo_control(void)
       Servo_temp = Servo_temp/10;
     }
     else
-    {      
-      if(speed_goal<5250)
+    {  
+      if(speed_goal<4500)
       {
         if(All_Black==0)
         {
@@ -578,18 +578,18 @@ void Servo_control(void)
         }
       }
     
-      else if(speed_goal<5850)
+     else if(speed_goal<5250)
       {
         if(All_Black==0)
         {
           if(error<0)
           {
-            Kp = 27;
+            Kp = 25;
             Kd = 2;
           }
           else
           {
-            Kp = 27;
+            Kp = 25;
             Kd = 2;
           }
         }
@@ -597,12 +597,12 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 39;
+            Kp = 40;
             Kd = 12;
           } 
           else
           {
-            Kp = 39;
+            Kp = 40;
             Kd = 12;
           }
         }
@@ -611,12 +611,12 @@ void Servo_control(void)
           if(error<0)
           {
             Kp = 42;
-            Kd = 12;
+            Kd = 13;
           }
           else
           {
             Kp = 42;
-            Kd=12;
+            Kd=13;
           }
         }
         else if(All_Black<22)////弯道入直道的时候
@@ -636,12 +636,12 @@ void Servo_control(void)
         {
           if(error<0)     //左转
           {
-            Kp=50;
+            Kp=52;
             Kd=20;
           }
           else
           {
-            Kp=50;
+            Kp=52;
             Kd =20;
           }
         }
@@ -715,19 +715,20 @@ void Servo_control(void)
           }
         }
       }
+    
       
-      else if(speed_goal<6450)
+      else if((speed_goal>5300)&&(speed_goal<5450))
       {
          if(All_Black==0)
         {
           if(error<0)
           {
-            Kp = 27;
+            Kp = 26;
             Kd = 2;
           }
           else
           {
-            Kp = 27;
+            Kp = 26;
             Kd = 2;
           }
         }
@@ -803,12 +804,12 @@ void Servo_control(void)
           if(error<0)
           {
             Kp=48;
-            Kd=20;
+            Kd=21;
           }
           else
           {
             Kp=48;
-            Kd =20;
+            Kd =21;
           }
         }
         
@@ -816,13 +817,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 52;
-            Kd = 29;
+            Kp = 54;
+            Kd = 30;
           }
           else
           {
-            Kp = 52;
-            Kd = 29;
+            Kp = 54;
+            Kd = 30;
           }
         }
         
