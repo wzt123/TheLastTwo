@@ -341,11 +341,11 @@ void Servo_control(void)
   ///¹ýÕÏ°­
   if(Cross_Flag==5)
   {
-    Servomiddle=8680;
+    Servomiddle=8690;
   }
   else if(Cross_Flag==6)
   {
-    Servomiddle=8570;
+    Servomiddle=8520;
   }
   else if(stopLine_temp==0)
   {
@@ -1395,10 +1395,10 @@ void Search_Line(void)
       start_line_num[Row_Ptr] = 0;
       for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
       {      
-        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==255 )
+        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 &&img[Row_Ptr][Col_Ptr+2]==255 &&img[Row_Ptr][Col_Ptr+3]==255 )
         {
           start_line_num[Row_Ptr] ++;
-        }      
+        }
       }
       if(start_line_num[Row_Ptr]>4)
       {

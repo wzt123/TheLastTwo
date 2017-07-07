@@ -129,30 +129,15 @@ void  main(void)
     IR2_last = IR2;
     IR2 = gpio_get(PTE9);///隔一下再读另一边的红外对管
         
-    if(stop_Flag !=1&&ChaoChe_stop!=1)//超车的时候电机不输出
+    if(stop_Flag !=1&&ChaoChe_stop==0)//超车的时候电机不输出
     {  
       Motor_Out();
     }    
-//    if(Stop_Flag==2&&stop_Flag!=1)
-//    {      
-//      if(Car==1&&ChaoChe_stop!=1)
-//        Chaoche_stop();
-//      else
-//        stop_Car();
-//    }
-     
-    if((Stop_Flag>1)&&Car==1&&ChaoChe_stop!=1)
-    {
-      Chaoche_stop();
-    }
+      if((Stop_Flag>1)&&Car==1&&ChaoChe_stop<2)
+        stop_Car1();
+      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0)
+        stop_Car2();
     
-    if((Stop_Flag==2||Stop_Flag==21)/*&&stopLine_temp==1*/)//或者前车告诉后车有起跑线
-    {
-      if(Car==1)
-        Servomiddle=Servomiddle-150;
-      else
-        Servomiddle=Servomiddle+150;
-    }
     
     /*if(Stop_Flag==1&&sum_time>2000)
     {

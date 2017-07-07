@@ -128,20 +128,19 @@ void  main(void)
     {
       Motor_Out();
     }
-    if(Stop_Flag==2&&stop_Flag!=1)
-    {  
-      if(Car==1)
-        Chaoche_stop();
-      else
-        stop_Car();
-    }
+
+    if((Stop_Flag>1)&&Car==1&&ChaoChe_stop<2)
+      stop_Car1();
+    else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0)
+      stop_Car2();
+    
      
     if(Stop_Flag==2&&stopLine_temp==1)//或者前车告诉后车有起跑线
     {
       if(Car==1)
         Servomiddle=8550;
-      else
-        Servomiddle=8700;
+//      else
+//        Servomiddle=8700;
     }
     
     
@@ -223,7 +222,7 @@ void  main(void)
     */
     //if(Car==2)
     //race[0]=1;
-    Overtake_judge();
+    //Overtake_judge();
 
     if(speed_get_R<60&&speed_get_L<60)
     {
