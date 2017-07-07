@@ -396,7 +396,7 @@ void Servo_control(void)
 //      Servo_temp=Kp*error/10-110;
 //    }
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
-    else if(Cross_Flag==31&&Ring_First_Row>13)//越小转得越早
+    else if(Cross_Flag==31&&Ring_First_Row>10)//越小转得越早
     {
         if(Car == 1)
         {
@@ -969,7 +969,8 @@ void Search_Line(void)
   uint8 Right_Y0=0;
   uint8 Right_Y1=0;
   Cross_flag=0;
-  
+  Right_xian=0;
+  Left_xian=0;
   a=1;
   uint8 b=79;
   uint8 i,j,k;
@@ -1359,19 +1360,22 @@ void Search_Line(void)
   }///如果在车头连续三行丢线，十字路口另外一种情况
     else*/
     
-    if(Row_Ptr<54&&(Left_Flag[Row_Ptr+2]==3 && Right_Flag[Row_Ptr+2]==3)&&
+    /*if(Row_Ptr<54&&(Left_Flag[Row_Ptr+2]==3 && Right_Flag[Row_Ptr+2]==3)&&
        (Left_Flag[Row_Ptr+3]==3 && Right_Flag[Row_Ptr+3]==3)&&
            (Left_Flag[Row_Ptr+1]==1 || Right_Flag[Row_Ptr+1]==1)&&
              (Left_Flag[Row_Ptr]==1 || Right_Flag[Row_Ptr]==1)&&Row_Ptr>All_Black)
     {
-      Cross_Flag=1;
-      Cross_flag++;
+      //Cross_Flag=1;
+      //Cross_flag++;
       for(i=Row_Ptr+3;i>2&&i>All_Black;i--)
       {
         if(Left_Flag[i]==1 && Right_Flag[i]==1)
+        {
           StopRow=i;
+          break;
+        }
       }
-    }
+    }*/
     else if(Row_Ptr<50&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
        (Left_Flag[Row_Ptr+7]==3 && Right_Flag[Row_Ptr+7]==3)&&
          (Left_Flag[Row_Ptr+6]==3 && Right_Flag[Row_Ptr+6]==3)&&(
@@ -1488,7 +1492,7 @@ void Search_Line(void)
     Left_Y0=0;
     Left_Y1=0;
     
-    if(Left_left!=1&&Row_Ptr<48) //左拐点确定
+    if(Left_left!=1&&Row_Ptr<48&&Row_Ptr>(Right_xian-10)) //左拐点确定
     {
       for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
       {
@@ -1541,7 +1545,7 @@ void Search_Line(void)
     Right_J1=0;
     Right_Y0=0;
     Right_Y1=0;
-    if(Right_right!=1&&Row_Ptr<48) //右拐点确定
+    if(Right_right!=1&&Row_Ptr<48&&Row_Ptr>(Left_xian-10)) //右拐点确定
     {
       for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
       {
@@ -1604,8 +1608,7 @@ void Search_Line(void)
             }
         }
     }*/
-    
-    if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row)
+    if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>8)
     {
       for(i=Left_xian;i>Ring_First_Row;i--)
       {
@@ -1618,7 +1621,7 @@ void Search_Line(void)
       if(i==Ring_First_Row&&j==Ring_First_Row)
         Cross_Flag=31;/////标记为大圆环
     }
-    
+
     /*if(samll_Ring_temp==1&&cross_Time==0&&(Right_right==1||Left_left==1)&&Stop_Flag!=0&&sum_time>1000)
     {
       Cross_Flag=3;
@@ -1630,10 +1633,37 @@ void Search_Line(void)
       Road_Right[Row_Ptr]=Road_Right[Row_Ptr+1];
     }
   }//结束for 行循环
+  if(ring_num>0&&Right_right==1&&Left_left==0&&Right_xian>Ring_First_Row) //you斜入十字
+  {
+    //max_xian=Right_xian;
+    
+    for(i=Right_xian-6;i>4&&i>All_Black;i--)
+    {
+      if(Right_Flag[i+4]!=1&&Right_Flag[i+3]!=1&&Right_Flag[i+2]!=1) break;
+      if(Road_Right[i]<=Road_Right[i+1]&&Road_Right[i+2]<=Road_Right[i+3]&&Road_Right[i+3]<Road_Right[i+4]&&Right_Flag[i+4]==1)
+      {
+        Cross_Flag=31;
+        break;
+      }
+    }
+  }
+  if(ring_num>0&&Right_right==0&&Left_left==1&&Left_xian>Ring_First_Row) //zuo斜入十字
+  {
+    //max_xian=Right_xian;
+    
+    for(i=Left_xian-6;i>4&&i>All_Black;i--)
+    {
+      if(Left_Flag[i+4]!=1&&Left_Flag[i+3]!=1&&Left_Flag[i+2]!=1) break;
+      if(Road_Left[i]>=Road_Left[i+1]&&Road_Left[i+2]>=Road_Left[i+3]&&Road_Left[i+3]>Road_Left[i+4]&&Left_Flag[i+4]==1)
+      {
+        Cross_Flag=31;
+        break;
+      }
+    }
+  }
   // }//结束if判断
 }
 //寻线函数结束
-
 //赛道类型判断
 uint32 Road_Type_sum_error;
 uint8  Road_Type_error;

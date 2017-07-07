@@ -187,14 +187,14 @@ void  main(void)
     
  
     ///蓝牙传送编码器的值
-    send_data[0] = speed_PWM_R;
+    send_data[0] = Cross_Flag*500;
     send_data[1] = speed_PWM_L;
     send_data[2] = 0;
     send_data[3] = 0;
 
     //if(speed_get_R>50&&Cross_Flag!=0)
     //uart_putchar(UART5,Cross_Flag);
-    //vcan_sendware((uint16_t *)send_data, sizeof(send_data));
+    vcan_sendware((uint16_t *)send_data, sizeof(send_data));
    
     nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
     
