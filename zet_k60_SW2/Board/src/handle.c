@@ -197,7 +197,7 @@ void Calculate_Slope()
       break;
     }
   }
-  for(Row_Ptr=57;Row_Ptr>3&&Row_Ptr>StopRow;Row_Ptr--)
+  for(Row_Ptr=57;Row_Ptr>6&&Row_Ptr>StopRow;Row_Ptr--)
   {
     if(Road_Right[Row_Ptr-1]>Road_Right[Row_Ptr]&&
        Road_Right[Row_Ptr-2]>=Road_Right[Row_Ptr-1]&&
@@ -208,10 +208,10 @@ void Calculate_Slope()
     }
   }
   k=Road_Left[Left_start];
-  Left_stop=Left_start+15;
+  Left_stop=Left_start-15;
   if(Left_start==58)
   {
-    for(Row_Ptr=Left_start+4;Row_Ptr>3&&Row_Ptr>All_Black;Row_Ptr--)
+    for(Row_Ptr=Left_start-4;Row_Ptr>3&&Row_Ptr>All_Black;Row_Ptr--)
     {
       if(abs(Road_Left[Row_Ptr]-Road_Left[Row_Ptr+1])<4&&abs(Road_Left[Row_Ptr+1]-Road_Left[Row_Ptr+2])<4&&Left_Flag[Row_Ptr]==1)
       {
@@ -223,30 +223,30 @@ void Calculate_Slope()
   }
   else
   {
-    for(Row_Ptr=Left_start+4;Row_Ptr>3&&Row_Ptr>All_Black;Row_Ptr--)
+    for(Row_Ptr=Left_start-4;Row_Ptr>3&&Row_Ptr>All_Black;Row_Ptr--)
     {    
       
       if(img[Row_Ptr][Road_Left[Left_start]]==0&&img[Row_Ptr-1][Road_Left[Left_start]]==0)
       {
-        //k=Road_Left[Left_start];
+        Left_stop=Row_Ptr-3;
         for(i=Road_Left[Left_start];i<Road_Right[Right_start];i++)
         {
-          if(img[Row_Ptr+3][i]==0&&img[Row_Ptr+3][i+1]==0&&img[Row_Ptr+3][i+2]==255&&img[Row_Ptr+3][i+3]==255)
+          if(img[Row_Ptr-3][i]==0&&img[Row_Ptr-3][i+1]==0&&img[Row_Ptr-3][i+2]==255&&img[Row_Ptr-3][i+3]==255)
           {
             k=i+2;
-            Left_stop=Row_Ptr+3;
+            Left_stop=Row_Ptr-3;
             break;
           }
         }
-        if(i!=Road_Right[Right_start+3]&&All_Black) break;
+        if(i!=Road_Right[Right_start]) break;
       }
     }
   }
   l=Road_Right[Right_start];
-  Right_stop=Right_start+15;
+  Right_stop=Right_start-15;
   if(Right_start==58)
   {
-    for(Row_Ptr=Left_start+4;Row_Ptr>3&&Row_Ptr>All_Black;Row_Ptr--)
+    for(Row_Ptr=Left_start-4;Row_Ptr>3&&Row_Ptr>All_Black;Row_Ptr--)
     {
       if(abs(Road_Right[Row_Ptr]-Road_Right[Row_Ptr]+1)<4&&abs(Road_Right[Row_Ptr+1]-Road_Right[Row_Ptr+2])<4&&Right_Flag[Row_Ptr]==1)
       {
@@ -259,19 +259,19 @@ void Calculate_Slope()
   else
   {
     
-    for(Row_Ptr=Right_start+4;Row_Ptr>3&&Row_Ptr>All_Black;Row_Ptr--)
+    for(Row_Ptr=Right_start-4;Row_Ptr>3&&Row_Ptr>All_Black;Row_Ptr--)
     {
       
       if(img[Row_Ptr][Road_Right[Right_start]]==0&&img[Row_Ptr-1][Road_Right[Right_start]]==0)
       {
         
-        Right_stop=Row_Ptr+3;
+        Right_stop=Row_Ptr-3;
         for(i=Road_Right[Right_start];i>Road_Left[Left_start];i--)
         {
-          if(img[Row_Ptr+3][i]==0&&img[Row_Ptr+3][i-1]==0&&img[Row_Ptr+3][i-2]==255&&img[Row_Ptr+3][i-3]==255)
+          if(img[Row_Ptr-3][i]==0&&img[Row_Ptr-3][i-1]==0&&img[Row_Ptr-3][i-2]==255&&img[Row_Ptr-3][i-3]==255)
           {
             l=i-2;
-            Right_stop=Row_Ptr+3;
+            Right_stop=Row_Ptr-3;
             break;
           }
         }
@@ -1004,7 +1004,7 @@ void Find_Middle()
   }
 //  if(Cross_Cnt==4)
 //  {
-  if(Cross_Flag_Last!=3)
+  if(Cross_Flag_Last!=31)
   {
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
