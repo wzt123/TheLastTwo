@@ -129,11 +129,11 @@ void  main(void)
         Motor_Out();
       else if(Car==2)
       {
-        if(ABDistance>1000)
+        if(ABDistance>1000||ABDistance<=10)
         {
           Motor_Out();
         }
-        else if(Distance_stop_temp==0&&ABDistance<=1000)
+        else if(Distance_stop_temp==0&&ABDistance<=1000&&ABDistance>10)
         {
           Distance_stop();
         }
