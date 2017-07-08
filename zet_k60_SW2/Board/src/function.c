@@ -16,8 +16,6 @@ uint16 speed_lasterr=0;
 uint16 speed_PWM=0;
 int16 speed_PWM_R = 0;
 int16 speed_PWM_L = 0;
-uint16 LastDuty_L = 0;
-uint16 LastDuty_R = 0;
 int16  speed_err_R = 0;
 int16  speed_err_L = 0;
 int16 speed_err_R_last = 0;
@@ -30,9 +28,10 @@ uint8 Status=0;
 uint16 var;
 uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
-uint32 Distance = 2300;
+uint32 Distance = 900;
 uint8 stop_time = 0;
-uint8 ChaoChe_stop=0;
+uint8 Car_First_stop=0;
+uint8 Car_Second_stop=0;
 uint8 ChaoChe_stop_time = 0;
 uint8 ChaoChe_temp = 0;
 uint8 Distance_stop_temp=0;
@@ -63,6 +62,7 @@ void PIT0_IRQHandler(void)
   //Find_Middle();
   //Servo_control();
   //zf_oled( val);
+
   PIT_Flag_Clear(PIT0);       //清中断标志位
 }
 
@@ -125,22 +125,6 @@ void Motor_Out(void)
   uint8 speed_Ki=5;
   uint8 speed_Kp=20;  
   uint8 speed_Kd=5;
-  
-  /*if(Overtake2==1||buff[1]==2)
-  {
-  if(buff[1]==2&&Car==2)
-  DELAY_MS(500);
-  gpio_init(PTC1,GPO,0);
-  gpio_init(PTC2,GPO,1);
-  speed_PWM=62;
-  if(speed_get<=5)
-  {
-  speed_PWM=0;
-  Turn_Left=0;
-}
-}
-  else
-  {*/
   gpio_set(PTC3,1);
   gpio_set(PTC2,0);
   gpio_set(PTB17,0);
@@ -264,7 +248,6 @@ void Motor_Out(void)
     else
       stop_time=0;
   }
-  //}
   
   if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>10)
   {
@@ -349,14 +332,25 @@ void stop_Car2(void)
 {  
   if(speed_get_L<8&&speed_get_R<8)
   {
-    
-    gpio_set(PTC3,0);//驱动反向使能
-    gpio_set(PTC2,1);//驱动反向使能
-    gpio_set(PTB17,1);//驱动反向使能
-    gpio_set(PTB16,0);//驱动反向使能
+    gpio_set(PTC3,1);
+    gpio_set(PTC2,0);
+    gpio_set(PTB17,0);
+    gpio_set(PTB16,1);
+    ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+    ftm_pwm_duty(FTM2,FTM_CH0,6300);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,6300);//B1
+    DELAY_MS(200);
+    gpio_set(PTC3,0);
+    gpio_set(PTC2,1);
+    gpio_set(PTB17,1);
+    gpio_set(PTB16,0);
+    ftm_pwm_duty(FTM2,FTM_CH0,6300);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,6300);//B1
+    DELAY_MS(200);
     ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
     ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
-    ChaoChe_stop=2;
+    
+    Car_Second_stop=1;
     stop_Flag  = 1;
     return;
   }
@@ -457,7 +451,7 @@ void stop_Car1()
     gpio_set(PTB16,0);//驱动反向使能
     ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
     ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
-    ChaoChe_stop=2;
+    Car_First_stop=2;
     stop_Flag  = 1;
     return;
   }
@@ -480,16 +474,8 @@ void stop_Car1()
   }
   else
   { 
-//    if(speed_get_R>100||speed_get_L>100)
-//    {
-//      speed_goal_R=100;//设置速度
-//      speed_goal_L=100;
-//    }
-//    else
-//    {
       speed_goal_R=0;//设置速度
       speed_goal_L=0;
-//    }
   }
   speed_err_R_lastlast = speed_err_R_last;
   speed_err_R_last = speed_err_R;
@@ -538,7 +524,9 @@ void stop_Car1()
   ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
 }
 
-
+/*
+后车检测到小于一定距离就停车
+*/
 void Distance_stop(void)
 {
   if(speed_get_L<8&&speed_get_R<8)
@@ -620,6 +608,7 @@ void Distance_stop(void)
   ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
   
 }
+
 //拨码开关初始化
 
 void Switch_Init()

@@ -31,10 +31,10 @@ extern uint16 speed_get_R;
 extern uint16 speed_get_L;
 extern uint16 send_data[3][8];
 extern void stop_Car1();
-extern uint8 ChaoChe_stop;
+extern uint8 Car_First_stop;
+extern uint8 Car_Second_stop;
 extern uint8 ChaoChe_stop_time;
 extern uint8 ChaoChe_temp;
 extern uint8 Distance_stop_temp;
-
 ////
 #endif

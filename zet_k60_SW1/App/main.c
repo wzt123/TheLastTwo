@@ -123,7 +123,7 @@ void  main(void)
     ftm_quad_clean(FTM1);
     lptmr_pulse_clean();
         
-    if(stop_Flag !=1&&ChaoChe_stop==0)//超车的时候电机不输出
+    if(stop_Flag !=1&&Car_First_stop==0&&Car_Second_stop==0)//超车的时候电机不输出
     {  
       if(Car==1)
         Motor_Out();
@@ -139,9 +139,9 @@ void  main(void)
         }
       }
     }    
-      if((Stop_Flag>1)&&Car==1&&ChaoChe_stop<2)
+      if((Stop_Flag>1)&&Car==1&&Car_First_stop<2)
         stop_Car1();
-      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0)
+      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0)
         stop_Car2();
     
     
