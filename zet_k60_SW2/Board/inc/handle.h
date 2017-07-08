@@ -79,6 +79,9 @@ extern uint8 white_Right_cnt;
 extern int16 Servo_error;
 extern int16 Servo_errorerror;
 extern uint8 stopLine_temp;
+
+extern uint8 Left_stop;
+extern uint8 Right_stop;
 /////////////////////////////////////////
 //extern int32 All_Black;
 extern uint16 Servo_value;

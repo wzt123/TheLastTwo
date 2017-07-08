@@ -144,6 +144,11 @@ void  main(void)
       else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
         stop_Car2();
     
+      
+      if(Cross_Flag==1&&(Left_stop>18||Right_stop>18))
+      {
+        Chaoche_FrontCar();
+      }
     
     /*if(Stop_Flag==1&&sum_time>2000)
     {
@@ -224,17 +229,18 @@ void  main(void)
     }
     
     
-    Overtake_judge();
+    
+    //Overtake_judge();
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
       OLED_Print_Num1(88, 1, All_Black);
       OLED_Print_Num1(88, 2, error);
       OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, Stop_Flag);
-      OLED_Print_Num1(88, 5, Servo_temp);
+      OLED_Print_Num1(88, 4, Servo_temp);
+      OLED_Print_Num1(88, 5, Left_stop);
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
-      OLED_Print_Num1(88, 6, Cross_Flag);
+      OLED_Print_Num1(88, 6, Right_stop);
     }
     //wzt_bluetooth();      
     

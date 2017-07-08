@@ -145,6 +145,13 @@ void  main(void)
         stop_Car2();
     
     
+      
+      
+      if(Cross_Flag==1&&(Left_stop>18||Right_stop>18)&&Car==1)
+      {
+        Chaoche_FrontCar();
+      }
+      
     /*if(Stop_Flag==1&&sum_time>2000)
     {
       if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3)

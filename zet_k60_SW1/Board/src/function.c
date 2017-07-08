@@ -376,6 +376,30 @@ void stop_Car1()
     return;
   }
   
+  stop();
+}
+
+/*
+后车检测到小于一定距离就停车
+*/
+void Distance_stop(void)
+{
+  if(speed_get_L<8&&speed_get_R<8)
+  {
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
+    Distance_stop_temp=1;//防止多次停车
+    return;
+  }
+  stop();
+}
+
+
+void stop(void){
   gpio_set(PTC3,1);
   gpio_set(PTC2,0);
   gpio_set(PTB17,0);
@@ -445,11 +469,40 @@ void stop_Car1()
 }
 
 /*
-后车检测到小于一定距离就停车
+超车
 */
-void Distance_stop(void)
+void Chaoche_FrontCar(void)
 {
-  if(speed_get_L<8&&speed_get_R<8)
+  ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle-100);
+  
+  gpio_set(PTC3,0);//驱动反向使能
+  gpio_set(PTC2,1);//驱动反向使能
+  gpio_set(PTB17,1);//驱动反向使能
+  gpio_set(PTB16,0);//驱动反向使能
+  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+  //ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+  DELAY_MS(150);
+  
+  gpio_set(PTC3,1);
+  gpio_set(PTC2,0);
+  gpio_set(PTB17,0);
+  gpio_set(PTB16,1);
+  //ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+  DELAY_MS(150);
+  gpio_set(PTC3,0);//驱动反向使能
+  gpio_set(PTC2,1);//驱动反向使能
+  gpio_set(PTB17,1);//驱动反向使能
+  gpio_set(PTB16,0);//驱动反向使能
+  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+  DELAY_MS(180);
+  
+  ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,0);//B
+  if(speed_get_L<10&&speed_get_R<10)
   {
     gpio_set(PTC3,0);//驱动反向使能
     gpio_set(PTC2,1);//驱动反向使能
@@ -457,76 +510,67 @@ void Distance_stop(void)
     gpio_set(PTB16,0);//驱动反向使能
     ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
     ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
-    Distance_stop_temp=1;//防止多次停车
+  
+    uint8 ChaoChe_temp=1;
+    uint8 nrf_buff[4]={0};
+  
+    while(ChaoChe_temp)
+    {
+      nrf_rx(nrf_buff,4);               //等待接收一个数据包，数据存储在buff里
+      
+      uint8 nrf_data=0;
+      for(int i=0;i<sizeof(nrf_buff);i++)
+      {
+        nrf_data|=nrf_buff[i];
+        nrf_data=nrf_data<<1;
+      }
+      if(nrf_data==1001)
+      {
+        Car=2;
+        gpio_set(PTC3,0);//驱动反向使能
+        gpio_set(PTC2,1);//驱动反向使能
+        gpio_set(PTB17,1);//驱动反向使能
+        gpio_set(PTB16,0);//驱动反向使能
+        ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+        ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+        DELAY_MS(400);
+        gpio_set(PTC3,1);
+        gpio_set(PTC2,0);
+        gpio_set(PTB17,0);
+        gpio_set(PTB16,1);
+        ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+        ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+        ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+        DELAY_MS(400);
+        ChaoChe_temp=0;
+      }
+    }
     return;
-  }
-  gpio_set(PTC3,1);
-  gpio_set(PTC2,0);
-  gpio_set(PTB17,0);
-  gpio_set(PTB16,1);
+  }  
+}
+
+void ChaoChe_BackCar(void)
+{
   
-  
-  uint8 speed_Ki=10;
-  uint8 speed_Kp=20;  
-  uint8 speed_Kd=5;
-  
-  if(All_Black>=50)
+}
+
+//NRF
+void NRF_SendData(uint8 data)
+{
+  if(Car==1)
   {
-    speed_PWM_R=0;
-    speed_PWM_L =0;
+    nrf_tx(race,4);
+    while(nrf_tx_state() == NRF_TXING);//等待发送完成 
+    
+    race[1]=0;
+  }
+  else if(Car==2)
+  {
+    nrf_tx(race,4);
+    while(nrf_tx_state() == NRF_TXING);//等待发送完成
+    race[0]=0;
     
   }
-  else
-  { 
-      speed_goal_R=0;//设置速度
-      speed_goal_L=0;
-  }
-  speed_err_R_lastlast = speed_err_R_last;
-  speed_err_R_last = speed_err_R;
-  
-  speed_err_L_lastlast = speed_err_L_last;
-  speed_err_L_last = speed_err_L;
-  
-  speed_err_R = speed_goal_R-speed_get_R*10;
-  speed_err_L = speed_goal_L-speed_get_L*10;
-  
-  speed_increment_R = speed_Kp*(speed_err_R-speed_err_R_last)/10+
-    speed_Ki*speed_err_R/10+
-      speed_Kd*(speed_err_R-2*speed_err_R_last+speed_err_R_lastlast)/10;
-  speed_increment_L= speed_Kp*(speed_err_L-speed_err_L_last)/10+
-    speed_Ki*speed_err_L/10+
-      speed_Kd*(speed_err_L-2*speed_err_L_last+speed_err_L_lastlast)/10;
-  speed_PWM_R=6100+speed_increment_R;
-  speed_PWM_L=6100+speed_increment_L;
-  
-  
-  
-  if(speed_PWM_R<0)
-  {
-    gpio_set(PTC3,0);//驱动反向使能
-    gpio_set(PTC2,1);//驱动反向使能
-    gpio_set(PTB17,1);//驱动反向使能
-    gpio_set(PTB16,0);//驱动反向使能
-    speed_PWM_R=abs(speed_PWM_R);
-    
-  }
-  if(speed_PWM_R>8800)
-    speed_PWM_R=8800;
-  
-  if(speed_PWM_L<0)
-  {
-    gpio_set(PTC3,0);//驱动反向使能
-    gpio_set(PTC2,1);//驱动反向使能
-    gpio_set(PTB17,1);//驱动反向使能
-    gpio_set(PTB16,0);//驱动反向使能
-    speed_PWM_L = abs(speed_PWM_L);
-  }
-  if(speed_PWM_L>8800)
-    speed_PWM_L=8800;
-  
-  ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
-  ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
-  
 }
 
 //拨码开关初始化

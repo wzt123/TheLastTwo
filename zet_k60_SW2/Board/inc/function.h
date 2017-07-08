@@ -13,6 +13,7 @@ extern void Distance_stop(void);
 extern void xx_bluetooth();
 extern void Switch_Init();
 extern uint8 Get_Switch(void);
+extern void Chaoche_FrontCar(void);
 //extern uint16 speed_get;
 extern uint16 var;//∫ÏÕ‚≤‚æ‡£ª
 //extern uint16 speed_goal;

@@ -529,6 +529,76 @@ void Distance_stop(void)
   
 }
 
+
+void Chaoche_FrontCar(void)
+{
+  ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle-100);
+  
+  gpio_set(PTC3,0);//驱动反向使能
+  gpio_set(PTC2,1);//驱动反向使能
+  gpio_set(PTB17,1);//驱动反向使能
+  gpio_set(PTB16,0);//驱动反向使能
+  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+  //ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+  DELAY_MS(150);
+  
+  gpio_set(PTC3,1);
+  gpio_set(PTC2,0);
+  gpio_set(PTB17,0);
+  gpio_set(PTB16,1);
+  //ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+  DELAY_MS(150);
+  gpio_set(PTC3,0);//驱动反向使能
+  gpio_set(PTC2,1);//驱动反向使能
+  gpio_set(PTB17,1);//驱动反向使能
+  gpio_set(PTB16,0);//驱动反向使能
+  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+  DELAY_MS(180);
+  
+  ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,0);//B
+  
+    uint8 ChaoChe_temp=1;
+    uint8 nrf_buff[4]={0};
+  
+    while(ChaoChe_temp)
+    {
+      nrf_rx(nrf_buff,4);               //等待接收一个数据包，数据存储在buff里
+      
+      uint8 nrf_data=0;
+      for(int i=0;i<sizeof(nrf_buff);i++)
+      {
+        nrf_data|=nrf_buff[i];
+        nrf_data=nrf_data<<1;
+      }
+      if(nrf_data==1001)
+      {
+        Car=2;
+        gpio_set(PTC3,0);//驱动反向使能
+        gpio_set(PTC2,1);//驱动反向使能
+        gpio_set(PTB17,1);//驱动反向使能
+        gpio_set(PTB16,0);//驱动反向使能
+        ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+        ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+        DELAY_MS(400);
+        gpio_set(PTC3,1);
+        gpio_set(PTC2,0);
+        gpio_set(PTB17,0);
+        gpio_set(PTB16,1);
+        ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+        ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+        ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+        DELAY_MS(400);
+        ChaoChe_temp=0;
+      }
+    }
+    return;
+    
+}
 //拨码开关初始化
 
 void Switch_Init()
