@@ -15,6 +15,9 @@ uint8 Road_type=0;
 uint8 Left_Flag[ROW_MAX]= {0}; //本行左边线找到标志
 uint8 Right_Flag[ROW_MAX]= {0}; //本行右边线找到标志
 
+int8 Road_Left_f[ROW_MAX]= {0}; //左线位置_列标副
+int8 Road_Right_f[ROW_MAX]= {0}; //右线位置_列标副
+
 uint8 Left_Cnt=0;//左线计数 所有的
 uint8 Right_Cnt=0;//右线计数 所有的
 uint8 Right_cnt=0;//连续的左边线计数
@@ -1313,6 +1316,9 @@ void Search_Line(void)
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
     
+    Road_Left_f[Row_Ptr]=Road_Left[Row_Ptr];
+    Road_Right_f[Row_Ptr]=Road_Right[Row_Ptr];
+    
     start_line_num[Row_Ptr] = 0;
     for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
     {      
@@ -1371,6 +1377,8 @@ void Search_Line(void)
       Road_Left[Row_Ptr]=Road_Left[Row_Ptr+1];
       Road_Right[Row_Ptr]=Road_Right[Row_Ptr+1];
     }
+    Road_Left_f[Row_Ptr]=Road_Left[Row_Ptr];
+    Road_Right_f[Row_Ptr]=Road_Right[Row_Ptr];
   }//结束三行搜线 外层for
   Road_Width[59]=Road_Right[59]-Road_Left[59];
   Road_Width[58]=Road_Right[58]-Road_Left[58];
@@ -1389,6 +1397,8 @@ void Search_Line(void)
     Left_Flag[Row_Ptr]=0;
     Right_Flag[Row_Ptr]=0;
     Road_Center[Row_Ptr]=0;
+    Road_Left_f[Row_Ptr]=Road_Left[Row_Ptr];
+    Road_Right_f[Row_Ptr]=Road_Right[Row_Ptr];
     //从左到右检测起跑线
     
     if(Row_Ptr>2)
@@ -1568,19 +1578,21 @@ void Search_Line(void)
         break;
       }
     }//结束for_搜右边
-    /*if(Cross_flag<2)
+    Road_Left_f[Row_Ptr]=Road_Left[Row_Ptr];
+    Road_Right_f[Row_Ptr]=Road_Right[Row_Ptr];
+    if(Cross_flag<2)
     {
-      if(img[Row_Ptr][Road_Right[Row_Ptr+1]]==255&&Right_Flag[Row_Ptr+1]==3)
+      if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]]==255&&Road_Right_f[Row_Ptr+1]==79)
       {
-        Road_Right[Row_Ptr]=Road_Right[Row_Ptr+1];
-        Right_Flag[Row_Ptr]=3;
+        Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1];
+        //Right_Flag[Row_Ptr]=3;
       }
-      if(img[Row_Ptr][Road_Left[Row_Ptr+1]]==255&&Left_Flag[Row_Ptr+1]==3)
+      if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]]==255&&Road_Left_f[Row_Ptr+1]==0)
       {
-        Road_Left[Row_Ptr]=Road_Left[Row_Ptr+1];
-        Left_Flag[Row_Ptr]=3;
+        Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1];
+        //Left_Flag[Row_Ptr]=3;
       }
-    }*/
+    }
     if(Col_Ptr==REnd && img[Row_Ptr][39] ==0 && img[Row_Ptr][40]==0 && img[Row_Ptr][41]==0) Right_Flag[Row_Ptr]=2;//在搜线范围内没找到_全黑行
     if(Col_Ptr==REnd&& img[Row_Ptr][39]==255 && img[Row_Ptr][40]==255 && img[Row_Ptr][41]==255) Right_Flag[Row_Ptr]=3;//在搜线范围内没找到_全白行
     if(Row_Ptr==30&&Col_Ptr==REnd&&img[Row_Ptr][70]==255) Right_sign=1;
@@ -1706,7 +1718,7 @@ void Search_Line(void)
     }
     //if(  (Row_Ptr>All_Black+6)&&(Cross_Flag!=3||Cross_Flag!=4))
     ring_flag=0;
-    for(Col_Ptr=Road_Left[Row_Ptr]; Col_Ptr<Road_Right[Row_Ptr]-3; Col_Ptr++)
+    for(Col_Ptr=Road_Left_f[Row_Ptr]; Col_Ptr<Road_Right_f[Row_Ptr]-3; Col_Ptr++)
     {      
       if(ring_flag==0&&img[Row_Ptr][Col_Ptr]==255&&img[Row_Ptr][Col_Ptr+1]==255&&img[Row_Ptr][Col_Ptr+2]==0&&img[Row_Ptr][Col_Ptr+3]==0) 
       {
@@ -1818,7 +1830,7 @@ void Search_Line(void)
       if(Left_J==1&&Left_Y==1)
       {
         Left_left=1;
-        Left_xian=Row_Ptr;
+        Left_xian=Row_Ptr+5;
       }
     }
     Right_J=0;
@@ -1875,7 +1887,7 @@ void Search_Line(void)
       if(Right_J==1&&Right_Y==1)
       {
         Right_right=1;
-        Right_xian=Row_Ptr;
+        Right_xian=Row_Ptr+5;
       }
     }
     
@@ -1890,15 +1902,15 @@ void Search_Line(void)
             }
         }
     }*/
-    if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>8)
+    if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>4)
     {
       for(i=Left_xian;i>Ring_First_Row;i--)
       {
-        if(img[i][Road_Left[i]]==0&&img[i+1][Road_Left[i+1]]==0) break;
+        if(img[i][Road_Left[Left_xian]]==0&&img[i+1][Road_Left[Left_xian]]==0) break;
       }
       for(j=Right_xian;j>Ring_First_Row;j--)
       {
-        if(img[j][Road_Right[j]]==0&&img[j+1][Road_Right[j+1]]==0) break;
+        if(img[j][Road_Right[Right_xian]]==0&&img[j+1][Road_Right[Right_xian]]==0) break;
       }
       if(i==Ring_First_Row&&j==Ring_First_Row)
         Cross_Flag=31;/////标记为大圆环
