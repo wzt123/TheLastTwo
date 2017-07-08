@@ -54,8 +54,6 @@ void  main(void)
   char nrf_data=0;
   uint8 Edge_R[3]= {0};
   uint8 Edge_L[3]= {0};
-  uint8 IR1_last = 0;
-  uint8 IR2_last = 0;
   
   //uint32 time2 =  0;
   DisableInterrupts;
@@ -70,7 +68,7 @@ void  main(void)
   set_vector_handler(PORTA_VECTORn , PORTA_IRQHandler);  
   set_vector_handler(DMA0_VECTORn , DMA0_IRQHandler);    
   int a=nrf_link_check();
-  uint8 IR1=0,IR2=0;
+  
   //uint8 Chaoche_stop_time=0;
   uint8 Chaoche_start_time=0;
   while(a)
@@ -82,8 +80,6 @@ void  main(void)
     Find_Middle();
     Road_Type();
     Servo_control();
-    IR1_last = IR1;
-    IR1 = gpio_get(PTE10);///读一边的红外对管
     
     speed_get_L = abs(ftm_quad_get(FTM1));          //获取FTM 正交解码 的脉冲数(负数表示反方向)
 //    if(Edge_L[0]!=0){
@@ -126,33 +122,28 @@ void  main(void)
 //    }
     ftm_quad_clean(FTM1);
     lptmr_pulse_clean();
-    IR2_last = IR2;
-    IR2 = gpio_get(PTE9);///隔一下再读另一边的红外对管
         
-    if(stop_Flag !=1&&ChaoChe_stop!=1)//超车的时候电机不输出
+    if(stop_Flag !=1&&Car_First_stop==0&&Car_Second_stop==0)//超车的时候电机不输出
     {  
-      Motor_Out();
-    }    
-//    if(Stop_Flag==2&&stop_Flag!=1)
-//    {      
-//      if(Car==1&&ChaoChe_stop!=1)
-//        Chaoche_stop();
-//      else
-//        stop_Car();
-//    }
-     
-    if((Stop_Flag>1)&&Car==1&&ChaoChe_stop!=1)
-    {
-      Chaoche_stop();
-    }
-    
-    if((Stop_Flag==2||Stop_Flag==21)/*&&stopLine_temp==1*/)//或者前车告诉后车有起跑线
-    {
       if(Car==1)
-        Servomiddle=Servomiddle-150;
-      else
-        Servomiddle=Servomiddle+150;
-    }
+        Motor_Out();
+      else if(Car==2)
+      {
+        if(ABDistance>1000||ABDistance<=10)
+        {
+          Motor_Out();
+        }
+        else if(Distance_stop_temp==0&&ABDistance<=1000&&ABDistance>10)
+        {
+          Distance_stop();
+        }
+      }
+    }    
+      if((Stop_Flag>1)&&Car==1&&Car_First_stop<2&&stop_Flag==0)
+        stop_Car1();
+      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
+        stop_Car2();
+    
     
     /*if(Stop_Flag==1&&sum_time>2000)
     {

@@ -45,9 +45,10 @@ uint8 Cross_Flag=0;
 uint8 Change_Flag;
 uint8 CrossRow=0;
 
-uint16 Servomiddle=8769;
-uint32 Servo_max=8938;
-uint32 Servo_min=8612;
+uint16 Servomiddle=8775;
+uint16 Servomiddle_rember=8770;
+uint16 Servo_max=8938;
+uint16 Servo_min=8612;
 float CenterLineSlope=0;
 
 int16 error=0;   //0~40左右
@@ -352,7 +353,7 @@ void Servo_control(void)
   }
   else if(stopLine_temp==0)
   {
-    Servomiddle=8775;
+    Servomiddle=Servomiddle_rember;
   }
   
   if(All_Black>2)
@@ -862,8 +863,6 @@ void Find_Middle()
   
   for(Row_Ptr=56; Row_Ptr>All_Black; Row_Ptr--)
   { 
-    if(Stop_Flag<2)
-    {
       if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
       {
         Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
@@ -880,18 +879,6 @@ void Find_Middle()
       {
         Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
       }
-    }
-    else
-    {
-        if(Car==1)
-        {
-          Road_Center[Row_Ptr]=Road_Left[Row_Ptr]+(Road_Right[Row_Ptr]-Road_Left[Row_Ptr])/4;          
-        }
-        else
-          Road_Center[Row_Ptr]=Road_Right[Row_Ptr]-(Road_Right[Row_Ptr]-Road_Left[Row_Ptr])/4;
-      
-      
-    }
     
     ////排除中线跳变
     if(Road_Center[Row_Ptr]-Road_Center[Row_Ptr+1]>30&&Cross_Flag==0&&error*errorerror<0)
@@ -1118,16 +1105,16 @@ void Search_Line(void)
     Road_Right_f[Row_Ptr]=Road_Right[Row_Ptr];
     //从左到右检测起跑线
     
-    if(Row_Ptr>2)
+    if(Row_Ptr>6)
     {
       
       start_line_num[Row_Ptr] = 0;
       for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
       {      
-        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==255 )
+        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 &&img[Row_Ptr][Col_Ptr+2]==255 &&img[Row_Ptr][Col_Ptr+3]==255 )
         {
           start_line_num[Row_Ptr] ++;
-        }      
+        }
       }
       if(start_line_num[Row_Ptr]>4)
       {
