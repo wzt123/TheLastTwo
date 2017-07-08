@@ -133,10 +133,10 @@ void  main(void)
         {
           Motor_Out();
         }
-//        else if(Distance_stop_temp==0&&ABDistance<=1000&&ABDistance>10)
-//        {
-//          Distance_stop();
-//        }
+        else if(Distance_stop_temp==0&&ABDistance<=1000&&ABDistance>10)
+        {
+          Distance_stop();
+        }
       }
     }    
       if((Stop_Flag>1)&&Car==1&&Car_First_stop<2&&stop_Flag==0)
