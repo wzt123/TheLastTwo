@@ -290,12 +290,12 @@ void Calculate_Slope()
   Left_Slope=1.0*(k-Road_Left[Left_start])/(Left_start-Left_stop);
   Right_Slope=1.0*(Road_Right[Right_start]-l)/(Right_start-Right_stop);
   j=0;
-  for(i=Left_start-1;i>=Left_stop;i--)
+  for(i=Left_start-1;i>Left_stop-1;i--)
   {
     j++;
     Road_Left[i]=(uint8)(Road_Left[Left_start]+Left_Slope*j+0.5);
   }
-  for(i=Right_start-1,j=0;i>=Right_stop;i--)
+  for(i=Right_start-1,j=0;i>Right_stop-1;i--)
   {
     j++;
     Road_Right[i]=(uint8)(Road_Right[Right_start]-Right_Slope*j+0.5);
@@ -418,7 +418,7 @@ void Servo_control(void)
 //      Servo_temp=Kp*error/10-110;
 //    }
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
-    else if(Cross_Flag==31&&Ring_First_Row>10)//越小转得越早
+    /*else if(Cross_Flag==31&&Ring_First_Row>10)//越小转得越早
     {
         if(Car == 1)
         {
@@ -430,7 +430,7 @@ void Servo_control(void)
           Servo_temp=-Ring_First_Row*100/10-90;
         }
       
-    }
+    }*/
     else if(Cross_Flag==1)
     {
       Kp =70;
@@ -753,16 +753,16 @@ void Find_Middle()
     }
   }
   /////////////////////////////////////////////////////////////
- /* if(Cross_Flag_Last==31) //圆环补右线，左转
+  if(Cross_Flag_Last==31) //圆环补右线，左转
   {
     if(Right_xian==0) Right_xian=57;
     Right_Slope=1.0*(Road_Right[Right_xian]-End_zuo)/(Right_xian-Ring_First_Row);
-    for(i=Right_xian-1,j=0;i>=Ring_First_Row;i--)
+    for(i=Right_xian-1,j=0;i>Ring_First_Row;i--)
     {
       j++;
       Road_Right[i]=(uint8)(Road_Right[Right_xian]-Right_Slope*j+0.5);
     }
-  }*/
+  }
   //}
   
   //************************//
