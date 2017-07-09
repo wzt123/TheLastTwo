@@ -48,14 +48,12 @@ uint16 speed_rember_L[3] = {0};
 void  main(void)
 {
   //zet_bluetooth();
-  uint16 send_data[4] = {0};
+  uint16 send_data[3] = {0};
   uint8 time1=0;
   sum_time = 0;
   char nrf_data=0;
   uint8 Edge_R[3]= {0};
   uint8 Edge_L[3]= {0};
-  uint8 IR1_last = 0;
-  uint8 IR2_last = 0;
   
   //uint32 time2 =  0;
   DisableInterrupts;
@@ -69,7 +67,8 @@ void  main(void)
   
   set_vector_handler(PORTA_VECTORn , PORTA_IRQHandler);  
   set_vector_handler(DMA0_VECTORn , DMA0_IRQHandler);    
-  int a=nrf_link_check(); 
+  int a=nrf_link_check();
+  
   //uint8 Chaoche_stop_time=0;
   uint8 Chaoche_start_time=0;
   while(a)
@@ -78,54 +77,75 @@ void  main(void)
     camera_get_img();                                   //摄像头获取图像
     img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
     Search_Line();
+    
+    if(Car==2)
+    {
+      nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里      
+      uint8 nrf_data=0;
+      for(int i=0;i<sizeof(buff);i++)
+      {
+        nrf_data+=buff[i];
+        nrf_data=nrf_data*10;
+      }
+      if(nrf_data=0001)
+      {
+        //Car=1;
+        ABDistance=0;
+        ABDistance_last=0;
+        gpio_set(PTE25,1);//后车开启超声波
+        gpio_set(PTE24,1);
+      }
+      if(nrf_data=0002)
+        Cross_Flag=1;
+    }
+    
     Find_Middle();
     Road_Type();
     Servo_control();
     
     speed_get_L = abs(ftm_quad_get(FTM1));          //获取FTM 正交解码 的脉冲数(负数表示反方向)
-    if(Edge_L[0]!=0){
-      if(abs(speed_get_L-speed_rember_L[2])<20)
-      {
-        speed_rember_L[0] = speed_rember_L[1];
-        speed_rember_L[1] = speed_rember_L[2];
-        speed_rember_L[2] = speed_get_L;
-        
-        Edge_L[0]=speed_rember_L[0];
-        Edge_L[1]=speed_rember_L[1];
-        Edge_L[2]=speed_rember_L[2];          
-        speed_get_L=GetMedianNum(Edge_L,3);////左编码器滤波
-      }
-      else
-      {
-        speed_get_L = speed_rember_L[2];
-      } 
-      
-    }
+//    if(Edge_L[0]!=0){
+//      if(abs(speed_get_L-speed_rember_L[2])<20)
+//      {
+//        speed_rember_L[0] = speed_rember_L[1];
+//        speed_rember_L[1] = speed_rember_L[2];
+//        speed_rember_L[2] = speed_get_L;
+//        
+//        Edge_L[0]=speed_rember_L[0];
+//        Edge_L[1]=speed_rember_L[1];
+//        Edge_L[2]=speed_rember_L[2];          
+//        speed_get_L=GetMedianNum(Edge_L,3);////左编码器滤波
+//      }
+//      else
+//      {
+//        speed_get_L = speed_rember_L[2];
+//      } 
+//      
+//    }
     speed_get_R = lptmr_pulse_get();
-    if(Edge_R[0]!=0)
-    {
-      if(abs(speed_get_R-speed_rember_R[2])<20)
-      {
-        speed_rember_R[0] = speed_rember_R[1];
-        speed_rember_R[1] = speed_rember_R[2];
-        speed_rember_R[2] = speed_get_R;
-        
-        Edge_R[0]=speed_rember_R[0];
-        Edge_R[1]=speed_rember_R[1];
-        Edge_R[2]=speed_rember_R[2];          
-        speed_get_R=GetMedianNum(Edge_R,3);////右编码器滤波          
-      }
-      else
-      {
-        speed_get_R = speed_rember_R[2];
-      }
-      
-    }
+//    if(Edge_R[0]!=0)
+//    {
+//      if(abs(speed_get_R-speed_rember_R[2])<20)
+//      {
+//        speed_rember_R[0] = speed_rember_R[1];
+//        speed_rember_R[1] = speed_rember_R[2];
+//        speed_rember_R[2] = speed_get_R;
+//        
+//        Edge_R[0]=speed_rember_R[0];
+//        Edge_R[1]=speed_rember_R[1];
+//        Edge_R[2]=speed_rember_R[2];          
+//        speed_get_R=GetMedianNum(Edge_R,3);////右编码器滤波          
+//      }
+//      else
+//      {
+//        speed_get_R = speed_rember_R[2];
+//      }
+//      
+//    }
     ftm_quad_clean(FTM1);
     lptmr_pulse_clean();
         
-    
-    if(stop_Flag !=1&&ChaoChe_stop==0)//超车的时候电机不输出
+    if(stop_Flag !=1&&Car_First_stop==0&&Car_Second_stop==0)//超车的时候电机不输出
     {  
       if(Car==1)
         Motor_Out();
@@ -141,12 +161,19 @@ void  main(void)
         }
       }
     }    
+      if((Stop_Flag>1)&&Car==1&&Car_First_stop<2&&stop_Flag==0)
+        stop_Car1();
+      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
+        stop_Car2();
     
-    if((Stop_Flag>1)&&Car==1&&ChaoChe_stop<2)
-      stop_Car1();
-    else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0)
-      stop_Car2();
     
+      
+      
+      if(Cross_Flag==1&&(Left_stop>22||Right_stop>22)&&Car==1)
+      {
+        Chaoche_FrontCar();
+      }
+      
     /*if(Stop_Flag==1&&sum_time>2000)
     {
       if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3)
@@ -186,50 +213,31 @@ void  main(void)
     }
     */
     
- 
     ///蓝牙传送编码器的值
-    send_data[0] = Cross_Flag*500;
-    send_data[1] = speed_PWM_L;
+    send_data[0] = 0;
+    send_data[1] = Cross_Flag*500;
+    //uart_putchar(UART5,speed_get_R);
     send_data[2] = 0;
-    send_data[3] = 0;
+    //vcan_sendware((uint16_t *)send_data, sizeof(send_data));
+    
 
+    ///蓝牙传送编码器的值
+    //send_data[0] = speed_get_L;
+    //send_data[1] = speed_get_R;
+      //send_data[0] = Cross_Flag*50+50;
     //if(speed_get_R>50&&Cross_Flag!=0)
     //uart_putchar(UART5,Cross_Flag);
-    vcan_sendware((uint16_t *)send_data, sizeof(send_data));
-   
-    nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
-    
-    uint8 nrf_data=0;
-    for(int i=0;i<sizeof(buff);i++)
-    {
-      nrf_data|=buff[i];
-      nrf_data=nrf_data<<1;
-    }
-    
+      //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
+
     
     ////////////////后车检测到超声波信号，buff[1]发来一个1，表明超车成功
-    /*if(buff[1]==1)
-    {
-      Car=1;
-      race[0]=0;
-      race[1]=0;
-      ABDistance=0;
-      ABDistance_last=0;
-    }
-    if(buff[0]==1)//前车告诉后车已经停车了buff[0]发来一个1
-    {
-      gpio_set(PTE25,1);//后车开启超声波
-      gpio_set(PTE24,1);
-    }
-    */
-    //if(Car==2)
-    //race[0]=1;
-    //Overtake_judge();
-
+    
+    
+    
+    //Overtake_jpudge();
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      
       OLED_Print_Num1(88, 1, All_Black);
       OLED_Print_Num1(88, 2, error);
       OLED_Print_Num1(88, 3, errorerror);
@@ -239,17 +247,16 @@ void  main(void)
       //wzt_bluetooth();     
       OLED_Print_Num1(88, 6, Servo_Value_Last);
     }
+    //wzt_bluetooth();      
     
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {
       sum_time++; 
     }
     pit_close(PIT1);
-    //nrf_data = race[1];
-    /*uart_putchar   (UART5 , Cross_Flag);
-    uart_putchar   (UART5 , Right_xian);
-    uart_putchar   (UART5 , Left_xian);
-    uart_putchar   (UART5 , ring_num);*/
+    nrf_data = race[1];
+    
+    
     //OLED_Print_Num1(88, 6, nrf_data);
   }
 }
@@ -283,22 +290,13 @@ void PORTA_IRQHandler()
   
 }
 
-/*!
-*  @brief      DMA0中断服务函数
-*  @since      v5.0
-*/
-void DMA0_IRQHandler()
-{
-  camera_dma();
-}
 
 void zhidaochaoche(){
-  //复制到main函数里
-  /*   if(Car==1)
+  /*if(Car==1)
     {
-      if(sum_time>0&&sum_time<100&&stopLine_temp==0&&Chaoche_start_time==0)
-      {        
-        if(Cross_Flag!=5&&Cross_Flag!=6&&speed_get_R!=0&&speed_get_L!=0)
+      if(sum_time>5&&sum_time<100&&stopLine_temp==0&&Chaoche_start_time==0)
+      {
+        if(Cross_Flag!=5&&Cross_Flag!=6&&speed_get_R>30&&speed_get_L>30)
         {
           Chaoche_stop();
           ChaoChe_stop_time++;
@@ -309,14 +307,13 @@ void zhidaochaoche(){
     }
     else if(Car==2)
     {
-      if(sum_time>0&&sum_time<100&&stopLine_temp==0&&Chaoche_start_time==0)
+      if(sum_time>15&&sum_time<100&&stopLine_temp==0&&Chaoche_start_time==0)
       {
-        if(Cross_Flag!=5&&Cross_Flag!=6&&speed_get_R!=0&&speed_get_L!=0)
+        if(Cross_Flag!=5&&Cross_Flag!=6&&speed_get_R>30&&speed_get_L>30)
         {
           Chaoche_stop();
           ChaoChe_stop_time++;
-          //stop_Flag=0;
-          
+          //stop_Flag=0;          
         }
       }
     }
@@ -331,9 +328,9 @@ void zhidaochaoche(){
       Chaoche_start_time++;
     }
     
-    if(Chaoche_start_time>0&&Chaoche_start_time<25)
+    if(Chaoche_start_time>0&&Chaoche_start_time<20)
       Chaoche_start_time++;
-    else if(Chaoche_start_time>=25)    {
+    else if(Chaoche_start_time>=20)    {
       Chaoche_start_time=0;
     }
     if(sum_time>0&&sum_time<100)
@@ -341,15 +338,23 @@ void zhidaochaoche(){
       ChaoChe_temp=1;
       if(Car==1)
       {
-        Servomiddle=8750;
+        Servomiddle=8770;
       }
       else if(Car==2)
-        Servomiddle=8560;
+        Servomiddle=8850;
     }
     else
     {
       ChaoChe_temp=0;
-    }
+    }*/
+}
+
+/*!
+*  @brief      DMA0中断服务函数
+*  @since      v5.0
 */
+void DMA0_IRQHandler()
+{
+  camera_dma();
 }
 

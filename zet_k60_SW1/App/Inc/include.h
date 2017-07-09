@@ -50,6 +50,7 @@
 #include "oled.h"
 #include "function.h"
 #include "ChaoShenBo.h"
+#include "NRF_Data.h"
 ///#include "bluetooth.h"
 ////////////////////////
 #endif  //__INCLUDE_H__

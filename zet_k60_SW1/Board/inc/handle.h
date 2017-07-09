@@ -60,7 +60,7 @@ extern void Start_Line(void);
 extern void Find_Middle(void);
 extern void Edge_Filter(void);
 extern void Servo_control(void);
-extern void Overtake_judge();
+//extern void Overtake_judge();
 extern void Cross_Search(void);
 extern void Road_Type(void);
 extern int16 error;
@@ -83,6 +83,8 @@ extern uint8 Ring_width_2;
 extern uint8 Cross_Cnt;
 extern uint8 Out_Left;
 extern uint8 stopLine_temp;
+extern uint8 Left_stop;
+extern uint8 Right_stop;
 /////////////////////////////////////////
 //extern int32 All_Black;
 extern uint16 Servo_value;
