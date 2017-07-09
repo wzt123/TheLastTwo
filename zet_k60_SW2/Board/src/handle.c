@@ -883,24 +883,24 @@ void Servo_control(void)
 //NRF
 void Overtake_judge()
 {
-  if(Car==1)
-  {
-    nrf_tx(race,4);
-    while(nrf_tx_state() == NRF_TXING);//等待发送完成     
-    race[0]=0;
-    race[1]=0;
-    race[2]=0;
-    race[3]=0;
-  }
-  else if(Car==2)
-  {
-    nrf_tx(race,4);
-    while(nrf_tx_state() == NRF_TXING);//等待发送完成
-    race[0]=0;
-    race[1]=0;
-    race[2]=0;
-    race[3]=0;
-  }
+//  if(Car==1)
+//  {
+//    nrf_tx(race,4);
+//    while(nrf_tx_state() == NRF_TXING);//等待发送完成     
+//    race[0]=0;
+//    race[1]=0;
+//    race[2]=0;
+//    race[3]=0;
+//  }
+//  else if(Car==2)
+//  {
+//    nrf_tx(race,4);
+//    while(nrf_tx_state() == NRF_TXING);//等待发送完成
+//    race[0]=0;
+//    race[1]=0;
+//    race[2]=0;
+//    race[3]=0;
+//  }
 }
 
 //滤波
