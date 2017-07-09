@@ -77,6 +77,28 @@ void  main(void)
     camera_get_img();                                   //摄像头获取图像
     img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
     Search_Line();
+    
+    if(Car==2)
+    {
+      nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里      
+      uint8 nrf_data=0;
+      for(int i=0;i<sizeof(buff);i++)
+      {
+        nrf_data+=buff[i];
+        nrf_data=nrf_data*10;
+      }
+      if(nrf_data=0001)
+      {
+        //Car=1;
+        ABDistance=0;
+        ABDistance_last=0;
+        gpio_set(PTE25,1);//后车开启超声波
+        gpio_set(PTE24,1);
+      }
+      if(nrf_data=0002)
+        Cross_Flag=1;
+    }
+    
     Find_Middle();
     Road_Type();
     Servo_control();
@@ -147,7 +169,7 @@ void  main(void)
     
       
       
-      if(Cross_Flag==1&&(Left_stop>18||Right_stop>18)&&Car==1)
+      if(Cross_Flag==1&&(Left_stop>22||Right_stop>22)&&Car==1)
       {
         Chaoche_FrontCar();
       }
@@ -206,32 +228,13 @@ void  main(void)
     //if(speed_get_R>50&&Cross_Flag!=0)
     //uart_putchar(UART5,Cross_Flag);
       //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
-   
-    nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
+
     
-    uint8 nrf_data=0;
-    for(int i=0;i<sizeof(buff);i++)
-    {
-      nrf_data|=buff[i];
-      nrf_data=nrf_data<<1;
-    }
     ////////////////后车检测到超声波信号，buff[1]发来一个1，表明超车成功
-    if(buff[1]==1)
-    {
-      Car=1;
-      race[0]=0;
-      race[1]=0;
-      ABDistance=0;
-      ABDistance_last=0;
-    }
-    if(buff[0]==1)//前车告诉后车已经停车了buff[0]发来一个1
-    {
-      gpio_set(PTE25,1);//后车开启超声波
-      gpio_set(PTE24,1);
-    }
     
     
-    Overtake_judge();
+    
+    //Overtake_jpudge();
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 

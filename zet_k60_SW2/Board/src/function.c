@@ -70,7 +70,7 @@ void PIT0_IRQHandler(void)
 
 void Init_All(void)
 {
-  Car=2;
+  Car=1;
   Motor_Init();
   OLED_Init();
   ov7725_eagle_init(imgbuff);
@@ -530,8 +530,46 @@ void Distance_stop(void)
 }
 
 
+void get_error()
+{
+  uint8 Lastline=0;
+  uint8 Row_Ptr=0;
+  uint8 l=0;
+  if(All_Black>2)
+  {
+    Lastline=All_Black;
+  }
+  else
+  {
+    Lastline=2;
+  }
+  
+  l = 59-Lastline;
+  
+  for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
+  {
+    error+=(Road_Center[Row_Ptr]-40);
+  }
+  error = error/l;
+  for(Row_Ptr=59; Row_Ptr>59-l/2; Row_Ptr--)
+  {
+    error1+=(Road_Center[Row_Ptr]-40);
+  }
+  for(Row_Ptr=59-l/2; Row_Ptr>Lastline; Row_Ptr--)
+  {
+    error2+=(Road_Center[Row_Ptr]-40);
+  }
+  error1 = error1*2/l;
+  error2 = error2/(59-l/2-Lastline);
+  errorerror = error2-error1;
+}
+
 void Chaoche_FrontCar(void)
 {
+  uint8 All_black_rember=All_Black;
+  int16 error_rember=error;
+  int16 errorerror_rember=errorerror;
+  
   ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle-100);
   
   gpio_set(PTC3,0);//驱动反向使能
@@ -562,45 +600,129 @@ void Chaoche_FrontCar(void)
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B
   
-    uint8 ChaoChe_temp=1;
-    uint8 nrf_buff[4]={0};
+  NRF_SendData(0002);//告诉后车有十字路口
   
-    while(ChaoChe_temp)
-    {
-      nrf_rx(nrf_buff,4);               //等待接收一个数据包，数据存储在buff里
-      
-      uint8 nrf_data=0;
-      for(int i=0;i<sizeof(nrf_buff);i++)
-      {
-        nrf_data|=nrf_buff[i];
-        nrf_data=nrf_data<<1;
-      }
-      if(nrf_data==1001)
-      {
-        Car=2;
-        gpio_set(PTC3,0);//驱动反向使能
-        gpio_set(PTC2,1);//驱动反向使能
-        gpio_set(PTB17,1);//驱动反向使能
-        gpio_set(PTB16,0);//驱动反向使能
-        ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
-        ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
-        DELAY_MS(400);
-        gpio_set(PTC3,1);
-        gpio_set(PTC2,0);
-        gpio_set(PTB17,0);
-        gpio_set(PTB16,1);
-        ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
-        ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
-        ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
-        DELAY_MS(400);
-        ChaoChe_temp=0;
-      }
-    }
-    return;
+  DELAY_MS(1500);
+  
+  Car=2;
+  NRF_SendData(0001);//告诉2车超车成功
+  uint8 time=0;
+  do
+  {
     
+    error=0;
+    errorerror=0;
+    Cross_Flag=0;
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle-100);
+    ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
+    
+    camera_get_img();                                   //摄像头获取图像
+    img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+    Search_Line();
+    Find_Middle();
+    
+    speed_get_L = abs(ftm_quad_get(FTM1));
+    speed_get_R = lptmr_pulse_get();
+    ftm_quad_clean(FTM1);
+    lptmr_pulse_clean();
+    if(speed_get_R!=0&&speed_get_L!=0)
+    {
+      time++;
+    }
+    if(time>1)
+    {
+      Servo_control();
+    }
+    else
+    {
+      get_error();
+      ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle-100);
+      DELAY_MS(300);
+    }
+    
+    if(speed_get_R<60&&speed_get_L<60)
+    {
+      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
+      OLED_Print_Num1(88, 1, time);
+      OLED_Print_Num1(88, 2, error);
+      OLED_Print_Num1(88, 3, errorerror);
+      OLED_Print_Num1(88, 4, error_rember);
+      OLED_Print_Num1(88, 5, errorerror_rember);
+      
+      OLED_Print_Num1(88, 6, Cross_Flag);
+    }
+  //}while(abs(error-error_rember)>7||abs(errorerror-errorerror_rember)>7||(abs(error)<4&&abs(errorerror)<4));
+  }while(Cross_Flag!=1&&time<500&&(abs(errorerror-errorerror_rember)>3||abs(error-error_rember)>3));
+  
+  do
+  {
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle-100);
+    ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+    
+    camera_get_img();                                   //摄像头获取图像
+    img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+    Search_Line();
+    Find_Middle();
+    Servo_control();
+    speed_get_L = abs(ftm_quad_get(FTM1));
+    speed_get_R = lptmr_pulse_get();
+    ftm_quad_clean(FTM1);
+    lptmr_pulse_clean();
+    if(speed_get_R<60&&speed_get_L<60)
+    {
+      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
+      OLED_Print_Num1(88, 1, error);
+      OLED_Print_Num1(88, 2, error_rember);
+      OLED_Print_Num1(88, 3, errorerror);
+      OLED_Print_Num1(88, 4, errorerror_rember);
+      OLED_Print_Num1(88, 5, Left_stop);
+      
+      OLED_Print_Num1(88, 6, Right_stop);
+    }
+  }while(Left_stop>33&&Right_stop>33);
+  
+  gpio_set(PTC3,1);
+  gpio_set(PTC2,0);
+  gpio_set(PTB17,0);
+  gpio_set(PTB16,1);
+  camera_get_img();                                   //摄像头获取图像
+  img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+  Search_Line();
+  Find_Middle();
+  Servo_control();
+  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
+  DELAY_MS(500);
+  //ChaoChe_temp=0;
 }
-//拨码开关初始化
 
+
+
+//NRF
+void NRF_SendData(uint8 data)
+{
+  uint8 sendData[4]={0};
+  for(uint8 i=0;i<4;i++)
+  {
+    sendData[i] = data/10;
+    data = data/10;
+  }
+  nrf_tx(sendData,4);
+  while(nrf_tx_state() == NRF_TXING);//等待发送完成
+  
+}
+
+//拨码开关初始化
 void Switch_Init()
 {
   	
