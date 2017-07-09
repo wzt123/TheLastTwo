@@ -82,6 +82,7 @@ extern uint8 stopLine_temp;
 /////////////////////////////////////////
 //extern int32 All_Black;
 extern uint16 Servo_value;
+extern uint16 Servo_Value_Last;
 extern int16 errorerror;
 extern uint8 Kp;
 extern uint8 Kd;

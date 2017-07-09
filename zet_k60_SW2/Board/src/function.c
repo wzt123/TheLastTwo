@@ -178,7 +178,7 @@ void Motor_Out(void)
         
          else if(Status==4)
         {
-          speed_goal=5200;
+          speed_goal=5400;
         }
       }
       
@@ -449,7 +449,8 @@ void stop_Car1()
     ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
     ftm_pwm_duty(FTM2,FTM_CH0,6800);//B2
     ftm_pwm_duty(FTM2,FTM_CH1,6800);//B1
-    DELAY_MS(800);
+    //DELAY_MS(800);
+    DELAY_MS(100);
     
     gpio_set(PTC3,0);//驱动反向使能
     gpio_set(PTC2,1);//驱动反向使能
