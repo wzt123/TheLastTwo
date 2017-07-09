@@ -162,7 +162,7 @@ void Motor_Out(void)
         
          else if(Status==4)
         {
-          speed_goal=5200;
+          speed_goal=5400;
         }
       }
       
@@ -451,6 +451,21 @@ void Distance_stop(void)
 {
   if(speed_get_L<8&&speed_get_R<8)
   {
+    ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,0);//B1  
+    //stop_Flag  = 1;
+    DELAY_MS(1000);//暂时这样用，等以后用NRF通知后车接近再发车
+    
+    gpio_set(PTC3,1);
+    gpio_set(PTC2,0);
+    gpio_set(PTB17,0);
+    gpio_set(PTB16,1);
+    ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+    ftm_pwm_duty(FTM2,FTM_CH0,6800);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,6800);//B1
+    //DELAY_MS(800);
+    DELAY_MS(100);
+    
     gpio_set(PTC3,0);//驱动反向使能
     gpio_set(PTC2,1);//驱动反向使能
     gpio_set(PTB17,1);//驱动反向使能

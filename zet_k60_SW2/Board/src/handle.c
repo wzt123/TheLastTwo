@@ -32,8 +32,8 @@ uint8 White_Cnt=0;//全白行计数_所有的
 uint8 White_Ren=0;
 uint8 Right_xian=0;
 uint8 Left_xian=0;
-uint16 Servo_value=8619;//舵机输出pwm值
-
+uint16 Servo_value = 8619;//舵机输出pwm值
+uint16 Servo_Value_Last = 0;
 
 uint8 Hinder_Start=0;
 uint8 Hinder_Flag=0;
@@ -44,14 +44,15 @@ uint8 CrossRow=0;
 
 
 uint16 Servomiddle=8619;
-uint32 Servo_max=8775;
-uint32 Servo_min=8465;
+uint32 Servo_max=8775;//往右打
+uint32 Servo_min=8465;//往左打
 float CenterLineSlope=0;
 
 int16 error=0;
 int32 error1=0;
 int32 error2=0;
 int16 errorerror=0;
+int16 error_sum = 0;
 uint8 Flag_L=0;
 uint8 Flag_R=0;
 
@@ -70,7 +71,8 @@ uint8 race[4]= {0}; //传输数据数组
 uint8 buff[4]= {0}; //定义接收缓冲区buff[32]
 uint8 Overtake_Flag=0;
 int16 Servo_temp=0;
-
+uint8 End_zuo=0;
+uint8 End_you=0;
 uint8 Left_addwidth[ROW_MAX]= {0}; //本行左边加宽区标志
 uint8 Right_addwidth[ROW_MAX]= {0}; //本行右边加宽区标志
 uint8 Left_c_in=0;
@@ -287,12 +289,12 @@ void Calculate_Slope()
   Left_Slope=1.0*(k-Road_Left[Left_start])/(Left_start-Left_stop);
   Right_Slope=1.0*(Road_Right[Right_start]-l)/(Right_start-Right_stop);
   j=0;
-  for(i=Left_start-1;i>=Left_stop;i--)
+  for(i=Left_start-1;i>Left_stop-1;i--)
   {
     j++;
     Road_Left[i]=(uint8)(Road_Left[Left_start]+Left_Slope*j+0.5);
   }
-  for(i=Right_start-1,j=0;i>=Right_stop;i--)
+  for(i=Right_start-1,j=0;i>Right_stop-1;i--)
   {
     j++;
     Road_Right[i]=(uint8)(Road_Right[Right_start]-Right_Slope*j+0.5);
@@ -395,10 +397,10 @@ void Servo_control(void)
     }
     else if(speed_goal<4650)
     {
-      Ring_First_Row_Compare=14;
+      Ring_First_Row_Compare=17;
     }
     else{
-      Ring_First_Row_Compare=14;
+      Ring_First_Row_Compare=17;
     }
 //    else if(speed_goal<4950)
 //    {
@@ -408,8 +410,8 @@ void Servo_control(void)
     {
 //      errorerror=errorerror*5/10;
 //      error = error*50/10;
-//      errorerror= - errorerror*15/2;
-//      error = error;
+      errorerror= - errorerror*15/2;
+      error = error;
     }
 //    if(Cross_Flag==2||cross_time>0)
 //    {
@@ -424,7 +426,7 @@ void Servo_control(void)
 
    
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
-    else if(Cross_Flag==31&&Ring_First_Row>10)
+    /*else if(Cross_Flag==31&&Ring_First_Row>10)
     {
         if(Car == 1)
         {
@@ -436,10 +438,10 @@ void Servo_control(void)
           Servo_temp=-Ring_First_Row*100/10-90;
         }
       
-    }
+    }*/
     else if(Cross_Flag==1)
     {
-      Kp =70;//66
+      Kp =66;//66
       Kd = 35;
       Servo_temp = Kp*error+Kd*errorerror;
       Servo_temp = Servo_temp/10;
@@ -453,24 +455,24 @@ void Servo_control(void)
           if(error<0)
           {
             Kp = 27;
-            Kd = 2;
+            Kd = 15;
           }
           else
           {
             Kp = 27;
-            Kd = 2;
+            Kd = 15;
           }
         }
         else if(All_Black<10)//长直道进弯道
         {
           if(error<0)
           {
-            Kp = 39;
+            Kp = 40;
             Kd = 12;
           } 
           else
           {
-            Kp = 39;
+            Kp = 40;
             Kd = 12;
           }
         }
@@ -478,12 +480,12 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 42;
+            Kp = 40;
             Kd = 12;
           }
           else
           {
-            Kp = 42;
+            Kp = 44;
             Kd=12;
           }
         }
@@ -491,12 +493,12 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 35;
+            Kp = 38;
             Kd = 12;
           }
           else
           {
-            Kp = 35;
+            Kp = 38;
             Kd=12;
           }
         }
@@ -504,12 +506,12 @@ void Servo_control(void)
         {
           if(error<0)     //左转
           {
-            Kp=50;
+            Kp=54;
             Kd=20;
           }
           else
           {
-            Kp=50;
+            Kp=54;
             Kd =20;
           }
         }
@@ -532,13 +534,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp=48;
-            Kd=20;
+            Kp=49;
+            Kd=22;
           }
           else
           {
-            Kp=48;
-            Kd =20;
+            Kp=49;
+            Kd =22;
           }
         }
         
@@ -556,32 +558,34 @@ void Servo_control(void)
           }
         }
         
-        else if(All_Black<41)
-        {
-          if(error<0)
-          {
-            Kp = 65;
-            Kd = 30;
-          }
-          else
-          {
-            Kp = 65;
-            Kd = 30;
-          }
-        }
-        else
-        {
-          if(error<0)
-          {
-            Kp=100;
-            Kd=35;
-          }
-          else
-          {
-            Kp=100;
-            Kd =35;
-          }
-        }
+        else if((All_Black>=41))error_sum += error;
+//        else if(All_Black<41)
+//        {
+//          if(error<0)
+//          {
+//            Kp = 65;
+//            Kd = 30;
+//          }
+//          else
+//          {
+//            Kp = 65;
+//            Kd = 30;
+//          }
+//        }
+//        else
+//        {
+////          if(error<0)
+////          {
+////            Kp=100;
+////            Kd=35;
+////          }
+////          else
+////          {
+////            Kp=100;
+////            Kd =35;
+////      }
+//          Servo_value = Servo_Value_Last;
+//        }
       }
     
      else if(speed_goal<5250)
@@ -616,13 +620,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 42;
-            Kd = 13;
+            Kp = 44;
+            Kd = 14;
           }
           else
           {
-            Kp = 42;
-            Kd=13;
+            Kp = 44;
+            Kd = 14;
           }
         }
         else if(All_Black<22)////弯道入直道的时候
@@ -642,12 +646,12 @@ void Servo_control(void)
         {
           if(error<0)     //左转
           {
-            Kp=52;
+            Kp=54;
             Kd=20;
           }
           else
           {
-            Kp=52;
+            Kp=54;
             Kd =20;
           }
         }
@@ -670,13 +674,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp=48;
-            Kd=20;
+            Kp=54;
+            Kd=22;
           }
           else
           {
-            Kp=48;
-            Kd =20;
+            Kp=54;
+            Kd =22;
           }
         }
         
@@ -684,42 +688,62 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 52;
+            Kp = 59;
             Kd = 29;
           }
           else
           {
-            Kp = 52;
+            Kp = 59;
             Kd = 29;
           }
         }
         
         else if(All_Black<41)
         {
-          if(error<0)
+          if(error<0)//左打
           {
-            Kp = 65;
+            Kp = 70;
             Kd = 30;
           }
           else
           {
-            Kp = 65;
+            Kp = 70;
             Kd = 30;
           }
         }
-        else
-        {
-          if(error<0)
-          {
-            Kp=100;
-            Kd=35;
-          }
-          else
-          {
-            Kp=100;
-            Kd =35;
-          }
-        }
+        
+        else if((All_Black>=41)) error_sum += error;
+//        else if(All_Black<57)
+//        {
+////          if(error<0)//左打
+////          {
+////            Kp = 120;
+////            Kd = 0;
+////          }
+////          else
+////          {
+////            Kp = 120;
+////            Kd = 0;
+////          }
+//          Servo_value = Servo_Value_Last;
+//        }
+//        
+//        else
+//        {
+////          if(error<0)
+////          {
+////            Kp = 140;
+////            Kd = 0;
+////          }
+////          else
+////          {
+////            Kp = 140;
+////            Kd = 0;
+////          }
+//          
+//          Servo_value = Servo_Value_Last;
+//          
+//        }
       }
     
       
@@ -729,12 +753,12 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 26;
+            Kp = 24;
             Kd = 2;
           }
           else
           {
-            Kp = 26;
+            Kp = 24;
             Kd = 2;
           }
         }
@@ -755,13 +779,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 42;
-            Kd = 12;
+            Kp = 46;
+            Kd = 14;
           }
           else
           {
-            Kp = 42;
-            Kd=12;
+            Kp = 46;
+            Kd=14;
           }
         }
         else if(All_Black<22)////弯道入直道的时候
@@ -809,13 +833,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp=48;
-            Kd=21;
+            Kp=53;
+            Kd=24;
           }
           else
           {
-            Kp=48;
-            Kd =21;
+            Kp=53;
+            Kd =24;
           }
         }
         
@@ -823,12 +847,12 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 54;
+            Kp = 55;
             Kd = 30;
           }
           else
           {
-            Kp = 54;
+            Kp = 55;
             Kd = 30;
           }
         }
@@ -846,22 +870,39 @@ void Servo_control(void)
             Kd = 30;
           }
         }
-        else
-        {
-          if(error<0)
-          {
-            Kp=100;
-            Kd=35;
-          }
-          else
-          {
-            Kp=100;
-            Kd =35;
-          }
-        }
+        
+        else if((All_Black>=41))error_sum += error;
+//        else if(All_Black<57)
+//        {
+//          if(error<0)
+//          {
+//            Kp=100;
+//            Kd=35;
+//          }
+//          else
+//          {
+//            Kp=100;
+//            Kd =35;
+//          }
+//        }
+//        
+//        else
+//        {
+//          if(error<0)
+//          {
+//            Kp = 130;
+//            Kd = 0;
+//          }
+//          else
+//          {
+//            Kp = 130;
+//            Kd = 0;
+//          }
+//        }
       }
       
-      Servo_temp=Kp*error/10+Kd*errorerror/10;
+      Servo_temp = Kp*error+Kd*errorerror;
+      Servo_temp = Servo_temp/10;
     }
     
     /*if(cross_num>15)
@@ -872,7 +913,17 @@ void Servo_control(void)
         Servo_temp = Servo_temp+cross_num;
     }*/
     
-    Servo_value=Servomiddle+Servo_temp;
+    
+//    Servo_Value_Last = Servo_value;
+    if(All_Black<41)
+    {
+      Servo_value = Servomiddle+Servo_temp;
+      error_sum = 0;
+    }
+    if(error_sum>0)
+      Servo_value = Servo_max;
+    else if (error_sum<0)
+      Servo_value = Servo_min;
     
   if(Servo_value<Servo_min)
     Servo_value = Servo_min;
@@ -980,6 +1031,8 @@ void Find_Middle()
   int8 k2=0;
   int8 k3=0;
   int8 k4=0;
+  uint8 i=0,j=0;
+  float Right_Slope=0.0;
   FirstBlackinCenter=0;
   Overtake=0;
   //
@@ -1049,6 +1102,16 @@ void Find_Middle()
 //      Cross_Cnt=0;
 //    }
 //  }
+  if(Cross_Flag_Last==31) //圆环补右线，左转
+  {
+    if(Right_xian==0) Right_xian=57;
+    Right_Slope=1.0*(Road_Right[Right_xian]-End_zuo)/(Right_xian-Ring_First_Row);
+    for(i=Right_xian-1,j=0;i>Ring_First_Row;i--)
+    {
+      j++;
+      Road_Right[i]=(uint8)(Road_Right[Right_xian]-Right_Slope*j+0.5);
+    }
+  }
   //************************//
   //出圆环判断
   if(Cross_Flag==31)
@@ -1259,6 +1322,8 @@ void Search_Line(void)
   uint8 Right_Y0=0;
   uint8 Right_Y1=0;
   uint8 Cross_flag=0;
+  uint8 Left_diu=0;
+  uint8 Right_diu=0;
   Right_xian=0;
   Left_xian=0;
   a=1;
@@ -1728,17 +1793,22 @@ void Search_Line(void)
         ring_flag=1;///找到黑块左跳变点
         if(Col_Ptr+2<Ring_width_1)
           Ring_width_1 = Col_Ptr+2;///黑块左边最小的列
-        a=Col_Ptr+2;///左边界
+        a=Col_Ptr+1;///左边界
 
       }
       else if(ring_flag==1&&img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==255&&img[Row_Ptr][Col_Ptr+3]==255) 
       {
-        b=Col_Ptr;//右边界
+        b=Col_Ptr+2;//右边界
         ring_flag=2;//找到黑块右跳变点
         ring_num++;//黑块行数加1
         if(Col_Ptr+1>Ring_width_2)
           Ring_width_2 = Col_Ptr+1;//黑块右边最大的的列
-        if(ring_num==1) Ring_First_Row=Row_Ptr;
+        if(ring_num==1) 
+        {
+          End_zuo=a;
+          End_you=b;
+          Ring_First_Row=Row_Ptr;
+        }
         break;
       }
     }
@@ -1788,8 +1858,9 @@ void Search_Line(void)
     Left_J1=0;
     Left_Y0=0;
     Left_Y1=0;
-    
-    if(Left_left!=1&&Row_Ptr<48&&Row_Ptr>(Right_xian-10)) //左拐点确定
+    if((abs(Road_Left[Row_Ptr]-Road_Left[Row_Ptr+1]))>10&&(abs(Road_Left[Row_Ptr]-Road_Left[Row_Ptr+2]))>10&&Left_diu==0) Left_diu=Row_Ptr;
+    if((abs(Road_Right[Row_Ptr+2]-Road_Right[Row_Ptr]))>10&&(abs(Road_Right[Row_Ptr+1]-Road_Right[Row_Ptr]))>10&&Right_diu==0) Right_diu=Row_Ptr;
+    if(Left_left!=1&&Row_Ptr<48&&Row_Ptr>(Right_xian-10)&&Row_Ptr>Left_diu) //左拐点确定
     {
       for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
       {
@@ -1830,7 +1901,7 @@ void Search_Line(void)
           }  
         }
       }
-      if(Left_J==1&&Left_Y==1)
+      if(Left_J==1&&Left_Y==1&&(abs(Road_Left[Row_Ptr+5]-Road_Left[Row_Ptr+4]))<11&&(abs(Road_Left[Row_Ptr+5]-Road_Left[Row_Ptr+6]))<11)
       {
         Left_left=1;
         Left_xian=Row_Ptr+5;
@@ -1842,7 +1913,7 @@ void Search_Line(void)
     Right_J1=0;
     Right_Y0=0;
     Right_Y1=0;
-    if(Right_right!=1&&Row_Ptr<48&&Row_Ptr>(Left_xian-10)) //右拐点确定
+    if(Right_right!=1&&Row_Ptr<48&&Row_Ptr>(Left_xian-10)&&Row_Ptr>Right_diu) //右拐点确定
     {
       for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
       {
@@ -1887,7 +1958,7 @@ void Search_Line(void)
           }
         }
       }
-      if(Right_J==1&&Right_Y==1)
+      if(Right_J==1&&Right_Y==1&&(abs(Road_Right[Row_Ptr+4]-Road_Right[Row_Ptr+5]))<11&&(abs(Road_Right[Row_Ptr+6]-Road_Right[Row_Ptr+5]))<11)
       {
         Right_right=1;
         Right_xian=Row_Ptr+5;
@@ -1905,7 +1976,7 @@ void Search_Line(void)
             }
         }
     }*/
-    if(ring_num>0&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>4)
+    if(ring_num>1&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>4)
     {
       for(i=Left_xian;i>Ring_First_Row;i--)
       {
@@ -1930,31 +2001,47 @@ void Search_Line(void)
       Road_Right[Row_Ptr]=Road_Right[Row_Ptr+1];
     }
   }//结束for 行循环
-  if(ring_num>0&&Right_right==1&&Left_left==0&&Right_xian>Ring_First_Row) //you斜入十字
+  if(ring_num>1&&Right_right==1&&Left_left==0&&Right_xian>Ring_First_Row) //you斜入十字
   {
     //max_xian=Right_xian;
     
     for(i=Right_xian-6;i>4&&i>All_Black;i--)
     {
-      if(Right_Flag[i+4]!=1&&Right_Flag[i+3]!=1&&Right_Flag[i+2]!=1) break;
+      if(Right_Flag[i+4]!=1&&Right_Flag[i+3]!=1) break;
+      if((abs(Road_Right[i+2]-Road_Right[i+1]))>10) break;
       if(Road_Right[i]<=Road_Right[i+1]&&Road_Right[i+2]<=Road_Right[i+3]&&Road_Right[i+3]<Road_Right[i+4]&&Right_Flag[i+4]==1)
       {
-        Cross_Flag=31;
-        break;
+        for(j=Right_xian;j>Ring_First_Row;j--)
+        {
+          if(img[j][Road_Right[Right_xian]]==0&&img[j+1][Road_Right[Right_xian]]==0) break;
+        }
+        if(j==Ring_First_Row)
+        {
+          Cross_Flag=31;
+          break;
+        }
       }
     }
   }
-  if(ring_num>0&&Right_right==0&&Left_left==1&&Left_xian>Ring_First_Row) //zuo斜入十字
+  if(ring_num>1&&Right_right==0&&Left_left==1&&Left_xian>Ring_First_Row) //zuo斜入十字
   {
     //max_xian=Right_xian;
     
     for(i=Left_xian-6;i>4&&i>All_Black;i--)
     {
-      if(Left_Flag[i+4]!=1&&Left_Flag[i+3]!=1&&Left_Flag[i+2]!=1) break;
+      if(Left_Flag[i+4]!=1&&Left_Flag[i+3]!=1) break;
+      if(abs(Road_Left[i+1]-Road_Left[i+2])>10) break;
       if(Road_Left[i]>=Road_Left[i+1]&&Road_Left[i+2]>=Road_Left[i+3]&&Road_Left[i+3]>Road_Left[i+4]&&Left_Flag[i+4]==1)
       {
-        Cross_Flag=31;
-        break;
+        for(j=Left_xian;j>Ring_First_Row;j--)
+        {
+          if(img[j][Road_Left[Left_xian]]==0&&img[j+1][Road_Left[Left_xian]]==0) break;
+        }
+        if(j==Ring_First_Row)
+        {
+          Cross_Flag=31;
+          break;
+        }
       }
     }
   }

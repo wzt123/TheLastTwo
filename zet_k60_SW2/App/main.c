@@ -141,10 +141,11 @@ void  main(void)
       OLED_Print_Num1(88, 1, nrf_data);
       OLED_Print_Num1(88, 2, error);
       OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, Stop_Flag);
-      OLED_Print_Num1(88, 5, Servo_temp);
+      OLED_Print_Num1(88, 4, Kp);
+      OLED_Print_Num1(88, 5, Servo_value);
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
-      OLED_Print_Num1(88, 6, Cross_Flag);
+      //wzt_bluetooth();     
+      OLED_Print_Num1(88, 6, Servo_Value_Last);
     }
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {
