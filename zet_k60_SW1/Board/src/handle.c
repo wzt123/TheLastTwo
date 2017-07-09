@@ -177,15 +177,19 @@ float Slope_Calculate(uint8 begin,uint8 end,uint8 *p)
 }
 
 
+
 //十字补线
+uint8 Left_stop=0;
+uint8 Right_stop=0;
+
 void Calculate_Slope()
 {
   uint8 i=0,j=0;
   uint8 k=0,l=0;
   uint8 Cross_Flag_Last=0;
-  uint8 Left_stop=10;
-  uint8 Left_start=58;
-  uint8 Right_stop=10;  
+  Left_stop=10;
+  uint8 Left_start=58;  
+  Right_stop=10;  
   uint8 Right_start=58;
   float Left_Slope=0.0;
   float Right_Slope=0.0;
@@ -596,24 +600,6 @@ void Servo_control(void)
   if(Servo_value>Servo_max)
     Servo_value = Servo_max;
   ftm_pwm_duty(FTM0,FTM_CH3,Servo_value);
-}
-//NRF
-void Overtake_judge()
-{
-  if(Car==1)
-  {
-    nrf_tx(race,4);
-    while(nrf_tx_state() == NRF_TXING);//等待发送完成 
-    
-    race[1]=0;
-  }
-  else if(Car==2)
-  {
-    nrf_tx(race,4);
-    while(nrf_tx_state() == NRF_TXING);//等待发送完成
-    race[0]=0;
-    
-  }
 }
 
 //滤波

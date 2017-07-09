@@ -7,12 +7,15 @@ extern void Motor_Init(void);
 extern void Motor_Out(void);
 extern void uart3_handler(void);
 extern void stop_Car2(void);
+extern void stop();
 extern void stop1(void);
 extern void stop2(void);
 extern void Distance_stop(void);
 extern void xx_bluetooth();
 extern void Switch_Init();
 extern uint8 Get_Switch(void);
+extern void Chaoche_FrontCar(void);
+extern void NRF_SendData(uint8 data);
 //extern uint16 speed_get;
 extern uint16 var;//∫ÏÕ‚≤‚æ‡£ª
 //extern uint16 speed_goal;

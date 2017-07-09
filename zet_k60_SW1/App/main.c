@@ -77,6 +77,28 @@ void  main(void)
     camera_get_img();                                   //摄像头获取图像
     img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
     Search_Line();
+    
+    if(Car==2)
+    {
+      nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里      
+      uint8 nrf_data=0;
+      for(int i=0;i<sizeof(buff);i++)
+      {
+        nrf_data+=buff[i];
+        nrf_data=nrf_data*10;
+      }
+      if(nrf_data=0001)
+      {
+        //Car=1;
+        ABDistance=0;
+        ABDistance_last=0;
+        gpio_set(PTE25,1);//后车开启超声波
+        gpio_set(PTE24,1);
+      }
+      if(nrf_data=0002)
+        Cross_Flag=1;
+    }
+    
     Find_Middle();
     Road_Type();
     Servo_control();
@@ -144,46 +166,11 @@ void  main(void)
       else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
         stop_Car2();
     
-    
-    /*if(Stop_Flag==1&&sum_time>2000)
-    {
-      if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3)
-      {
-        ChaoChe_stop=1;
-        
-        ChaoChe_stop_time=0;
-        gpio_set(PTE25,0);//停车，关闭前车超声波
-        gpio_set(PTE24,0);
-        race[0]=1;//race[0]通讯位，告诉后车，准备超车，让前车打开超声波
-        ABDistance_last=2000;
-      }
-    }
-    if(ChaoChe_stop==1)
-    {
-      Chaoche_stop();
-    }
-    
-    if(ChaoChe_stop==1&&ABDistance>30)//超车后的后车（以前的前车）检测到超声波，
-    {
-      ChaoChe_stop=0;
-      Car=2;
-      race[1]=1;//race[1]通讯位，告诉前车，超车成功
       
-      gpio_set(PTC3,1);
-      gpio_set(PTC2,0);
-      gpio_set(PTB17,0);
-      gpio_set(PTB16,1);
-      ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2左电机
-      ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1右电机
-    }
-    
-    if(ABDistance>300)
-    {
-      Car=2;
-      race[1]=1;
-    }
-    */
-    
+      if(Cross_Flag==1&&(Left_stop>18||Right_stop>18)&&Car==1)
+      {
+        Chaoche_FrontCar();
+      }
     ///蓝牙传送编码器的值
     send_data[0] = 0;
     send_data[1] = Cross_Flag*500;
@@ -200,41 +187,26 @@ void  main(void)
     //uart_putchar(UART5,Cross_Flag);
       //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
    
-    nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里
     
-    uint8 nrf_data=0;
-    for(int i=0;i<sizeof(buff);i++)
-    {
-      nrf_data|=buff[i];
-      nrf_data=nrf_data<<1;
-    }
-    ////////////////后车检测到超声波信号，buff[1]发来一个1，表明超车成功
-    if(buff[1]==1)
-    {
-      Car=1;
-      race[0]=0;
-      race[1]=0;
-      ABDistance=0;
-      ABDistance_last=0;
-    }
-    if(buff[0]==1)//前车告诉后车已经停车了buff[0]发来一个1
-    {
-      gpio_set(PTE25,1);//后车开启超声波
-      gpio_set(PTE24,1);
-    }
+//    if(buff[0]==1)//前车告诉后车已经停车了buff[0]发来一个1
+//    {
+//      gpio_set(PTE25,1);//后车开启超声波
+//      gpio_set(PTE24,1);
+//    }
     
     
-    Overtake_judge();
+    
+    //Overtake_judge();
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
       OLED_Print_Num1(88, 1, All_Black);
       OLED_Print_Num1(88, 2, error);
       OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, Stop_Flag);
-      OLED_Print_Num1(88, 5, Servo_temp);
+      OLED_Print_Num1(88, 4, Servo_temp);
+      OLED_Print_Num1(88, 5, Left_stop);
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
-      OLED_Print_Num1(88, 6, Cross_Flag);
+      OLED_Print_Num1(88, 6, Right_stop);
     }
     //wzt_bluetooth();      
     

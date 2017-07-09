@@ -46,6 +46,8 @@ extern uint8 Overtake_Flag;
 extern uint8 Overtake2;
 extern uint8 C;
 extern uint16 Servomiddle;
+extern uint32 Servo_min;
+extern uint32 Servo_max;
 extern uint8 Turn_Left;
 extern uint8 Overtake;
 extern uint8 ring_num;
@@ -79,6 +81,9 @@ extern uint8 white_Right_cnt;
 extern int16 Servo_error;
 extern int16 Servo_errorerror;
 extern uint8 stopLine_temp;
+
+extern uint8 Left_stop;
+extern uint8 Right_stop;
 /////////////////////////////////////////
 //extern int32 All_Black;
 extern uint16 Servo_value;
