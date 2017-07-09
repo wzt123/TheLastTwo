@@ -100,6 +100,8 @@ uint8 Bend_Lift = 0;
 float repair_slope_R = 0;/////右边线补线斜率
 float repair_slope_L = 0;/////左边线补线斜率
 uint8 Ring_First_Row = 0;
+uint8 Ring_First_zuo = 0;
+uint8 Ring_First_you = 0;
 uint8 Ring_Second_Row = 0;
 uint8 Ring_width = 0;
 uint8 Ring_width_1 = 0;
@@ -301,19 +303,6 @@ void Calculate_Slope()
     Road_Right[i]=(uint8)(Road_Right[Right_start]-Right_Slope*j+0.5);
   }
 }
-//圆环补you线
-/*void yuan_buxian()
-{
-  l=End_zuo;
-  Right_start=Right_xian;
-  Right_stop=Ring_First_Row;
-  Right_Slope=1.0*(Road_Right[Right_xian]-End_zuo)/(Right_xian-Ring_First_Row);
-  for(i=Right_xian-1,j=0;i>=Ring_First_Row;i--)
-  {
-    j++;
-    Road_Right[i]=(uint8)(Road_Right[Right_xian]-Right_Slope*j+0.5);
-  }
-}*/
 /*
 舵机控制
 */
@@ -756,7 +745,7 @@ void Find_Middle()
   if(Cross_Flag_Last==31) //圆环补右线，左转
   {
     if(Right_xian==0) Right_xian=57;
-    Right_Slope=1.0*(Road_Right[Right_xian]-End_zuo)/(Right_xian-Ring_First_Row);
+    Right_Slope=1.0*(Road_Right[Right_xian]-End_zuo)/(Right_xian-Ring_First_zuo);
     for(i=Right_xian-1,j=0;i>Ring_First_Row;i--)
     {
       j++;
@@ -764,7 +753,16 @@ void Find_Middle()
     }
   }
   //}
-  
+  /*if(Cross_Flag_Last==32) //圆环补左线，右转
+  {
+    if(Left_xian==0) Left_xian=57;
+    Right_Slope=1.0*(Road_Left[Left_xian]-End_you)/(Left_xian-Ring_First_you);
+    for(i=Left_xian-1,j=0;i>Ring_First_Row;i--)
+    {
+      j++;
+      Road_Left[i]=(uint8)(Road_Left[Left_xian]-Right_Slope*j+0.5);
+    }
+  }*/
   //************************//
   //出圆环判断
   if(Cross_Flag==31)
@@ -956,7 +954,7 @@ void Search_Line(void)
   uint8 Cut_Width=10;
   int8 LEnd=0;
   int8 REnd=79;
-  
+  uint8 End_zui=0;
   uint8 Left_left=0;
   uint8 Right_right=0;
   uint8 Left_J=0;
@@ -1452,7 +1450,6 @@ void Search_Line(void)
         if(Col_Ptr+2<Ring_width_1)
           Ring_width_1 = Col_Ptr+2;///黑块左边最小的列
         a=Col_Ptr+1;///左边界
-
       }
       else if(ring_flag==1&&img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==255&&img[Row_Ptr][Col_Ptr+3]==255) 
       {
@@ -1466,6 +1463,23 @@ void Search_Line(void)
           End_zuo=a;
           End_you=b;
           Ring_First_Row=Row_Ptr;
+          Ring_First_zuo=Row_Ptr;
+          Ring_First_you=Row_Ptr;          
+        }
+        else if(ring_num>1&&End_zui==0)
+        {
+          if(End_zuo>a) 
+          {
+            End_zuo=a;
+            Ring_First_zuo=Row_Ptr;
+          }
+          else if(End_zuo<a) End_zui=1;
+          if(End_you<b) 
+          {
+            End_you=b;
+            Ring_First_you=Row_Ptr;
+          }
+          else if(End_you>b) End_zui=1;
         }
         break;
       }
