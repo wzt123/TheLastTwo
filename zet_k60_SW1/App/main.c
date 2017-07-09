@@ -81,21 +81,16 @@ void  main(void)
     if(Car==2)
     {
       nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里      
-      uint8 nrf_data=0;
-      for(int i=0;i<sizeof(buff);i++)
+      
+      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==1)
       {
-        nrf_data+=buff[i];
-        nrf_data=nrf_data*10;
-      }
-      if(nrf_data=0001)
-      {
-        //Car=1;
+        Car=1;
         ABDistance=0;
         ABDistance_last=0;
         gpio_set(PTE25,1);//后车开启超声波
         gpio_set(PTE24,1);
       }
-      if(nrf_data=0002)
+      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==2)
         Cross_Flag=1;
     }
     
@@ -103,49 +98,12 @@ void  main(void)
     Road_Type();
     Servo_control();
     
-    speed_get_L = abs(ftm_quad_get(FTM1));          //获取FTM 正交解码 的脉冲数(负数表示反方向)
-//    if(Edge_L[0]!=0){
-//      if(abs(speed_get_L-speed_rember_L[2])<20)
-//      {
-//        speed_rember_L[0] = speed_rember_L[1];
-//        speed_rember_L[1] = speed_rember_L[2];
-//        speed_rember_L[2] = speed_get_L;
-//        
-//        Edge_L[0]=speed_rember_L[0];
-//        Edge_L[1]=speed_rember_L[1];
-//        Edge_L[2]=speed_rember_L[2];          
-//        speed_get_L=GetMedianNum(Edge_L,3);////左编码器滤波
-//      }
-//      else
-//      {
-//        speed_get_L = speed_rember_L[2];
-//      } 
-//      
-//    }
+    speed_get_L = abs(ftm_quad_get(FTM1));          
     speed_get_R = lptmr_pulse_get();
-//    if(Edge_R[0]!=0)
-//    {
-//      if(abs(speed_get_R-speed_rember_R[2])<20)
-//      {
-//        speed_rember_R[0] = speed_rember_R[1];
-//        speed_rember_R[1] = speed_rember_R[2];
-//        speed_rember_R[2] = speed_get_R;
-//        
-//        Edge_R[0]=speed_rember_R[0];
-//        Edge_R[1]=speed_rember_R[1];
-//        Edge_R[2]=speed_rember_R[2];          
-//        speed_get_R=GetMedianNum(Edge_R,3);////右编码器滤波          
-//      }
-//      else
-//      {
-//        speed_get_R = speed_rember_R[2];
-//      }
-//      
-//    }
     ftm_quad_clean(FTM1);
     lptmr_pulse_clean();
         
-    if(stop_Flag !=1&&Car_First_stop==0&&Car_Second_stop==0)//超车的时候电机不输出
+    if(stop_Flag !=1&&Car_First_stop==0&&Car_Second_stop==0)//停车的时候电机不输出
     {  
       if(Car==1)
         Motor_Out();
@@ -177,30 +135,11 @@ void  main(void)
     //uart_putchar(UART5,speed_get_R);
     send_data[2] = 0;
     //vcan_sendware((uint16_t *)send_data, sizeof(send_data));
-    
-
-    ///蓝牙传送编码器的值
-    //send_data[0] = speed_get_L;
-    //send_data[1] = speed_get_R;
-      //send_data[0] = Cross_Flag*50+50;
-    //if(speed_get_R>50&&Cross_Flag!=0)
-    //uart_putchar(UART5,Cross_Flag);
-      //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
-   
-    
-//    if(buff[0]==1)//前车告诉后车已经停车了buff[0]发来一个1
-//    {
-//      gpio_set(PTE25,1);//后车开启超声波
-//      gpio_set(PTE24,1);
-//    }
-    
-    
-    
     //Overtake_judge();
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, All_Black);
+      OLED_Print_Num1(88, 1, nrf_data);
       OLED_Print_Num1(88, 2, error);
       OLED_Print_Num1(88, 3, errorerror);
       OLED_Print_Num1(88, 4, Servo_temp);
@@ -218,7 +157,7 @@ void  main(void)
     nrf_data = race[1];
     
     
-    //OLED_Print_Num1(88, 6, nrf_data);
+    OLED_Print_Num1(88, 6, nrf_data);
   }
 }
 

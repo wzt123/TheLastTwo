@@ -74,28 +74,22 @@ void  main(void)
   while(a)
   {
     pit_time_start(PIT1);
+    
     camera_get_img();                                   //摄像头获取图像
     img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
     Search_Line();
-    
     if(Car==2)
     {
       nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里      
-      uint8 nrf_data=0;
-      for(int i=0;i<sizeof(buff);i++)
+      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==1)
       {
-        nrf_data+=buff[i];
-        nrf_data=nrf_data*10;
-      }
-      if(nrf_data=0001)
-      {
-        //Car=1;
+        Car=1;
         ABDistance=0;
         ABDistance_last=0;
         gpio_set(PTE25,1);//后车开启超声波
         gpio_set(PTE24,1);
       }
-      if(nrf_data=0002)
+      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==2)
         Cross_Flag=1;
     }
     
@@ -104,44 +98,7 @@ void  main(void)
     Servo_control();
     
     speed_get_L = abs(ftm_quad_get(FTM1));          //获取FTM 正交解码 的脉冲数(负数表示反方向)
-//    if(Edge_L[0]!=0){
-//      if(abs(speed_get_L-speed_rember_L[2])<20)
-//      {
-//        speed_rember_L[0] = speed_rember_L[1];
-//        speed_rember_L[1] = speed_rember_L[2];
-//        speed_rember_L[2] = speed_get_L;
-//        
-//        Edge_L[0]=speed_rember_L[0];
-//        Edge_L[1]=speed_rember_L[1];
-//        Edge_L[2]=speed_rember_L[2];          
-//        speed_get_L=GetMedianNum(Edge_L,3);////左编码器滤波
-//      }
-//      else
-//      {
-//        speed_get_L = speed_rember_L[2];
-//      } 
-//      
-//    }
     speed_get_R = lptmr_pulse_get();
-//    if(Edge_R[0]!=0)
-//    {
-//      if(abs(speed_get_R-speed_rember_R[2])<20)
-//      {
-//        speed_rember_R[0] = speed_rember_R[1];
-//        speed_rember_R[1] = speed_rember_R[2];
-//        speed_rember_R[2] = speed_get_R;
-//        
-//        Edge_R[0]=speed_rember_R[0];
-//        Edge_R[1]=speed_rember_R[1];
-//        Edge_R[2]=speed_rember_R[2];          
-//        speed_get_R=GetMedianNum(Edge_R,3);////右编码器滤波          
-//      }
-//      else
-//      {
-//        speed_get_R = speed_rember_R[2];
-//      }
-//      
-//    }
     ftm_quad_clean(FTM1);
     lptmr_pulse_clean();
         
@@ -161,84 +118,27 @@ void  main(void)
         }
       }
     }    
-      if((Stop_Flag>1)&&Car==1&&Car_First_stop<2&&stop_Flag==0)
-        stop_Car1();
-      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
-        stop_Car2();
     
+    if((Stop_Flag>1)&&Car==1&&Car_First_stop<2&&stop_Flag==0)
+      stop_Car1();
+    else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
+      stop_Car2();
     
-      
-      
-      if(Cross_Flag==1&&(Left_stop>22||Right_stop>22)&&Car==1)
-      {
-        Chaoche_FrontCar();
-      }
-      
-    /*if(Stop_Flag==1&&sum_time>2000)
+    if(Cross_Flag==1&&(Left_stop>22||Right_stop>22)&&Car==1)
     {
-      if(Car==1&&Cross_Flag!=Cross_Flag_Last&&Cross_Flag_Last==3)
-      {
-        ChaoChe_stop=1;
-        
-        ChaoChe_stop_time=0;
-        gpio_set(PTE25,0);//停车，关闭前车超声波
-        gpio_set(PTE24,0);
-        race[0]=1;//race[0]通讯位，告诉后车，准备超车，让前车打开超声波
-        ABDistance_last=2000;
-      }
-    }
-    if(ChaoChe_stop==1)
-    {
-      Chaoche_stop();
+      Chaoche_FrontCar();
     }
     
-    if(ChaoChe_stop==1&&ABDistance>30)//超车后的后车（以前的前车）检测到超声波，
-    {
-      ChaoChe_stop=0;
-      Car=2;
-      race[1]=1;//race[1]通讯位，告诉前车，超车成功
-      
-      gpio_set(PTC3,1);
-      gpio_set(PTC2,0);
-      gpio_set(PTB17,0);
-      gpio_set(PTB16,1);
-      ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2左电机
-      ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1右电机
-    }
-    
-    if(ABDistance>300)
-    {
-      Car=2;
-      race[1]=1;
-    }
-    */
     
     ///蓝牙传送编码器的值
     send_data[0] = 0;
     send_data[1] = Cross_Flag*500;
-    //uart_putchar(UART5,speed_get_R);
     send_data[2] = 0;
     //vcan_sendware((uint16_t *)send_data, sizeof(send_data));
-    
-
-    ///蓝牙传送编码器的值
-    //send_data[0] = speed_get_L;
-    //send_data[1] = speed_get_R;
-      //send_data[0] = Cross_Flag*50+50;
-    //if(speed_get_R>50&&Cross_Flag!=0)
-    //uart_putchar(UART5,Cross_Flag);
-      //vcan_sendware((uint8_t *)send_data, sizeof(send_data));
-
-    
-    ////////////////后车检测到超声波信号，buff[1]发来一个1，表明超车成功
-    
-    
-    
-    //Overtake_jpudge();
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, All_Black);
+      OLED_Print_Num1(88, 1, nrf_data);
       OLED_Print_Num1(88, 2, error);
       OLED_Print_Num1(88, 3, errorerror);
       OLED_Print_Num1(88, 4, Kp);
@@ -247,17 +147,12 @@ void  main(void)
       //wzt_bluetooth();     
       OLED_Print_Num1(88, 6, Servo_Value_Last);
     }
-    //wzt_bluetooth();      
-    
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {
       sum_time++; 
     }
     pit_close(PIT1);
     nrf_data = race[1];
-    
-    
-    //OLED_Print_Num1(88, 6, nrf_data);
   }
 }
 
@@ -289,8 +184,9 @@ void PORTA_IRQHandler()
   
   
 }
-
-
+/*
+直道超车
+*/
 void zhidaochaoche(){
   /*if(Car==1)
     {

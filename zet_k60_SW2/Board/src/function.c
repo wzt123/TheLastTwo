@@ -70,7 +70,7 @@ void PIT0_IRQHandler(void)
 
 void Init_All(void)
 {
-  Car=1;
+  Car=2;
   Motor_Init();
   OLED_Init();
   ov7725_eagle_init(imgbuff);
@@ -615,12 +615,12 @@ void Chaoche_FrontCar(void)
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B
   
-  NRF_SendData(0002);//告诉后车有十字路口
+  NRF_SendData(10002);//告诉后车有十字路口
   
   DELAY_MS(1500);
   
   Car=2;
-  NRF_SendData(0001);//告诉2车超车成功
+  NRF_SendData(10001);//告诉2车超车成功
   uint8 time=0;
   do
   {
@@ -671,7 +671,6 @@ void Chaoche_FrontCar(void)
       
       OLED_Print_Num1(88, 6, Cross_Flag);
     }
-  //}while(abs(error-error_rember)>7||abs(errorerror-errorerror_rember)>7||(abs(error)<4&&abs(errorerror)<4));
   }while(Cross_Flag!=1&&time<500&&(abs(errorerror-errorerror_rember)>3||abs(error-error_rember)>3));
   
   do
@@ -724,12 +723,12 @@ void Chaoche_FrontCar(void)
 
 
 //NRF
-void NRF_SendData(uint8 data)
+void NRF_SendData(int data)
 {
   uint8 sendData[4]={0};
   for(uint8 i=0;i<4;i++)
   {
-    sendData[i] = data/10;
+    sendData[i] = data%10;
     data = data/10;
   }
   nrf_tx(sendData,4);
