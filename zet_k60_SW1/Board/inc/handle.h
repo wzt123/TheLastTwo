@@ -87,7 +87,11 @@ extern int16 Servo_errorerror;
 extern uint8 stopLine_temp;
 extern uint8 Left_stop;
 extern uint8 Right_stop;
+extern uint8 Left_stop_find_temp;
+extern uint8 Right_stop_find_temp;
+
 extern uint8 Cross_Flag_3;
+
 /////////////////////////////////////////
 //extern int32 All_Black;
 extern uint16 Servo_value;

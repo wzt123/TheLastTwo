@@ -122,6 +122,10 @@ uint8 Cross_Flag_3=0;
 uint8 cross_num = 0;
 uint8 white_Left_cnt = 0;
 uint8 white_Right_cnt = 0;
+uint8 Left_stop=0;
+uint8 Right_stop=0;
+uint8 Left_stop_find_temp=0;
+uint8 Right_stop_find_temp=0;
 uint8 weight_num_Cross [60]=
 {
   10,10,10,10,10,
@@ -180,8 +184,6 @@ float Slope_Calculate(uint8 begin,uint8 end,uint8 *p)
 
 
 //²¹Ïß
-uint8 Left_stop=0;
-uint8 Right_stop=0;
 
 void Calculate_Slope()
 {

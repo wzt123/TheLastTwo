@@ -124,6 +124,10 @@ uint8 white_Left_cnt = 0;
 uint8 white_Right_cnt = 0;
 uint8 Cross_flag =0;
 uint8 Cross_Flag_3=0;
+uint8 Left_stop=0;
+uint8 Right_stop=0;
+uint8 Left_stop_find_temp=0;
+uint8 Right_stop_find_temp=0;
 uint8 weight_num_Cross [60]=
 {
   10,10,10,10,10,
@@ -182,8 +186,6 @@ float Slope_Calculate(uint8 begin,uint8 end,uint8 *p)
 
 
 //Ê®×Ö²¹Ïß
-uint8 Left_stop=0;
-uint8 Right_stop=0;
 
 void Calculate_Slope()
 {
@@ -225,6 +227,7 @@ void Calculate_Slope()
       if(abs(Road_Left[Row_Ptr]-Road_Left[Row_Ptr+1])<4&&abs(Road_Left[Row_Ptr+1]-Road_Left[Row_Ptr+2])<4&&Left_Flag[Row_Ptr]==1)
       {
         Left_stop=Row_Ptr;
+        Left_stop_find_temp=1;
         k=Road_Left[Row_Ptr];
         break;
       }
@@ -238,12 +241,14 @@ void Calculate_Slope()
       if(img[Row_Ptr][Road_Left[Left_start]]==0&&img[Row_Ptr-1][Road_Left[Left_start]]==0)
       {
         Left_stop=Row_Ptr-3;
+        Left_stop_find_temp=1;
         for(i=Road_Left[Left_start];i<Road_Right[Right_start];i++)
         {
           if(img[Row_Ptr-3][i]==0&&img[Row_Ptr-3][i+1]==0&&img[Row_Ptr-3][i+2]==255&&img[Row_Ptr-3][i+3]==255)
           {
             k=i+2;
             Left_stop=Row_Ptr-3;
+            Left_stop_find_temp=1;
             break;
           }
         }
@@ -260,6 +265,7 @@ void Calculate_Slope()
       if(abs(Road_Right[Row_Ptr]-Road_Right[Row_Ptr]+1)<4&&abs(Road_Right[Row_Ptr+1]-Road_Right[Row_Ptr+2])<4&&Right_Flag[Row_Ptr]==1)
       {
         Right_stop=Row_Ptr;
+        Right_stop_find_temp=1;
         l=Road_Right[Row_Ptr];
         break;
       }
@@ -275,12 +281,14 @@ void Calculate_Slope()
       {
         
         Right_stop=Row_Ptr-3;
+        Right_stop_find_temp=1;
         for(i=Road_Right[Right_start];i>Road_Left[Left_start];i--)
         {
           if(img[Row_Ptr-3][i]==0&&img[Row_Ptr-3][i-1]==0&&img[Row_Ptr-3][i-2]==255&&img[Row_Ptr-3][i-3]==255)
           {
             l=i-2;
             Right_stop=Row_Ptr-3;
+            Right_stop_find_temp=1;
             break;
           }
         }
