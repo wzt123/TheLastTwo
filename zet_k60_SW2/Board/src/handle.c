@@ -1683,11 +1683,19 @@ void Search_Line(void)
       if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]]==255&&Road_Right_f[Row_Ptr+1]==79)
       {
         Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1];
+        if(Cross_Flag==31||Cross_Flag==3)
+        {
+          Road_Right[Row_Ptr]=Road_Right_f[Row_Ptr+1];
+        }
         //Right_Flag[Row_Ptr]=3;
       }
       if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]]==255&&Road_Left_f[Row_Ptr+1]==0)
       {
         Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1];
+        if(Cross_Flag==31||Cross_Flag==3)
+        {
+          Road_Left[Row_Ptr]=Road_Left_f[Row_Ptr+1];
+        }
         //Left_Flag[Row_Ptr]=3;
       }
     }
