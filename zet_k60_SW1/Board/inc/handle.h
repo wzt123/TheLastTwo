@@ -82,6 +82,8 @@ extern uint8 Ring_width_1;
 extern uint8 Ring_width_2;
 extern uint8 Cross_Cnt;
 extern uint8 Out_Left;
+extern int16 Servo_error;
+extern int16 Servo_errorerror;
 extern uint8 stopLine_temp;
 extern uint8 Left_stop;
 extern uint8 Right_stop;

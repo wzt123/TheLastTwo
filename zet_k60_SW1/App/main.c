@@ -82,16 +82,48 @@ void  main(void)
     {
       nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里      
       
-      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==1)
+//      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==1)
+//      {
+//        Car=1;
+//        ABDistance=0;
+//        ABDistance_last=0;
+//        gpio_set(PTE25,1);//后车开启超声波
+//        gpio_set(PTE24,1);
+//      }
+      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==2)
+        ChaoChe_Cross_temp=1;
+      
+      if(ChaoChe_Cross_temp==1)
+      {
+        Cross_Flag=1;
+      }
+      
+    }
+    
+    if(Cross_Cnt==4)
+    {
+      if(Car==2&&ChaoChe_Cross_temp==1)
       {
         Car=1;
         ABDistance=0;
         ABDistance_last=0;
-        gpio_set(PTE25,1);//后车开启超声波
+        gpio_set(PTE25,1);//开启超声波
         gpio_set(PTE24,1);
+        NRF_SendData(20001);//告诉停着的车，超车成功，换标志位
+        ChaoChe_Cross_temp=0;
       }
-      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==2)
-        Cross_Flag=1;
+      
+    }
+    
+    if(Car==1)
+    {
+      nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里     
+      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==1)
+      {
+        Car=2;
+        gpio_set(PTE25,0);//停着的车关闭超声波
+        gpio_set(PTE24,0);
+      }
     }
     
     Find_Middle();
@@ -132,7 +164,6 @@ void  main(void)
     ///蓝牙传送编码器的值
     send_data[0] = 0;
     send_data[1] = Cross_Flag*500;
-    //uart_putchar(UART5,speed_get_R);
     send_data[2] = 0;
     //vcan_sendware((uint16_t *)send_data, sizeof(send_data));
     //Overtake_judge();
