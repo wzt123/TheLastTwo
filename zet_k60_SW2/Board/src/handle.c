@@ -1747,12 +1747,12 @@ void Search_Line(void)
   }///如果在车头连续三行丢线，十字路口另外一种情况
     else*/
     
-    if(Row_Ptr<54&&(Left_Flag[Row_Ptr+2]==3 && Right_Flag[Row_Ptr+2]==3)&&
-       (Left_Flag[Row_Ptr+3]==3 && Right_Flag[Row_Ptr+3]==3)&&
-           (Left_Flag[Row_Ptr+1]==1 || Right_Flag[Row_Ptr+1]==1)&&
-             (Left_Flag[Row_Ptr]==1 || Right_Flag[Row_Ptr]==1)&&Row_Ptr>All_Black)
+    if(Row_Ptr<51&&(Left_Flag[Row_Ptr]==3 && Right_Flag[Row_Ptr]==3)&&
+       (Left_Flag[Row_Ptr+1]==3 && Right_Flag[Row_Ptr+1]==3)&&
+           ((Left_Flag[Row_Ptr+2]==1 && Left_Flag[Row_Ptr+3]==1)||
+             (Right_Flag[Row_Ptr+2]==1 && Right_Flag[Row_Ptr+3]==1))&&Row_Ptr>All_Black)
     {
-        Cross_Flag_3=1;
+      Cross_Flag_3=1;
     }
     else if(Row_Ptr<50&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
        (Left_Flag[Row_Ptr+7]==3 && Right_Flag[Row_Ptr+7]==3)&&
