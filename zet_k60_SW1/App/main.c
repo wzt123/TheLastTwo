@@ -159,7 +159,7 @@ void  main(void)
         stop_Car2();
     
       
-      if(Cross_Flag==1&&(Left_stop>18||Right_stop>18)&&Car==1&&Overtake==0)
+      if(Cross_Flag==1&&(Left_stop>18||Right_stop>18)&&Car==1&&Overtake==0&&Cross_Flag_3==2)
       {
         Chaoche_FrontCar();
       }
@@ -172,7 +172,7 @@ void  main(void)
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, Car);
+      OLED_Print_Num1(88, 1, Cross_Flag_3);
       OLED_Print_Num1(88, 2, ChaoChe_Cross_temp);
       OLED_Print_Num1(88, 3, Cross_Cnt);
       OLED_Print_Num1(88, 4, Cross_Flag);
