@@ -308,8 +308,12 @@ void Calculate_Slope()
     Road_Right[i]=(uint8)(Road_Right[Right_start]-Right_Slope*j+0.5);
   }
   j=(Road_Left[Left_start]+Road_Right[Right_start])/2;
-  i=(End_zuo+End_you)/2;
-  if(Cross_Flag_3&&((abs(i-j)>10)||ring_num==0)) Cross_Flag_3=2;
+  i=(Right_stop+Left_stop)/2;
+  if(img[i][j]==0&&img[i+1][j]==0&&img[i-1][j]==0) 
+  {
+    Right_stop_find_temp=0;
+    Left_stop_find_temp=0;
+  }
   /*for(i=(Left_start+Right_start)/2;i>4&&i>All_Black+1;i--)
   {
     if(img[i][j]==0) break;
