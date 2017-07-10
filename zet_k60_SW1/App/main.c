@@ -85,6 +85,7 @@ void  main(void)
       if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==1)
       {
         Car=1;
+        Overtake++;//超车次数加1
         ABDistance=0;
         ABDistance_last=0;
         gpio_set(PTE25,1);//后车开启超声波
@@ -158,7 +159,7 @@ void  main(void)
         stop_Car2();
     
       
-      if(Cross_Flag==1&&(Left_stop>18||Right_stop>18)&&Car==1)
+      if(Cross_Flag==1&&(Left_stop>18||Right_stop>18)&&Car==1&&Overtake==0)
       {
         Chaoche_FrontCar();
       }

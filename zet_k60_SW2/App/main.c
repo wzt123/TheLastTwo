@@ -85,6 +85,7 @@ void  main(void)
       if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==1)
       {
         Car=1;
+        Overtake++;
         ABDistance=0;
         ABDistance_last=0;
         gpio_set(PTE25,1);//ºó³µ¿ªÆô³¬Éù²¨
@@ -158,7 +159,7 @@ void  main(void)
     else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
       stop_Car2();
     
-    if(Cross_Flag==1&&(Left_stop>22||Right_stop>22)&&Car==1)
+    if(Cross_Flag==1&&(Left_stop>22||Right_stop>22)&&Car==1&&Overtake==0)
     {
       Chaoche_FrontCar();
     }

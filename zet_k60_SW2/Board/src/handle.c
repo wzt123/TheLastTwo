@@ -1036,7 +1036,7 @@ void Find_Middle()
   uint8 i=0,j=0;
   float Right_Slope=0.0;
   FirstBlackinCenter=0;
-  Overtake=0;
+  //Overtake=0;
   //
   Out_Right=0;
   Out_Left=0;

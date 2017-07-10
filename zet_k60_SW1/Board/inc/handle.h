@@ -41,7 +41,7 @@ extern uint8 Car;
 extern uint8 race[4];
 extern uint8 buff[4];
 extern uint8 Overtake_Flag;
-extern uint8 Overtake2;
+//extern uint8 Overtake2;
 extern uint8 C;
 extern uint16 Servomiddle;
 extern uint16 Servo_max;

@@ -624,7 +624,7 @@ void Chaoche_FrontCar(void)
   Car=2;
   gpio_set(PTE25,0);//¹Ø±Õ³¬Éù²¨
   gpio_set(PTE24,0);
-  
+  Overtake++;
   uint8 time=0;
   do
   {
