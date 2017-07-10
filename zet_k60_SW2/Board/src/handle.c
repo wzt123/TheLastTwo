@@ -1049,7 +1049,7 @@ void Find_Middle()
   uint8 i=0,j=0;
   float Right_Slope=0.0;
   FirstBlackinCenter=0;
-  Overtake=0;
+  //Overtake=0;
   //
   Out_Right=0;
   Out_Left=0;
@@ -1112,10 +1112,10 @@ void Find_Middle()
       }
     }
   }
-//    if(Cross_Cnt>0&&All_Black<3)
-//    {      
-//      Cross_Cnt=0;
-//    }
+    if(Cross_Cnt>0&&All_Black<3)
+    {      
+      Cross_Cnt=0;
+    }
 //  }
   if(Cross_Flag_Last==31) //Ô²»·²¹ÓÒÏß£¬×ó×ª
   {

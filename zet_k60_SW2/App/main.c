@@ -82,14 +82,16 @@ void  main(void)
     {
       nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里      
       
-//      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==1)
-//      {
-//        Car=1;
-//        ABDistance=0;
-//        ABDistance_last=0;
-//        gpio_set(PTE25,1);//后车开启超声波
-//        gpio_set(PTE24,1);
-//      }
+      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==1)
+      {
+        Car=1;
+        Overtake++;
+        ABDistance=0;
+        ABDistance_last=0;
+        gpio_set(PTE25,1);//后车开启超声波
+        gpio_set(PTE24,1);
+        ChaoChe_Cross_temp=0;
+      }
       if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==2)
         ChaoChe_Cross_temp=1;
       
@@ -100,31 +102,31 @@ void  main(void)
       
     }
     
-    if(Cross_Cnt==4)
-    {
-      if(Car==2&&ChaoChe_Cross_temp==1)
-      {
-        Car=1;
-        ABDistance=0;
-        ABDistance_last=0;
-        gpio_set(PTE25,1);//开启超声波
-        gpio_set(PTE24,1);
-        NRF_SendData(20001);//告诉停着的车，超车成功，换标志位
-        ChaoChe_Cross_temp=0;
-      }
-      
-    }
+//    if(Right_stop>40)
+//    {
+//      if(Car==2&&ChaoChe_Cross_temp==1)
+//      {
+//        Car=1;
+//        ABDistance=0;
+//        ABDistance_last=0;
+//        gpio_set(PTE25,1);//开启超声波
+//        gpio_set(PTE24,1);
+//        NRF_SendData(20001);//告诉停着的车，超车成功，换标志位
+//        ChaoChe_Cross_temp=0;
+//      }
+//      
+//    }
     
-    if(Car==1)
-    {
-      nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里     
-      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==1)
-      {
-        Car=2;
-        gpio_set(PTE25,0);//停着的车关闭超声波
-        gpio_set(PTE24,0);
-      }
-    }
+//    if(Car==1)
+//    {
+//      nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里     
+//      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==1)
+//      {
+//        Car=2;
+//        gpio_set(PTE25,0);//停着的车关闭超声波
+//        gpio_set(PTE24,0);
+//      }
+//    }
     
     Find_Middle();
     Road_Type();
@@ -141,14 +143,14 @@ void  main(void)
         Motor_Out();
       else if(Car==2)
       {
-        if(ABDistance>1000||ABDistance<=10)
-        {
+//        if(ABDistance>1000||ABDistance<=10)
+//        {
           Motor_Out();
-        }
-        else if(Distance_stop_temp==0&&ABDistance<=1000&&ABDistance>10)
-        {
-          Distance_stop();
-        }
+//        }
+//        else if(Distance_stop_temp==0&&ABDistance<=1000&&ABDistance>10)
+//        {
+//          Distance_stop();
+//        }
       }
     }    
     
@@ -157,7 +159,7 @@ void  main(void)
     else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
       stop_Car2();
     
-    if(Cross_Flag==1&&(Left_stop>22||Right_stop>22)&&Car==1)
+    if(Cross_Flag==1&&(Left_stop>22||Right_stop>22)&&Car==1&&Overtake==0)
     {
       Chaoche_FrontCar();
     }
@@ -171,14 +173,16 @@ void  main(void)
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, nrf_data);
-      OLED_Print_Num1(88, 2, error);
-      OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, Kp);
-      OLED_Print_Num1(88, 5, Cross_Flag_3);
+
+      OLED_Print_Num1(88, 1, Car);
+      OLED_Print_Num1(88, 2, ChaoChe_Cross_temp);
+      OLED_Print_Num1(88, 3, Cross_Cnt);
+      OLED_Print_Num1(88, 4, Cross_Flag);
+      OLED_Print_Num1(88, 5, Left_stop);
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
       //wzt_bluetooth();     
-      OLED_Print_Num1(88, 6, Cross_Flag);
+      OLED_Print_Num1(88, 6, Right_stop);
+
     }
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {

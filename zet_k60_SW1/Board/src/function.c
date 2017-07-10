@@ -124,7 +124,7 @@ void Motor_Out(void)
   speed_PWM=6550;
   uint8 speed_Ki=5;
   uint8 speed_Kp=20;  
-  uint8 speed_Kd=5;
+  uint8 speed_Kd=8;
   gpio_set(PTC3,1);
   gpio_set(PTC2,0);
   gpio_set(PTB17,0);
@@ -199,14 +199,14 @@ void Motor_Out(void)
       {
         if(ABDistance<Distance-50)
         {
-          speed_PWM_R = speed_goal_R-600;
-          speed_PWM_L = speed_goal_L-600;
+          speed_goal_R = speed_goal_R-400;
+          speed_goal_L = speed_goal_L-400;
         }
 
         else if(ABDistance>Distance+50)
         {
-          speed_PWM_R = speed_goal_R+500;
-          speed_PWM_L = speed_goal_L+500;
+          speed_goal_R = speed_goal_R+400;
+          speed_goal_L = speed_goal_L+400;
         }
       }
       
@@ -249,21 +249,24 @@ void Motor_Out(void)
       stop_time=0;
   }
   
-  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>10)
+//  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>10)
+//  {
+//    if(speed_get_L<50)
+//    { 
+//      speed_PWM_L = 0;
+//    }
+//    if(speed_get_R<50)
+//    {
+//      speed_PWM_R = 0;
+//    }
+//  }
+//  else 
+    if(speed_get_R<100||speed_get_L<100)
   {
-    if(speed_get_L<50)
-    { 
-      speed_PWM_L = 0;
-    }
-    if(speed_get_R<50)
-    {
-      speed_PWM_R = 0;
-    }
-  }
-  else if(speed_get_R<100||speed_get_L<100)
-  {
-    speed_PWM_R = 6500;
-    speed_PWM_L = 6500;
+    if(speed_get_R<100)
+      speed_PWM_R = 6800;
+    if(speed_get_L<100)
+      speed_PWM_L = 6800;
   }
   
  if(speed_PWM_R<0)
@@ -543,10 +546,12 @@ void Chaoche_FrontCar(void)
   
   NRF_SendData(10002);//告诉后车有十字路口
   
-  DELAY_MS(1500);
+  DELAY_MS(400);
   
   Car=2;
-  NRF_SendData(10001);//告诉2车超车成功
+  gpio_set(PTE25,0);//关闭超声波
+  gpio_set(PTE24,0);
+  Overtake++;
   uint8 time=0;
   do
   {
@@ -642,6 +647,7 @@ void Chaoche_FrontCar(void)
   Servo_control();
   ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
+  NRF_SendData(10001);//告诉2车超车成功
   DELAY_MS(500);
   //ChaoChe_temp=0;
 }
