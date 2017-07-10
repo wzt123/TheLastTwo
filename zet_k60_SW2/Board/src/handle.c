@@ -1099,10 +1099,10 @@ void Find_Middle()
       }
     }
   }
-//    if(Cross_Cnt>0&&All_Black<3)
-//    {      
-//      Cross_Cnt=0;
-//    }
+    if(Cross_Cnt>0&&All_Black<3)
+    {      
+      Cross_Cnt=0;
+    }
 //  }
   if(Cross_Flag_Last==31) //Ô²»·²¹ÓÒÏß£¬×ó×ª
   {
