@@ -198,6 +198,7 @@ void Calculate_Slope()
   uint8 Right_start=58;
   float Left_Slope=0.0;
   float Right_Slope=0.0;
+  
   for(Row_Ptr=57;Row_Ptr>6&&Row_Ptr>StopRow;Row_Ptr--)
   {
     if(Road_Left[Row_Ptr-1]<Road_Left[Row_Ptr]&&
@@ -241,7 +242,7 @@ void Calculate_Slope()
       if(img[Row_Ptr][Road_Left[Left_start]]==0&&img[Row_Ptr-1][Road_Left[Left_start]]==0)
       {
         Left_stop=Row_Ptr-3;
-        Left_stop_find_temp=1;
+        
         for(i=Road_Left[Left_start];i<Road_Right[Right_start];i++)
         {
           if(img[Row_Ptr-3][i]==0&&img[Row_Ptr-3][i+1]==0&&img[Row_Ptr-3][i+2]==255&&img[Row_Ptr-3][i+3]==255)
@@ -281,7 +282,7 @@ void Calculate_Slope()
       {
         
         Right_stop=Row_Ptr-3;
-        Right_stop_find_temp=1;
+        
         for(i=Road_Right[Right_start];i>Road_Left[Left_start];i--)
         {
           if(img[Row_Ptr-3][i]==0&&img[Row_Ptr-3][i-1]==0&&img[Row_Ptr-3][i-2]==255&&img[Row_Ptr-3][i-3]==255)
@@ -687,6 +688,10 @@ void Find_Middle()
   //
   Out_Right=0;
   //Out_Left=0;
+  
+  Left_stop_find_temp=0;
+  Right_stop_find_temp=0;
+  
   /////
   uint8 repair_R[60]= {0}; /////右边丢失的求斜率的数组
   uint8 repair_L[60]= {0}; /////左边丢失的求斜率的数组
@@ -696,7 +701,7 @@ void Find_Middle()
   //filter_Middle(Road_Center);
   
   //斜入十字判断
-  if(Cross_Flag==1&&StopRow>All_Black&&Cross_Flag_Last!=3)
+  if(Cross_Flag==1&&StopRow>All_Black&&Cross_Flag_Last!=31)
   {
     Calculate_Slope();
     if(Cross_Cnt==0) Cross_Cnt=1;//一个十字路口

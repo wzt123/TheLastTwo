@@ -226,6 +226,7 @@ void Calculate_Slope()
       {
         Left_stop=Row_Ptr;
         k=Road_Left[Row_Ptr];
+        Left_stop_find_temp=1;
         break;
       }
     }
@@ -244,6 +245,7 @@ void Calculate_Slope()
           {
             k=i+2;
             Left_stop=Row_Ptr-3;
+            Left_stop_find_temp=1;
             break;
           }
         }
@@ -260,6 +262,7 @@ void Calculate_Slope()
       if(abs(Road_Right[Row_Ptr]-Road_Right[Row_Ptr]+1)<4&&abs(Road_Right[Row_Ptr+1]-Road_Right[Row_Ptr+2])<4&&Right_Flag[Row_Ptr]==1)
       {
         Right_stop=Row_Ptr;
+        Right_stop_find_temp=1;
         l=Road_Right[Row_Ptr];
         break;
       }
@@ -281,6 +284,7 @@ void Calculate_Slope()
           {
             l=i-2;
             Right_stop=Row_Ptr-3;
+            Right_stop_find_temp=1;
             break;
           }
         }
@@ -1056,6 +1060,9 @@ void Find_Middle()
   //
   Out_Right=0;
   Out_Left=0;
+  
+  Left_stop_find_temp=0;
+  Right_stop_find_temp=0;
   /////
   uint8 repair_R[60]= {0}; /////右边丢失的求斜率的数组
   uint8 repair_L[60]= {0}; /////左边丢失的求斜率的数组
@@ -1064,7 +1071,7 @@ void Find_Middle()
   /////
   //filter_Middle(Road_Center);
   //斜入十字判断
-  if(Cross_Flag==1&&StopRow>All_Black&&Cross_Flag_Last!=3)
+  if(Cross_Flag==1&&StopRow>All_Black&&Cross_Flag_Last!=31)
   {
     Calculate_Slope();
     if(Cross_Cnt==0) Cross_Cnt=1;//一个十字路口
