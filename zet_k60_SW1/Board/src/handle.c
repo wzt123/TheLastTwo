@@ -374,18 +374,18 @@ void Servo_control(void)
   l = 59-Lastline;
 
   for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
-    {
-      error+=(Road_Center[Row_Ptr]-40);
-    }
-    error = error/l;
-    for(Row_Ptr=59; Row_Ptr>59-l/2; Row_Ptr--)
-    {
-      error1+=(Road_Center[Row_Ptr]-40);
-    }
-    for(Row_Ptr=59-l/2; Row_Ptr>Lastline; Row_Ptr--)
-    {
-      error2+=(Road_Center[Row_Ptr]-40);
-    }
+  {
+    error+=(Road_Center[Row_Ptr]-40);
+  }
+  error = error/l;
+  for(Row_Ptr=59; Row_Ptr>59-l/2; Row_Ptr--)
+  {
+    error1+=(Road_Center[Row_Ptr]-40);
+  }
+  for(Row_Ptr=59-l/2; Row_Ptr>Lastline; Row_Ptr--)
+  {
+    error2+=(Road_Center[Row_Ptr]-40);
+  }
     
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);

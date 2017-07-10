@@ -560,20 +560,21 @@ void Servo_control(void)
           }
         }
         
+        
+        else if(All_Black<41)
+        {
+          if(error<0)
+          {
+            Kp = 65;
+            Kd = 30;
+          }
+          else
+          {
+            Kp = 65;
+            Kd = 30;
+          }
+        }
         else if((All_Black>=41))error_sum += error;
-//        else if(All_Black<41)
-//        {
-//          if(error<0)
-//          {
-//            Kp = 65;
-//            Kd = 30;
-//          }
-//          else
-//          {
-//            Kp = 65;
-//            Kd = 30;
-//          }
-//        }
 //        else
 //        {
 ////          if(error<0)
@@ -1299,6 +1300,7 @@ void Find_Middle()
     a=Road_Right[Row_Ptr]-2;
     img[Row_Ptr][a]=0;
     img[Row_Ptr][40]=0;
+    img[Row_Ptr][40+error]=0;
   }
   //filter_Middle(Road_Center);
   //½áÊøfor_ÂËÖÐÏß
