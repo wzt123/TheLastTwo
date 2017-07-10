@@ -36,7 +36,7 @@ uint8 Right_xian=0;
 uint8 Left_xian=0;
 
 uint16 Servo_value=8808;//舵机输出pwm值
-
+uint8 ring_num;
 
 uint8 Hinder_Start=0;
 uint8 Hinder_Flag=0;
@@ -123,6 +123,7 @@ uint8 cross_num = 0;
 uint8 white_Left_cnt = 0;
 uint8 white_Right_cnt = 0;
 uint8 Cross_flag =0;
+uint8 Cross_Flag_3=0;
 uint8 weight_num_Cross [60]=
 {
   10,10,10,10,10,
@@ -302,6 +303,10 @@ void Calculate_Slope()
     j++;
     Road_Right[i]=(uint8)(Road_Right[Right_start]-Right_Slope*j+0.5);
   }
+  j=(Road_Left[Left_start]+Road_Right[Right_start])/2;
+  i=(End_zuo+End_you)/2;
+  if(Cross_Flag_3==1&&((abs(i-j)>10)||ring_num==0)) Cross_Flag_3=2;
+
 }
 /*
 舵机控制
@@ -941,7 +946,7 @@ void Find_Middle()
 
 //寻边线
 uint8 a=1,i,j;
-uint8 ring_num;
+
 void Search_Line(void)
 {
   Cross_Flag_Last=Cross_Flag; 
@@ -1017,6 +1022,7 @@ void Search_Line(void)
   Bend_Lift =0;
   Bend_Right = 0;
   uint8 ring_flag=0;
+  Cross_Flag_3=0;
   ring_num=0;
   white_Left_cnt = 0;
   white_Right_cnt = 0;
@@ -1373,22 +1379,13 @@ void Search_Line(void)
   }///如果在车头连续三行丢线，十字路口另外一种情况
     else*/
     
-    /*if(Row_Ptr<54&&(Left_Flag[Row_Ptr+2]==3 && Right_Flag[Row_Ptr+2]==3)&&
+    if(Row_Ptr<54&&(Left_Flag[Row_Ptr+2]==3 && Right_Flag[Row_Ptr+2]==3)&&
        (Left_Flag[Row_Ptr+3]==3 && Right_Flag[Row_Ptr+3]==3)&&
            (Left_Flag[Row_Ptr+1]==1 || Right_Flag[Row_Ptr+1]==1)&&
              (Left_Flag[Row_Ptr]==1 || Right_Flag[Row_Ptr]==1)&&Row_Ptr>All_Black)
     {
-      //Cross_Flag=1;
-      //Cross_flag++;
-      for(i=Row_Ptr+3;i>2&&i>All_Black;i--)
-      {
-        if(Left_Flag[i]==1 && Right_Flag[i]==1)
-        {
-          StopRow=i;
-          break;
-        }
-      }
-    }*/
+      Cross_Flag_3=1;
+    }
     else if(Row_Ptr<50&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
        (Left_Flag[Row_Ptr+7]==3 && Right_Flag[Row_Ptr+7]==3)&&
          (Left_Flag[Row_Ptr+6]==3 && Right_Flag[Row_Ptr+6]==3)&&(
@@ -1667,7 +1664,7 @@ void Search_Line(void)
       Road_Right[Row_Ptr]=Road_Right[Row_Ptr+1];
     }
   }//结束for 行循环
-  if(ring_num>1&&Right_right==1&&Left_left==0&&Right_xian>Ring_First_Row) //you斜入十字
+  if(ring_num>1&&Right_right==1&&Left_left==0&&Right_xian>Ring_First_Row) //you斜入圆环
   {
     //max_xian=Right_xian;
     
@@ -1689,7 +1686,7 @@ void Search_Line(void)
       }
     }
   }
-  if(ring_num>1&&Right_right==0&&Left_left==1&&Left_xian>Ring_First_Row) //zuo斜入十字
+  if(ring_num>1&&Right_right==0&&Left_left==1&&Left_xian>Ring_First_Row) //zuo斜入圆环
   {
     //max_xian=Right_xian;
     

@@ -51,7 +51,7 @@ extern uint32 Servo_max;
 extern uint8 Turn_Left;
 extern uint8 Overtake;
 extern uint8 ring_num;
-
+extern uint8 Cross_Flag_3;
 extern uint8 CrossRow;
 //
 extern uint8 GetMedianNum(uint8 *bArray,uint8 iFilterLen);
