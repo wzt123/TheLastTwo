@@ -1142,6 +1142,11 @@ void Find_Middle()
       j++;
       Road_Left[i]=(uint8)(Road_Left[Left_xian]-Right_Slope*j+0.5);
     }
+    for(i=Ring_First_Row;i>3&&i>All_Black;i--)
+    {
+      Road_Left[i]=Road_Left[i+1];
+      Road_Right[i]=0;
+    }
   }*/
   //************************//
   //³öÔ²»·ÅÐ¶Ï
