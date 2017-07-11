@@ -426,19 +426,22 @@ void Servo_control(void)
 //      Servo_temp=Kp*error/10-110;
 //    }
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
-    /*else if(Cross_Flag==31&&Ring_First_Row>10)//越小转得越早
+    else if(Cross_Flag==31)
     {
-        if(Car == 1)
-        {
-          Servo_temp=-Ring_First_Row*100/10-90;
-        }
-        else
-        {
-          //Servo_temp=Ring_First_Row*100/10+30;
-          Servo_temp=-Ring_First_Row*100/10-90;
-        }
+//        if(Car == 1)
+//        {
+//          Servo_temp=-Ring_First_Row*100/10-90;
+//        }
+//        else
+//        {
+//          //Servo_temp=Ring_First_Row*100/10+30;
+//          Servo_temp=-Ring_First_Row*100/10-90;
+//        }
+      Kp =45;//66
+      Kd = 35;
+      Servo_temp = Kp*error/10+Kd*errorerror/10;
       
-    }*/
+    }
     else if(Cross_Flag==1)
     {
       Kp =70;
@@ -787,6 +790,11 @@ void Find_Middle()
     {
       j++;
       Road_Left[i]=(uint8)(Road_Left[Left_xian]-Right_Slope*j+0.5);
+    }
+    for(i=Ring_First_Row;i>3&&i>All_Black;i--)
+    {
+      Road_Left[i]=Road_Left[i+1];
+      Road_Right[i]=0;
     }
   }*/
   //************************//
