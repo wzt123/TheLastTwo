@@ -159,7 +159,7 @@ void  main(void)
         stop_Car2();
     
       
-      if(Cross_Flag==1&&(Left_stop>18||Right_stop>18)&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake==0)
+      if(Cross_Flag==1&&((Left_stop>18&&Left_stop<25)||(Right_stop>18&&Right_stop<25))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake==0)
       {
         Chaoche_FrontCar();
       }
