@@ -126,17 +126,17 @@ uint8 Left_stop=0;
 uint8 Right_stop=0;
 uint8 Left_stop_find_temp=0;
 uint8 Right_stop_find_temp=0;
-uint8 weight_num_Cross [60]=
+uint8 weight_num_Ring [60]=
 {
-  10,10,10,10,10,
-  10,10,10,10,10,
-  10,10,10,10,10,
   100,100,100,100,100,
   100,100,100,100,100,
   100,100,100,100,100,
+  300,300,300,300,300,
+  300,300,300,300,300,
+  300,300,300,300,300,
   
-  100,100,100,100,100,
-  100,100,100,100,100,
+  300,300,300,300,300,
+  300,300,300,300,300,
   100,100,100,100,100,
   100,100,100,100,100,
   100,100,100,100,100,
@@ -396,7 +396,7 @@ void Servo_control(void)
   
   l = 59-Lastline;
 
-  for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
+    for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
     {
       error+=(Road_Center[Row_Ptr]-40);
     }
@@ -409,7 +409,7 @@ void Servo_control(void)
     {
       error2+=(Road_Center[Row_Ptr]-40);
     }
-    
+//  }
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
@@ -427,10 +427,6 @@ void Servo_control(void)
     else{
       Ring_First_Row_Compare=17;
     }
-//    else if(speed_goal<4950)
-//    {
-//      Ring_First_Row_Compare=1;
-//    }
     if(errorerror*error<0/*&&abs(error-errorerror)>15*/&&Cross_Flag==0)
     {
 //      errorerror=errorerror*5/10;
@@ -438,32 +434,22 @@ void Servo_control(void)
       errorerror= - errorerror*15/2;
       error = error;
     }
-//    if(Cross_Flag==2||cross_time>0)
-//    {
-//      Kp =86;
-//      Servo_temp=Kp*error/10+90;
-//    }
-//    else if(Cross_Flag==4||cross_time>0)
-//    {
-//      Kp =86;
-//      Servo_temp=Kp*error/10-90;
-//    }
-
-   
-    //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
-    /*else if(Cross_Flag==31&&Ring_First_Row>10)
+    else if(Cross_Flag==31)
     {
-        if(Car == 1)
-        {
-          Servo_temp=-Ring_First_Row*100/10-90;
-        }
-        else
-        {
-          //Servo_temp=Ring_First_Row*100/10+30;
-          Servo_temp=-Ring_First_Row*100/10-90;
-        }
+//        if(Car == 1)
+//        {
+//          Servo_temp=-Ring_First_Row*100/10-90;
+//        }
+//        else
+//        {
+//          //Servo_temp=Ring_First_Row*100/10+30;
+//          Servo_temp=-Ring_First_Row*100/10-90;
+//        }
+      Kp =45;//66
+      Kd = 35;
+      Servo_temp = Kp*error/10+Kd*errorerror/10;
       
-    }*/
+    }
     else if(Cross_Flag==1)
     {
       Kp =66;//66
