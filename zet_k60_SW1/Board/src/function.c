@@ -514,7 +514,7 @@ void Chaoche_FrontCar(void)
   int16 error_rember=error;
   int16 errorerror_rember=errorerror;
   
-  ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle-100);
+  ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle-150);
   
   gpio_set(PTC3,0);//驱动反向使能
   gpio_set(PTC2,1);//驱动反向使能
@@ -564,8 +564,8 @@ void Chaoche_FrontCar(void)
     gpio_set(PTB17,1);//驱动反向使能
     gpio_set(PTB16,0);//驱动反向使能
     ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle-100);
-    ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
-    ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
+    ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
     
     camera_get_img();                                   //摄像头获取图像
     img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
@@ -576,10 +576,10 @@ void Chaoche_FrontCar(void)
     speed_get_R = lptmr_pulse_get();
     ftm_quad_clean(FTM1);
     lptmr_pulse_clean();
-    if(speed_get_R!=0&&speed_get_L!=0)
-    {
+//    if(speed_get_R!=0&&speed_get_L!=0)
+//    {
       time++;
-    }
+//    }
     if(time>1)
     {
       Servo_control();
@@ -587,8 +587,9 @@ void Chaoche_FrontCar(void)
     else
     {
       get_error();
-      ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle-100);
-      DELAY_MS(300);
+      ftm_pwm_duty(FTM0, FTM_CH3, Servo_min);
+      DELAY_MS(600);
+      Cross_Flag=0;
     }
     
     if(speed_get_R<60&&speed_get_L<60)
@@ -602,7 +603,7 @@ void Chaoche_FrontCar(void)
       
       OLED_Print_Num1(88, 6, Cross_Flag);
     }
-  }while(Cross_Flag!=1&&time<500&&(abs(errorerror-errorerror_rember)>3||abs(error-error_rember)>3));
+  }while(Cross_Flag!=1&&time<500&&(abs(errorerror-errorerror_rember)>4||abs(error-error_rember)>4));
   
   do
   {
@@ -610,7 +611,7 @@ void Chaoche_FrontCar(void)
     gpio_set(PTC2,1);//驱动反向使能
     gpio_set(PTB17,1);//驱动反向使能
     gpio_set(PTB16,0);//驱动反向使能
-    ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle-100);
+    ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle-150);
     ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
     ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
     
@@ -634,7 +635,7 @@ void Chaoche_FrontCar(void)
       
       OLED_Print_Num1(88, 6, Right_stop);
     }
-  }while(Left_stop>33&&Right_stop>33);
+  }while(Left_stop>35||Right_stop>35);
   
   gpio_set(PTC3,1);
   gpio_set(PTC2,0);
@@ -648,7 +649,7 @@ void Chaoche_FrontCar(void)
   ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
   NRF_SendData(10001);//告诉2车超车成功
-  DELAY_MS(500);
+  DELAY_MS(300);
   //ChaoChe_temp=0;
 }
 
