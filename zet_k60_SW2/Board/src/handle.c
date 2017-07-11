@@ -45,7 +45,7 @@ uint8 CrossRow=0;
 
 uint16 Servomiddle=8619;
 uint32 Servo_max=8775;//往右打
-uint32 Servo_min=8465;//往左打
+uint32 Servo_min=8455;//往左打
 float CenterLineSlope=0;
 
 int16 error=0;
@@ -506,12 +506,12 @@ void Servo_control(void)
           if(error<0)
           {
             Kp = 40;
-            Kd = 12;
+            Kd = 15;
           }
           else
           {
             Kp = 44;
-            Kd=12;
+            Kd = 15;
           }
         }
         else if(All_Black<22)////弯道入直道的时候
@@ -524,19 +524,19 @@ void Servo_control(void)
           else
           {
             Kp = 38;
-            Kd=12;
+            Kd = 12;
           }
         }
         else if(All_Black<25)//弯道入直道的时候
         {
           if(error<0)     //左转
           {
-            Kp=54;
-            Kd=20;
+            Kp = 54;
+            Kd = 20;
           }
           else
           {
-            Kp=54;
+            Kp = 54;
             Kd =20;
           }
         }
@@ -545,13 +545,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp=36;
-            Kd=17;
+            Kp = 36;
+            Kd = 17;
           }
           else
           {
-            Kp=36;
-            Kd =17;
+            Kp = 36;
+            Kd = 17;
           }
         }
         
@@ -559,13 +559,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp=49;
-            Kd=22;
+            Kp = 49;
+            Kd = 35;
           }
           else
           {
-            Kp=49;
-            Kd =22;
+            Kp = 49;
+            Kd = 35;
           }
         }
         
@@ -582,8 +582,7 @@ void Servo_control(void)
             Kd = 29;
           }
         }
-        
-        
+                
         else if(All_Black<41)
         {
           if(error<0)
@@ -665,20 +664,20 @@ void Servo_control(void)
           else
           {
             Kp = 35;
-            Kd=12;
+            Kd = 12;
           }
         }
         else if(All_Black<25)//弯道入直道的时候
         {
           if(error<0)     //左转
           {
-            Kp=54;
-            Kd=20;
+            Kp = 54;
+            Kd = 20;
           }
           else
           {
-            Kp=54;
-            Kd =20;
+            Kp = 54;
+            Kd = 20;
           }
         }
         
@@ -686,13 +685,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp=36;
-            Kd=17;
+            Kp = 36;
+            Kd = 17;
           }
           else
           {
-            Kp=36;
-            Kd =17;
+            Kp = 36;
+            Kd = 17;
           }
         }
         
@@ -700,13 +699,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp=54;
-            Kd=22;
+            Kp = 54;
+            Kd = 22;
           }
           else
           {
-            Kp=54;
-            Kd =22;
+            Kp = 54;
+            Kd = 22;
           }
         }
         
@@ -811,7 +810,7 @@ void Servo_control(void)
           else
           {
             Kp = 46;
-            Kd=14;
+            Kd = 14;
           }
         }
         else if(All_Black<22)////弯道入直道的时候
@@ -824,20 +823,20 @@ void Servo_control(void)
           else
           {
             Kp = 35;
-            Kd=12;
+            Kd = 12;
           }
         }
         else if(All_Black<25)//弯道入直道的时候
         {
           if(error<0)     //左转
           {
-            Kp=50;
-            Kd=20;
+            Kp = 50;
+            Kd = 20;
           }
           else
           {
-            Kp=50;
-            Kd =20;
+            Kp = 50;
+            Kd = 20;
           }
         }
         
@@ -859,12 +858,12 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp=53;
-            Kd=24;
+            Kp = 55;
+            Kd = 24;
           }
           else
           {
-            Kp=53;
+            Kp = 55;
             Kd =24;
           }
         }
@@ -873,12 +872,12 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 55;
+            Kp = 65;
             Kd = 30;
           }
           else
           {
-            Kp = 55;
+            Kp = 65;
             Kd = 30;
           }
         }
@@ -887,17 +886,17 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 65;
+            Kp = 80;
             Kd = 30;
           }
           else
           {
-            Kp = 65;
+            Kp = 80;
             Kd = 30;
           }
         }
         
-        else if((All_Black>=41))error_sum += error;
+        else if((All_Black >= 41))error_sum += error;
 //        else if(All_Black<57)
 //        {
 //          if(error<0)

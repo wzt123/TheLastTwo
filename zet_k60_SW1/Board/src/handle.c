@@ -55,6 +55,7 @@ int16 error=0;   //0~40×óÓÒ
 int32 error1=0;  //
 int32 error2=0;  //
 int16 errorerror=0; //0~35×óÓÒ
+int16 error_sum = 0;
 uint8 Flag_L=0;
 uint8 Flag_R=0;
 
@@ -449,8 +450,8 @@ void Servo_control(void)
     {
       Kp =40;
       Kd = 40;
-      Servo_temp = Kp*error/10+Kd*errorerror/10;
-      
+      Servo_temp = Kp*error+Kd*errorerror;
+      Servo_temp = Servo_temp/10;
     }
     else
     {      
@@ -575,21 +576,11 @@ void Servo_control(void)
         Kd = 30;
       }
     }
-    else
-    {
-      if(error<0)
-      {
-        Kp=100;
-        Kd=35;
-      }
-      else
-      {
-        Kp=100;
-        Kd =35;
-      }
-    }
+        
+    else if((All_Black>=41))error_sum += error;
 
-    Servo_temp=Kp*error/10+Kd*errorerror/10;
+    Servo_temp = Kp*error+Kd*errorerror;
+    Servo_temp = Servo_temp/10;
     }
     
     /*if(cross_num>15)
@@ -600,7 +591,15 @@ void Servo_control(void)
         Servo_temp = Servo_temp+cross_num;
     }*/
     
-    Servo_value=Servomiddle+Servo_temp;
+     if(All_Black<41)
+    {
+      Servo_value = Servomiddle+Servo_temp;
+      error_sum = 0;
+    }
+    if(error_sum>0)
+      Servo_value = Servo_max;
+    else if (error_sum<0)
+      Servo_value = Servo_min;
     
   if(Servo_value<Servo_min)
     Servo_value = Servo_min;
