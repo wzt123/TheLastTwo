@@ -466,24 +466,24 @@ void Servo_control(void)
           if(error<0)
           {
             Kp = 27;
-            Kd = 15;
+            Kd = 2;
           }
           else
           {
             Kp = 27;
-            Kd = 15;
+            Kd = 2;
           }
         }
         else if(All_Black<10)//长直道进弯道
         {
           if(error<0)
           {
-            Kp = 40;
+            Kp = 39;
             Kd = 12;
           } 
           else
           {
-            Kp = 40;
+            Kp = 39;
             Kd = 12;
           }
         }
@@ -491,12 +491,12 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 40;
+            Kp = 42;
             Kd = 12;
           }
           else
           {
-            Kp = 44;
+            Kp = 42;
             Kd=12;
           }
         }
@@ -504,12 +504,12 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 38;
+            Kp = 35;
             Kd = 12;
           }
           else
           {
-            Kp = 38;
+            Kp = 35;
             Kd=12;
           }
         }
@@ -517,12 +517,12 @@ void Servo_control(void)
         {
           if(error<0)     //左转
           {
-            Kp=54;
+            Kp=50;
             Kd=20;
           }
           else
           {
-            Kp=54;
+            Kp=50;
             Kd =20;
           }
         }
@@ -545,13 +545,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp=49;
-            Kd=22;
+            Kp=48;
+            Kd=20;
           }
           else
           {
-            Kp=49;
-            Kd =22;
+            Kp=48;
+            Kd =20;
           }
         }
         
@@ -568,7 +568,6 @@ void Servo_control(void)
             Kd = 29;
           }
         }
-        
         
         else if(All_Black<41)
         {
@@ -606,12 +605,12 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 25;
+            Kp = 27;
             Kd = 2;
           }
           else
           {
-            Kp = 25;
+            Kp = 27;
             Kd = 2;
           }
         }
@@ -619,12 +618,12 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 40;
+            Kp = 39;
             Kd = 12;
           } 
           else
           {
-            Kp = 40;
+            Kp = 39;
             Kd = 12;
           }
         }
@@ -632,13 +631,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 44;
-            Kd = 14;
+            Kp = 42;
+            Kd = 12;
           }
           else
           {
-            Kp = 44;
-            Kd = 14;
+            Kp = 42;
+            Kd=12;
           }
         }
         else if(All_Black<22)////弯道入直道的时候
@@ -658,12 +657,12 @@ void Servo_control(void)
         {
           if(error<0)     //左转
           {
-            Kp=54;
+            Kp=50;
             Kd=20;
           }
           else
           {
-            Kp=54;
+            Kp=50;
             Kd =20;
           }
         }
@@ -686,13 +685,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp=54;
-            Kd=22;
+            Kp=48;
+            Kd=20;
           }
           else
           {
-            Kp=54;
-            Kd =22;
+            Kp=48;
+            Kd =20;
           }
         }
         
@@ -700,26 +699,26 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 59;
+            Kp = 52;
             Kd = 29;
           }
           else
           {
-            Kp = 59;
+            Kp = 52;
             Kd = 29;
           }
         }
         
         else if(All_Black<41)
         {
-          if(error<0)//左打
+          if(error<0)
           {
-            Kp = 70;
+            Kp = 65;
             Kd = 30;
           }
           else
           {
-            Kp = 70;
+            Kp = 65;
             Kd = 30;
           }
         }
