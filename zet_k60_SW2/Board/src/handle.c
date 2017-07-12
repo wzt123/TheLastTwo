@@ -393,7 +393,8 @@ void Servo_control(void)
   {
     Lastline=2;
   }
-  
+  if(Cross_Flag==31)
+    Lastline=Ring_First_Row;
   l = 59-Lastline;
 
     for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)

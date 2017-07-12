@@ -390,6 +390,8 @@ void Servo_control(void)
     Lastline=2;
   }
   
+  if(Cross_Flag==31)
+    Lastline=Ring_First_Row;
   l = 59-Lastline;
 
   for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
@@ -438,7 +440,7 @@ void Servo_control(void)
 //          Servo_temp=-Ring_First_Row*100/10-90;
 //        }
       Kp =45;//66
-      Kd = 35;
+      Kd = 28;
       Servo_temp = Kp*error/10+Kd*errorerror/10;
       
     }
@@ -1019,7 +1021,7 @@ void Find_Middle()
     }
   }
   /////////////////////////////////////////////////////////////
-  if(Cross_Flag_Last==31) //圆环补右线，左转
+  /*if(Cross_Flag_Last==31) //圆环补右线，左转
   {
     if(Right_xian==0) Right_xian=57;
     Right_Slope=1.0*(Road_Right[Right_xian]-End_zuo)/(Right_xian-Ring_First_zuo);
@@ -1033,9 +1035,9 @@ void Find_Middle()
       Road_Right[i]=Road_Right[i+1];
       Road_Left[i]=0;
     }
-  }
+  }*/
   //}
-  /*if(Cross_Flag_Last==32) //圆环补左线，右转
+  if(Cross_Flag_Last==31) //圆环补左线，右转
   {
     if(Left_xian==0) Left_xian=57;
     Right_Slope=1.0*(Road_Left[Left_xian]-End_you)/(Left_xian-Ring_First_you);
@@ -1049,7 +1051,7 @@ void Find_Middle()
       Road_Left[i]=Road_Left[i+1];
       Road_Right[i]=0;
     }
-  }*/
+  }
   //************************//
   //出圆环判断
   if(Cross_Flag==31)

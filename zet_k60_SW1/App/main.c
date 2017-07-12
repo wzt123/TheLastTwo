@@ -173,13 +173,13 @@ void  main(void)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
       OLED_Print_Num1(88, 1, Cross_Flag);
-      OLED_Print_Num1(88, 2, stopLine_temp);
-      OLED_Print_Num1(88, 3, Cross_Cnt);
-     OLED_Print_Num1(88, 4, speed_get_L);
-      OLED_Print_Num1(88, 5, speed_get_R);
+      OLED_Print_Num1(88, 2, errorerror);
+      OLED_Print_Num1(88, 3, Servo_temp);
+     OLED_Print_Num1(88, 4, All_Black);
+      OLED_Print_Num1(88, 5, stop_Flag);
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
       //wzt_bluetooth();     
-      OLED_Print_Num1(88, 6, time1);
+      OLED_Print_Num1(88, 6, stopLine_temp);
     }
     //wzt_bluetooth();      
     
