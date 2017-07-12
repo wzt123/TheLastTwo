@@ -1227,8 +1227,6 @@ void Find_Middle()
 }
 
 //寻边线
-uint8 a=1,i,j;
-
 void Search_Line(void)
 {
   Cross_Flag_Last=Cross_Flag; 
@@ -1259,9 +1257,9 @@ void Search_Line(void)
   Cross_flag=0;
   Right_xian=0;
   Left_xian=0;
-  a=1;
+  uint8 a=1;
   uint8 b=79;
-  uint8 k;
+  uint8 k,i,j;
   uint8 a_f=0,b_f=0,c_f=0;
   uint8 Left_diu=0;
   uint8 Right_diu=0;
@@ -1324,47 +1322,34 @@ void Search_Line(void)
     Road_Right_f[Row_Ptr]=Road_Right[Row_Ptr];
     
     start_line_num[Row_Ptr] = 0;
-    start_line_temp[Row_Ptr] = 0;
-      for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
-      {      
-        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 && img[Row_Ptr][Col_Ptr+2]==0&&
-           img[Row_Ptr][Col_Ptr+3]==255&& img[Row_Ptr][Col_Ptr+4]==255&& img[Row_Ptr][Col_Ptr+5]==255)
-        {
-          start_line_num[Row_Ptr] ++;
-        }
-//        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==255)
-//        {
-//          start_line_temp[Row_Ptr]++;
-//        }
-      }
-      if(start_line_num[Row_Ptr]>4)
+    for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
+    {      
+      if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 && img[Row_Ptr][Col_Ptr+2]==0&&
+         img[Row_Ptr][Col_Ptr+3]==255&& img[Row_Ptr][Col_Ptr+4]==255&& img[Row_Ptr][Col_Ptr+5]==255)
       {
-        stop_line_num++;
-      }
-//      if(start_line_temp[Row_Ptr]>6)
-//      {
-//        start_line_temp_num++;
-//      }
-//      if(start_line_temp_num>=3)
-//      {
-//        stopLine_temp=1;
-//      }
-      if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
+        start_line_num[Row_Ptr] ++;
+      }      
+    }
+    if(start_line_num[Row_Ptr]>4)
+    {
+      stop_line_num++;
+    }
+    if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
+    {
+      stopLine_temp=1;
+      if(sum_time>80)
       {
-        stopLine_temp=1;
-        if(sum_time>80)
-        {
-          Stop_Flag=2;
-        }
+        Stop_Flag=2;
       }
-      else if(stop_line_num>=3&&Stop_Flag==0)
-      {
-        stopLine_temp=1;
-        Stop_Flag=1;
-      }
+    }
+    else if(stop_line_num>=3&&Stop_Flag==0)
+    {
+      stopLine_temp=1;
+      Stop_Flag=1;
+    }
     
     //内层for开始 从中心向左边
-    for(Col_Ptr=60; Col_Ptr>2; Col_Ptr--)
+    for(Col_Ptr=60; Col_Ptr>3; Col_Ptr--)
     {
       if(img[Row_Ptr][Col_Ptr-2]==0 && img[Row_Ptr][Col_Ptr-1]==0&&
          img[Row_Ptr][Col_Ptr]==255&& img[Row_Ptr][Col_Ptr+1]==255)
@@ -1955,7 +1940,7 @@ void Search_Line(void)
             }
         }
     }*/
-    if(ring_num>1&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>4)
+    if(ring_num>1&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>4&&stopLine_temp!=1)
     {
       for(i=Left_xian;i>Ring_First_Row;i--)
       {
@@ -1980,7 +1965,7 @@ void Search_Line(void)
       Road_Right[Row_Ptr]=Road_Right[Row_Ptr+1];
     }
   }//结束for 行循环
-  if(ring_num>1&&Right_right==1&&Left_left==0&&Right_xian>Ring_First_Row) //you斜入圆环
+  if(ring_num>1&&Right_right==1&&Left_left==0&&Right_xian>Ring_First_Row&&stopLine_temp!=1) //you斜入圆环
   {
     //max_xian=Right_xian;
     
@@ -2002,7 +1987,7 @@ void Search_Line(void)
       }
     }
   }
-  if(ring_num>1&&Right_right==0&&Left_left==1&&Left_xian>Ring_First_Row) //zuo斜入圆环
+  if(ring_num>1&&Right_right==0&&Left_left==1&&Left_xian>Ring_First_Row&&stopLine_temp!=1) //zuo斜入圆环
   {
     //max_xian=Right_xian;
     

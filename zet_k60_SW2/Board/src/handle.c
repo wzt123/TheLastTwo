@@ -1332,7 +1332,6 @@ void Find_Middle()
 }
 
 //寻边线
-uint8 a=1;
 
 void Search_Line(void)
 {
@@ -1370,7 +1369,7 @@ void Search_Line(void)
   Right_xian=0;
   Left_xian=0;
   Cross_Flag_3=0;
-  a=1;
+  uint8 a=1;
   uint8 b=79;
   uint8 i,j,k;
   uint8 a_f=0,b_f=0,c_f=0;
@@ -1472,7 +1471,7 @@ void Search_Line(void)
     }
     
     //内层for开始 从中心向左边
-    for(Col_Ptr=60; Col_Ptr>2; Col_Ptr--)
+    for(Col_Ptr=60; Col_Ptr>3; Col_Ptr--)
     {
       if(img[Row_Ptr][Col_Ptr-2]==0 && img[Row_Ptr][Col_Ptr-1]==0&&
          img[Row_Ptr][Col_Ptr]==255&& img[Row_Ptr][Col_Ptr+1]==255)
@@ -2049,7 +2048,7 @@ void Search_Line(void)
             }
         }
     }*/
-    if(ring_num>1&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>4)
+    if(ring_num>1&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>4&&stopLine_temp!=1)
     {
       for(i=Left_xian;i>Ring_First_Row;i--)
       {
@@ -2074,7 +2073,7 @@ void Search_Line(void)
       Road_Right[Row_Ptr]=Road_Right[Row_Ptr+1];
     }
   }//结束for 行循环
-  if(ring_num>1&&Right_right==1&&Left_left==0&&Right_xian>Ring_First_Row) //you斜入十字
+  if(ring_num>1&&Right_right==1&&Left_left==0&&Right_xian>Ring_First_Row&&stopLine_temp!=1) //you斜入十字
   {
     //max_xian=Right_xian;
     
@@ -2096,7 +2095,7 @@ void Search_Line(void)
       }
     }
   }
-  if(ring_num>1&&Right_right==0&&Left_left==1&&Left_xian>Ring_First_Row) //zuo斜入十字
+  if(ring_num>1&&Right_right==0&&Left_left==1&&Left_xian>Ring_First_Row&&stopLine_temp!=1) //zuo斜入十字
   {
     //max_xian=Right_xian;
     
