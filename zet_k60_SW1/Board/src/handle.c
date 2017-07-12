@@ -1818,7 +1818,7 @@ void Search_Line(void)
         //Cross_Flag=3;/////标记为小圆环
       //}
       //else 
-        if(ring_num>5&&ring_time==0&&Road_type==1&&stopLine_temp==0)
+        if(ring_num>5/*&&ring_time==0*/&&stopLine_temp==0)
         {
           if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
           {
