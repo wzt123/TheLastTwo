@@ -32,7 +32,7 @@ uint8 White_Cnt=0;//全白行计数_所有的
 uint8 White_Ren=0;
 uint8 Right_xian=0;
 uint8 Left_xian=0;
-uint16 Servo_value = 8619;//舵机输出pwm值
+uint16 Servo_value = 8616;//舵机输出pwm值
 uint16 Servo_Value_Last = 0;
 
 uint8 Hinder_Start=0;
@@ -43,7 +43,7 @@ uint8 Change_Flag;
 uint8 CrossRow=0;
 
 
-uint16 Servomiddle=8619;
+uint16 Servomiddle=8615;
 uint32 Servo_max=8775;//往右打
 uint32 Servo_min=8455;//往左打
 float CenterLineSlope=0;
@@ -382,7 +382,7 @@ void Servo_control(void)
   }
   else if(stopLine_temp==0)
   {
-    Servomiddle=8622;
+    Servomiddle=8615;
   }
   
   if(All_Black>2)
@@ -465,13 +465,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 27;
-            Kd = 2;
+            Kp = 40;
+            Kd = 12;
           }
           else
           {
-            Kp = 27;
-            Kd = 2;
+            Kp = 40;
+            Kd = 12;
           }
         }
         else if(All_Black<10)//长直道进弯道
@@ -1078,7 +1078,7 @@ void Find_Middle()
   }
 //  if(Cross_Cnt==4)
 //  {
-  if(Cross_Flag_Last!=31)
+  if(Cross_Flag_Last!=31&&stopLine_temp==0)
   {
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
@@ -1449,6 +1449,14 @@ void Search_Line(void)
     {
       stop_line_num++;
     }
+    if(start_line_temp[Row_Ptr]>6)
+    {
+        start_line_temp_num++;
+      }
+      if(start_line_temp_num>=3)
+      {
+        stopLine_temp=1;
+      }
     if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
     {
       stopLine_temp=1;

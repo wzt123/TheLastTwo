@@ -144,11 +144,11 @@ void Motor_Out(void)
       {
         if(Status==0)
         {
-          speed_goal=3800;
+          speed_goal=3600;
         }
         else if(Status==1)
         {
-          speed_goal=4100;
+          speed_goal=3800;
         }
         else if(Status==2)//直道加速
         {
@@ -170,11 +170,11 @@ void Motor_Out(void)
       {
        if(Status==0)
         {
-          speed_goal=3800;
+          speed_goal=3600;
         }
         else if(Status==1)
         {
-          speed_goal=4100;
+          speed_goal=3800;
         }
         else if(Status==2)//入弯减速
         {
@@ -191,25 +191,23 @@ void Motor_Out(void)
           speed_goal=5000;
         }
       }     
+      
+//      if(Car==2)
+//      {
+//        if(ABDistance>30)
+//        {
+//          if(ABDistance<Distance-50)
+//          {
+//            speed_goal = speed_goal-400;
+//          }
+//          else if(ABDistance>Distance+50)
+//          {
+//            speed_goal = speed_goal+400;
+//          }
+//        }
+//      }
       speed_goal_R=speed_goal;
-      speed_goal_L=speed_goal;
-      
-
-      if(Car==2)
-      {
-        if(ABDistance<Distance-50)
-        {
-          speed_goal_R = speed_goal_R-400;
-          speed_goal_L = speed_goal_L-400;
-        }
-
-        else if(ABDistance>Distance+50)
-        {
-          speed_goal_R = speed_goal_R+400;
-          speed_goal_L = speed_goal_L+400;
-        }
-      }
-      
+      speed_goal_L=speed_goal;      
 //      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
 //      {
 ////        if(abs(error)<8&&abs(error)>=4)
@@ -249,46 +247,47 @@ void Motor_Out(void)
       stop_time=0;
   }
   
-//  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>10)
-//  {
-//    if(speed_get_L<50)
-//    { 
-//      speed_PWM_L = 0;
-//    }
-//    if(speed_get_R<50)
-//    {
-//      speed_PWM_R = 0;
-//    }
-//  }
-//  else
-    if(speed_get_R<100||speed_get_L<100)
+  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>10)
+  {
+    if(speed_get_L<50)
+    { 
+      speed_PWM_L = 0;
+    }
+    if(speed_get_R<50)
+    {
+      speed_PWM_R = 0;
+    }
+  }
+  else if((speed_get_R<100||speed_get_L<100))
   {
     if(speed_get_R<100)
-      speed_PWM_R = 6800;
+      speed_PWM_R = 7000;
     if(speed_get_L<100)
-      speed_PWM_L = 6800;
+      speed_PWM_L = 7000;
   }
   
  if(speed_PWM_R<0)
-  {
-    gpio_set(PTC3,0);//驱动反向使能
-    gpio_set(PTC2,1);//驱动反向使能
-    gpio_set(PTB17,1);//驱动反向使能
-    gpio_set(PTB16,0);//驱动反向使能
-    speed_PWM_R=abs(speed_PWM_R);
-    
-  }
+   speed_PWM_R=0;
+//  {
+//    gpio_set(PTC3,0);//驱动反向使能
+//    gpio_set(PTC2,1);//驱动反向使能
+//    gpio_set(PTB17,1);//驱动反向使能
+//    gpio_set(PTB16,0);//驱动反向使能
+//    speed_PWM_R=abs(speed_PWM_R);
+//    
+//  }
   if(speed_PWM_R>8800)
     speed_PWM_R=8800;
   
   if(speed_PWM_L<0)
-  {
-    gpio_set(PTC3,0);//驱动反向使能
-    gpio_set(PTC2,1);//驱动反向使能
-    gpio_set(PTB17,1);//驱动反向使能
-    gpio_set(PTB16,0);//驱动反向使能
-    speed_PWM_L = abs(speed_PWM_L);
-  }
+    speed_PWM_L=0;
+//  {
+//    gpio_set(PTC3,0);//驱动反向使能
+//    gpio_set(PTC2,1);//驱动反向使能
+//    gpio_set(PTB17,1);//驱动反向使能
+//    gpio_set(PTB16,0);//驱动反向使能
+//    speed_PWM_L = abs(speed_PWM_L);
+//  }
   if(speed_PWM_L>8800)
     speed_PWM_L=8800;
    

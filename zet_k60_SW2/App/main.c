@@ -159,10 +159,10 @@ void  main(void)
     else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
       stop_Car2();
     
-    if(Cross_Flag==1&&((Left_stop>18&&Left_stop<25)||(Right_stop>18&&Right_stop<25))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake==0)
-    {
-      Chaoche_FrontCar();
-    }
+//    if(Cross_Flag==1&&((Left_stop>18&&Left_stop<25)||(Right_stop>18&&Right_stop<25))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake==0)
+//    {
+//      Chaoche_FrontCar();
+//    }
     
     
     ///À¶ÑÀ´«ËÍ±àÂëÆ÷µÄÖµ
@@ -176,8 +176,8 @@ void  main(void)
       OLED_Print_Num1(88, 1, All_Black);
       OLED_Print_Num1(88, 2, error);
       OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, Kp);
-      OLED_Print_Num1(88, 5, Kd);
+      OLED_Print_Num1(88, 4, speed_get_L);
+      OLED_Print_Num1(88, 5, speed_get_R);
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);
       //wzt_bluetooth();     
       OLED_Print_Num1(88, 6, time1);

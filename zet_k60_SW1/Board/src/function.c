@@ -191,24 +191,21 @@ void Motor_Out(void)
           speed_goal=5000;
         }
       }     
-      speed_goal_R=speed_goal;
-      speed_goal_L=speed_goal;
-      
-
+     
       if(Car==2)
       {
         if(ABDistance<Distance-50)
         {
-          speed_goal_R = speed_goal_R-400;
-          speed_goal_L = speed_goal_L-400;
+          speed_goal = speed_goal-400;
         }
 
         else if(ABDistance>Distance+50)
         {
-          speed_goal_R = speed_goal_R+400;
-          speed_goal_L = speed_goal_L+400;
+          speed_goal = speed_goal+400;
         }
-      }
+      }     
+      speed_goal_R=speed_goal;
+      speed_goal_L=speed_goal;
       
 //      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
 //      {
@@ -292,8 +289,8 @@ void Motor_Out(void)
   if(speed_PWM_L>8800)
     speed_PWM_L=8800;
    
-  ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
-  ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
+  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2左电机
+  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1右电机
   
 }
 /*
