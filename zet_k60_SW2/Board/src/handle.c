@@ -932,10 +932,13 @@ void Servo_control(void)
       Servo_value = Servomiddle+Servo_temp;
       error_sum = 0;
     }
-    if(error_sum>0)
-      Servo_value = Servo_max;
-    else if (error_sum<0)
-      Servo_value = Servo_min;
+    if(stopLine_temp==0)
+    {
+      if(error_sum>0)
+        Servo_value = Servo_max;
+      else if (error_sum<0)
+        Servo_value = Servo_min;
+    }
     
   if(Servo_value<Servo_min)
     Servo_value = Servo_min;
@@ -1362,6 +1365,8 @@ void Search_Line(void)
   uint8 Cross_flag=0;
   uint8 Left_diu=0;
   uint8 Right_diu=0;
+  uint8 start_line_temp[60]={0};
+  uint8 start_line_temp_num=0;
   Right_xian=0;
   Left_xian=0;
   Cross_Flag_3=0;
@@ -1427,6 +1432,7 @@ void Search_Line(void)
     Road_Right_f[Row_Ptr]=Road_Right[Row_Ptr];
     
     start_line_num[Row_Ptr] = 0;
+    start_line_temp[Row_Ptr] = 0;
     for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
     {      
       if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 && img[Row_Ptr][Col_Ptr+2]==0&&
@@ -1434,6 +1440,10 @@ void Search_Line(void)
       {
         start_line_num[Row_Ptr] ++;
       }      
+      if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==255)
+      {
+        start_line_temp[Row_Ptr]++;
+      }
     }
     if(start_line_num[Row_Ptr]>4)
     {

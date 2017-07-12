@@ -599,11 +599,13 @@ void Servo_control(void)
       Servo_value = Servomiddle+Servo_temp;
       error_sum = 0;
     }
+    if(stopLine_temp==0)
+    {
     if(error_sum>0)
       Servo_value = Servo_max;
     else if (error_sum<0)
       Servo_value = Servo_min;
-    
+    }
   if(Servo_value<Servo_min)
     Servo_value = Servo_min;
   if(Servo_value>Servo_max)
@@ -1012,7 +1014,8 @@ void Search_Line(void)
   uint8 a_f=0,b_f=0,c_f=0;
   uint8 Left_diu=0;
   uint8 Right_diu=0;
-  
+  uint8 start_line_temp[60]={0};
+  uint8 start_line_temp_num=0;
   Left_Cnt=0;
   Right_Cnt=0;
   Left_cnt=0;
@@ -1070,17 +1073,30 @@ void Search_Line(void)
     Road_Right_f[Row_Ptr]=Road_Right[Row_Ptr];
     
     start_line_num[Row_Ptr] = 0;
+    start_line_temp[Row_Ptr] = 0;
       for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
       {      
         if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 && img[Row_Ptr][Col_Ptr+2]==0&&
            img[Row_Ptr][Col_Ptr+3]==255&& img[Row_Ptr][Col_Ptr+4]==255&& img[Row_Ptr][Col_Ptr+5]==255)
         {
           start_line_num[Row_Ptr] ++;
-        }      
+        }
+        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==255)
+        {
+          start_line_temp[Row_Ptr]++;
+        }
       }
       if(start_line_num[Row_Ptr]>4)
       {
         stop_line_num++;
+      }
+      if(start_line_temp[Row_Ptr]>6)
+      {
+        start_line_temp_num++;
+      }
+      if(start_line_temp_num>=3)
+      {
+        stopLine_temp=1;
       }
       if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
       {
@@ -1156,18 +1172,30 @@ void Search_Line(void)
     {
       
       start_line_num[Row_Ptr] = 0;
+      start_line_temp[Row_Ptr] = 0;
       for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
       {      
         if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 &&img[Row_Ptr][Col_Ptr+2]==255 &&img[Row_Ptr][Col_Ptr+3]==255 )
         {
           start_line_num[Row_Ptr] ++;
         }
+        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==255)
+        {
+          start_line_temp[Row_Ptr]++;
+        }
       }
       if(start_line_num[Row_Ptr]>4)
       {
         stop_line_num++;
       }
-      
+      if(start_line_temp[Row_Ptr]>6)
+      {
+        start_line_temp_num++;
+      }
+      if(start_line_temp_num>=3)
+      {
+        stopLine_temp=1;
+      }
       if(Car==1)
       {
         if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
