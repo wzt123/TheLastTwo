@@ -1329,7 +1329,6 @@ void Find_Middle()
 }
 
 //寻边线
-uint8 a=1;
 
 void Search_Line(void)
 {
@@ -1365,7 +1364,7 @@ void Search_Line(void)
   Right_xian=0;
   Left_xian=0;
   Cross_Flag_3=0;
-  a=1;
+  uint8 a=1;
   uint8 b=79;
   uint8 i,j,k;
   uint8 a_f=0,b_f=0,c_f=0;
@@ -1454,7 +1453,7 @@ void Search_Line(void)
     }
     
     //内层for开始 从中心向左边
-    for(Col_Ptr=60; Col_Ptr>2; Col_Ptr--)
+    for(Col_Ptr=60; Col_Ptr>3; Col_Ptr--)
     {
       if(img[Row_Ptr][Col_Ptr-2]==0 && img[Row_Ptr][Col_Ptr-1]==0&&
          img[Row_Ptr][Col_Ptr]==255&& img[Row_Ptr][Col_Ptr+1]==255)
