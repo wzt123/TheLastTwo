@@ -124,7 +124,7 @@ void Motor_Out(void)
   speed_PWM=6550;
   uint8 speed_Ki=5;
   uint8 speed_Kp=20;  
-  uint8 speed_Kd=5;
+  uint8 speed_Kd=8;
   gpio_set(PTC3,1);
   gpio_set(PTC2,0);
   gpio_set(PTB17,0);

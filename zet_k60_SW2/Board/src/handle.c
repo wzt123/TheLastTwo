@@ -1439,23 +1439,23 @@ void Search_Line(void)
       {
         start_line_num[Row_Ptr] ++;
       }      
-      if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==255)
-      {
-        start_line_temp[Row_Ptr]++;
-      }
+//      if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==255)
+//      {
+//        start_line_temp[Row_Ptr]++;
+//      }
     }
     if(start_line_num[Row_Ptr]>4)
     {
       stop_line_num++;
     }
-    if(start_line_temp[Row_Ptr]>6)
-    {
-        start_line_temp_num++;
-      }
-      if(start_line_temp_num>=3)
-      {
-        stopLine_temp=1;
-      }
+//    if(start_line_temp[Row_Ptr]>6)
+//    {
+//        start_line_temp_num++;
+//      }
+//      if(start_line_temp_num>=3)
+//      {
+//        stopLine_temp=1;
+//      }
     if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
     {
       stopLine_temp=1;
