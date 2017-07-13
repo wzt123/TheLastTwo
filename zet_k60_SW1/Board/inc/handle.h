@@ -80,6 +80,7 @@ extern uint8 white_Left_cnt;
 extern uint8 white_Right_cnt;
 extern uint8 Ring_width_1;
 extern uint8 Ring_width_2;
+extern uint8 Ring_not_out;
 extern uint8 Cross_Cnt;
 extern uint8 Out_Left;
 extern int16 Servo_error;

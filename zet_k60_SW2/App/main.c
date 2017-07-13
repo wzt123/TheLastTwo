@@ -174,12 +174,13 @@ void  main(void)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
       OLED_Print_Num1(88, 1, All_Black);
-      OLED_Print_Num1(88, 2, white_Right_cnt);
-      OLED_Print_Num1(88, 3, white_Left_cnt);
-      OLED_Print_Num1(88, 4, Cross_Flag);
-      OLED_Print_Num1(88, 5, speed_get_L);
+
+      OLED_Print_Num1(88, 2, error);
+      OLED_Print_Num1(88, 3, errorerror);
+     OLED_Print_Num1(88, 4, Kp);
+      OLED_Print_Num1(88, 5, Kd);
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);    
-      OLED_Print_Num1(88, 6, speed_get_R);
+      OLED_Print_Num1(88, 6, Servo_temp);
     }
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {

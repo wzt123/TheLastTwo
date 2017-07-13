@@ -32,7 +32,7 @@ uint8 White_Cnt=0;//全白行计数_所有的
 uint8 White_Ren=0;
 uint8 Right_xian=0;
 uint8 Left_xian=0;
-uint16 Servo_value = 8581;//舵机输出pwm值
+uint16 Servo_value = 8582;//舵机输出pwm值
 uint16 Servo_Value_Last = 0;
 
 uint8 Hinder_Start=0;
@@ -43,7 +43,8 @@ uint8 Change_Flag;
 uint8 CrossRow=0;
 
 
-uint16 Servomiddle=8590;
+
+uint16 Servomiddle=8582;
 uint32 Servo_max=8745;//往右打
 uint32 Servo_min=8425;//往左打
 float CenterLineSlope=0;
@@ -105,6 +106,8 @@ uint8 Ring_Second_Row = 0;
 uint8 Ring_width = 0;
 uint8 Ring_width_1 = 0;
 uint8 Ring_width_2 = 0;
+uint8 Ring_not_out=0;
+uint8 Ring_out=0;
 uint8 Cross_Flag_Last=0;
 uint8 start_line_num[60] = {0};
 uint8 stopLine_temp=0;
@@ -348,6 +351,21 @@ void Servo_control(void)
     Cross_Flag=0;
   }
   
+  if(Cross_Flag==31)
+  {
+    Ring_not_out = 1;//进入圆环了，不用折点
+  }
+  else if(Cross_Flag==1||Cross_Flag==5||Cross_Flag==6||(white_Right_cnt<2&&white_Left_cnt<2))
+  {
+    if(Cross_Flag==1)
+    {
+      if(((Left_stop>20&&Left_stop<25)||(Right_stop>20&&Right_stop<25))&&(Right_stop_find_temp==1||Left_stop_find_temp==1))
+        Ring_not_out=0;//出去了，可以用折点了
+    }
+    else
+      Ring_not_out=0;//出去了，可以用折点了
+  }
+  
   if((Cross_Flag_Last==2||Cross_Flag_Last==4)&&(Cross_Flag!=2&&Cross_Flag!=4))
     cross_time++;
   if(cross_time!=0&&abs(error)<5)
@@ -382,7 +400,7 @@ void Servo_control(void)
   }
   else if(stopLine_temp==0)
   {
-    Servomiddle=8590;
+    Servomiddle=8582;
   }
   
   if(All_Black>2)
@@ -460,7 +478,7 @@ void Servo_control(void)
     }
     else
     {  
-      if(speed_goal<4500)
+      if(speed_goal<4250)
       {
         if(All_Black==0)
         {
@@ -475,102 +493,72 @@ void Servo_control(void)
             Kd = 12;
           }
         }
-        else if(All_Black<10)//长直道进弯道
+        else if(All_Black<10)
+      {
+        if(error<0)
         {
-          if(error<0)
-          {
-            Kp = 39;
-            Kd = 12;
-          } 
-          else
-          {
-            Kp = 39;
-            Kd = 12;
-          }
+          Kp = 35;
+          Kd = 5;
         }
-        else if(All_Black<17)//直道入弯道或者270度时提前转角
+        else
         {
-          if(error<0)
-          {
-
-            Kp = 40;
-            Kd = 15;
-          }
-          else
-          {
-            Kp = 44;
-            Kd = 15;
-          }
+          Kp = 35;
+          Kd = 5;
         }
-        else if(All_Black<22)////弯道入直道的时候
+      }
+      else if(All_Black<17)
+      {
+        if(error<0)
         {
-          if(error<0)
-          {
-            Kp = 35;
-            Kd = 12;
-          }
-          else
-          {
-            Kp = 38;
-            Kd = 12;
-          }
+          Kp = 35;
+          Kd = 11;
         }
-        else if(All_Black<25)//弯道入直道的时候
+        else
         {
-          if(error<0)     //左转
-          {
-            Kp = 54;
-            Kd = 20;
-          }
-          else
-          {
-            Kp = 54;
-            Kd=20;
-          }
-       }
-        
-        else if(All_Black<27)//弯道内部
-        {
-          if(error<0)
-          {
-            Kp = 36;
-            Kd = 17;
-          }
-          else
-          {
-            Kp = 36;
-            Kd = 17;
-          }
+          Kp = 35;
+          Kd=11;
         }
-        
-        else if(All_Black<32)//靠弯道外边
+      }
+      else if(All_Black<22)
+      {
+        if(error<0)
         {
-          if(error<0)
-          {
-            Kp = 49;
-            Kd = 35;
-          }
-          else
-          {
-            Kp = 49;
-            Kd = 35;
-          }
+          Kp = 45;
+          Kd = 19;
         }
-        
-        else if(All_Black<36)       //靠弯道外边
+        else
         {
-          if(error<0)
-          {
-            Kp = 52;
-            Kd = 29;
-          }
-          else
-          {
-            Kp = 52;
-            Kd = 29;
-          }
+          Kp = 45;
+          Kd=19;
         }
-
+      }
+      else if(All_Black<25)
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=20;
+        }
+        else
+        {
+          Kp=50;
+          Kd =20;
+        }
+      }
+      
+      else if(All_Black<32)
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=25;
+        }
+        else
+        {
+          Kp=50;
+          Kd =25;
+        }
+      }
         else if(All_Black<41)
         {
           if(error<0)
@@ -601,7 +589,7 @@ void Servo_control(void)
 //        }
       }
     
-     else if(speed_goal<5250)
+     else if(speed_goal<4850)
       {
         if(All_Black==0)
         {
@@ -629,10 +617,11 @@ void Servo_control(void)
             Kd = 15;
           }
         }
-        else if(All_Black<17)//直道入弯道或者270度时提前转角
+        else if(All_Black<5)
         {
           if(error<0)
           {
+
             Kp = 42;
             Kd = 13;
           }
@@ -642,34 +631,27 @@ void Servo_control(void)
             Kd = 13;
           }
         }
-        else if(All_Black<22)////弯道入直道的时候
+        else if(All_Black<10)
         {
           if(error<0)
           {
             Kp = 35;
-            Kd = 12;
+            Kd = 13;
           }
           else
           {
             Kp = 35;
-            Kd = 12;
+            Kd = 13;
           }
         }
-        else if(All_Black<25)//弯道入直道的时候
+      else if(All_Black<17)
+      {
+        if(error<0)
         {
-          if(error<0)     //左转
-          {
-            Kp = 54;
-            Kd = 20;
-          }
-          else
-          {
-            Kp = 54;
-            Kd = 20;
-          }
+          Kp = 35;
+          Kd = 14;
         }
-        
-        else if(All_Black<27)//弯道内部
+        else
         {
           if(error<0)
           {
@@ -682,8 +664,10 @@ void Servo_control(void)
             Kd = 17;
           }
         }
-        
-        else if(All_Black<32)//靠弯道外边
+      }
+      else if(All_Black<22)
+      {
+        if(error<0)
         {
           if(error<0)
           {
@@ -696,21 +680,39 @@ void Servo_control(void)
             Kd = 22;
           }
         }
-        
-        else if(All_Black<36)       //靠弯道外边
+        else
         {
-          if(error<0)
-          {
-            Kp = 52;
-            Kd = 29;
-          }
-          else
-          {
-            Kp = 52;
-            Kd = 29;
-          }
+          Kp = 45;
+          Kd=19;
         }
-        
+      }
+      else if(All_Black<25)
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=20;
+        }
+        else
+        {
+          Kp=50;
+          Kd =20;
+        }
+      }
+      
+      else if(All_Black<32)
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=25;
+        }
+        else
+        {
+          Kp=50;
+          Kd =25;
+        }
+      }
         else if(All_Black<41)
         {
           if(error<0)
@@ -724,39 +726,7 @@ void Servo_control(void)
             Kd = 30;
           }
         }
-        
-        else if((All_Black>=41)) error_sum += error;
-//        else if(All_Black<57)
-//        {
-////          if(error<0)//左打
-////          {
-////            Kp = 120;
-////            Kd = 0;
-////          }
-////          else
-////          {
-////            Kp = 120;
-////            Kd = 0;
-////          }
-//          Servo_value = Servo_Value_Last;
-//        }
-//        
-//        else
-//        {
-////          if(error<0)
-////          {
-////            Kp = 140;
-////            Kd = 0;
-////          }
-////          else
-////          {
-////            Kp = 140;
-////            Kd = 0;
-////          }
-//          
-//          Servo_value = Servo_Value_Last;
-//          
-//        }
+        else if((All_Black>=41))error_sum += error;
       }
     
       
@@ -1092,7 +1062,10 @@ void Find_Middle()
         {
           
           cross_num = Row_Ptr;
-          All_Black=Row_Ptr;
+          if(Ring_not_out==0)
+          {
+            All_Black=Row_Ptr;
+          }
           
           break;
         }
@@ -1109,7 +1082,10 @@ void Find_Middle()
         {
           
           cross_num = Row_Ptr;
-          All_Black=Row_Ptr;
+          if(Ring_not_out==0)
+          {
+            All_Black=Row_Ptr;
+          }
           
           break;
         }

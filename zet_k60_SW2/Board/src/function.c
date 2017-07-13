@@ -144,11 +144,11 @@ void Motor_Out(void)
       {
         if(Status==0)
         {
-          speed_goal=3600;
+          speed_goal=4200;
         }
         else if(Status==1)
         {
-          speed_goal=3800;
+          speed_goal=4400;
         }
         else if(Status==2)//直道加速
         {
@@ -170,15 +170,15 @@ void Motor_Out(void)
       {
        if(Status==0)
         {
-          speed_goal=3600;
+          speed_goal=4200;
         }
         else if(Status==1)
         {
-          speed_goal=3800;
+          speed_goal=4400;
         }
         else if(Status==2)//入弯减速
         {
-          speed_goal=4300;
+          speed_goal=4600;
         }
         
         else if(Status==3)
