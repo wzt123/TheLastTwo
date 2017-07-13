@@ -32,7 +32,7 @@ uint8 White_Cnt=0;//全白行计数_所有的
 uint8 White_Ren=0;
 uint8 Right_xian=0;
 uint8 Left_xian=0;
-uint16 Servo_value = 8581;//舵机输出pwm值
+uint16 Servo_value = 8582;//舵机输出pwm值
 uint16 Servo_Value_Last = 0;
 
 uint8 Hinder_Start=0;
@@ -43,7 +43,7 @@ uint8 Change_Flag;
 uint8 CrossRow=0;
 
 
-uint16 Servomiddle=8581;
+uint16 Servomiddle=8582;
 uint32 Servo_max=8745;//往右打
 uint32 Servo_min=8425;//往左打
 float CenterLineSlope=0;
@@ -105,6 +105,8 @@ uint8 Ring_Second_Row = 0;
 uint8 Ring_width = 0;
 uint8 Ring_width_1 = 0;
 uint8 Ring_width_2 = 0;
+uint8 Ring_not_out=0;
+uint8 Ring_out=0;
 uint8 Cross_Flag_Last=0;
 uint8 start_line_num[60] = {0};
 uint8 stopLine_temp=0;
@@ -348,6 +350,21 @@ void Servo_control(void)
     Cross_Flag=0;
   }
   
+  if(Cross_Flag==31)
+  {
+    Ring_not_out = 1;//进入圆环了，不用折点
+  }
+  else if(Cross_Flag==1||Cross_Flag==5||Cross_Flag==6||(white_Right_cnt<2&&white_Left_cnt<2))
+  {
+    if(Cross_Flag==1)
+    {
+      if(((Left_stop>20&&Left_stop<25)||(Right_stop>20&&Right_stop<25))&&(Right_stop_find_temp==1||Left_stop_find_temp==1))
+        Ring_not_out=0;//出去了，可以用折点了
+    }
+    else
+      Ring_not_out=0;//出去了，可以用折点了
+  }
+  
   if((Cross_Flag_Last==2||Cross_Flag_Last==4)&&(Cross_Flag!=2&&Cross_Flag!=4))
     cross_time++;
   if(cross_time!=0&&abs(error)<5)
@@ -382,7 +399,7 @@ void Servo_control(void)
   }
   else if(stopLine_temp==0)
   {
-    Servomiddle=8581;
+    Servomiddle=8582;
   }
   
   if(All_Black>2)
@@ -1092,7 +1109,10 @@ void Find_Middle()
         {
           
           cross_num = Row_Ptr;
-          All_Black=Row_Ptr;
+          if(Ring_not_out==0)
+          {
+            All_Black=Row_Ptr;
+          }
           
           break;
         }
@@ -1109,7 +1129,10 @@ void Find_Middle()
         {
           
           cross_num = Row_Ptr;
-          All_Black=Row_Ptr;
+          if(Ring_not_out==0)
+          {
+            All_Black=Row_Ptr;
+          }
           
           break;
         }

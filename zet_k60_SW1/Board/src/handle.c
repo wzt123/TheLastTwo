@@ -45,8 +45,8 @@ uint8 Cross_Flag=0;
 uint8 Change_Flag;
 uint8 CrossRow=0;
 
-uint16 Servomiddle=8775;
-uint16 Servomiddle_rember=8770;
+uint16 Servomiddle=8762;
+uint16 Servomiddle_rember=8762;
 uint16 Servo_max=8938;
 uint16 Servo_min=8612;
 float CenterLineSlope=0;
@@ -107,6 +107,7 @@ uint8 Ring_Second_Row = 0;
 uint8 Ring_width = 0;
 uint8 Ring_width_1 = 0;
 uint8 Ring_width_2 = 0;
+uint8 Ring_not_out=0;
 uint8 Cross_Flag_Last=0;
 uint8 start_line_num[60] = {0};
 uint8 stop_line_num = 0;
@@ -344,6 +345,21 @@ void Servo_control(void)
     Cross_Flag=0;
   }
   
+  if(Cross_Flag==31)
+  {
+    Ring_not_out = 1;//进入圆环了，不用折点
+  }
+  else if(Cross_Flag==1||Cross_Flag==5||Cross_Flag==6||(white_Right_cnt<2&&white_Left_cnt<2))
+  {
+    if(Cross_Flag==1)
+    {
+      if(((Left_stop>20&&Left_stop<25)||(Right_stop>20&&Right_stop<25))&&(Right_stop_find_temp==1||Left_stop_find_temp==1))
+        Ring_not_out=0;//出去了，可以用折点了
+    }
+    else
+      Ring_not_out=0;//出去了，可以用折点了
+  }
+  
   if((Cross_Flag_Last==2||Cross_Flag_Last==4)&&(Cross_Flag!=2&&Cross_Flag!=4))
     cross_time++;
   if(cross_time!=0&&abs(error)<5)
@@ -467,12 +483,12 @@ void Servo_control(void)
           if(error<0)               //左转
           {
             Kp = 40;
-            Kd = 12;
+            Kd = 22;
           }
           else
           {
             Kp = 39;
-            Kd = 12;
+            Kd = 22;
           }
         }
         else if(All_Black<12)       //长直道进弯道
@@ -992,8 +1008,10 @@ void Find_Middle()
         {
           
           cross_num = Row_Ptr;
-          All_Black=Row_Ptr;
-          
+          if(Ring_not_out==0)
+          {
+            All_Black=Row_Ptr;
+          }
           break;
         }
       }
@@ -1009,7 +1027,10 @@ void Find_Middle()
         {
           
           cross_num = Row_Ptr;
-          All_Black=Row_Ptr;
+          if(Ring_not_out==0)
+          {
+            All_Black=Row_Ptr;
+          }
           
           break;
         }
