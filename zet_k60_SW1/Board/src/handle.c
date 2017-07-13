@@ -1299,6 +1299,8 @@ void Search_Line(void)
   stop_line_num = 0;
   Ring_width_1 = 50;
   Ring_width_2 = 30;
+  uint8 Ring_width_1_Row=0;
+  uint8 Ring_width_2_Row=0;
   Ring_width =0;
   Ring_First_Row=0;  
   Ring_Second_Row=0;
@@ -1701,7 +1703,7 @@ void Search_Line(void)
     {
       Cross_Flag_3=1;
     }
-    else if(Row_Ptr<50&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
+    else if(Row_Ptr<45&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
        (Left_Flag[Row_Ptr+7]==3 && Right_Flag[Row_Ptr+7]==3)&&
          (Left_Flag[Row_Ptr+6]==3 && Right_Flag[Row_Ptr+6]==3)&&(
                                                              (Left_Flag[Row_Ptr+5]==1 && Right_Flag[Row_Ptr+5]==1)||
@@ -1709,7 +1711,7 @@ void Search_Line(void)
                                                                  (Left_Flag[Row_Ptr+3]==1 && Right_Flag[Row_Ptr+3]==1)||
                                                                    (Left_Flag[Row_Ptr+2]==1 && Right_Flag[Row_Ptr+2]==1)||
                                                                      (Left_Flag[Row_Ptr+1]==1 && Right_Flag[Row_Ptr+1]==1)||
-                                                                       (Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1))&&Row_Ptr>All_Black)//如果四行后两行丢线前两行重新找到线，十字
+                                                                       (Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1))&&Row_Ptr>All_Black)//如果八行后两行丢线前两行重新找到线，十字
     {
       Cross_Flag=1;
       Cross_flag++;
@@ -1760,7 +1762,10 @@ void Search_Line(void)
       {
         ring_flag=1;///找到黑块左跳变点
         if(Col_Ptr+2<Ring_width_1)
+        {
           Ring_width_1 = Col_Ptr+2;///黑块左边最小的列
+          Ring_width_1_Row = Row_Ptr;
+        }
         a=Col_Ptr+1;///左边界
       }
       else if(ring_flag==1&&img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==255&&img[Row_Ptr][Col_Ptr+3]==255) 
@@ -1769,7 +1774,10 @@ void Search_Line(void)
         ring_flag=2;//找到黑块右跳变点
         ring_num++;//黑块行数加1
         if(Col_Ptr+1>Ring_width_2)
+        {
           Ring_width_2 = Col_Ptr+1;//黑块右边最大的的列
+          Ring_width_2_Row = Row_Ptr;
+        }
         if(ring_num==1) 
         {
           End_zuo=a;
@@ -1809,7 +1817,7 @@ void Search_Line(void)
       }
     }
     uint8 samll_Ring_temp=0;
-    if(abs(Ring_width_2-Col_Ptr)<3)//障碍
+    if(abs(Ring_width_2-Col_Ptr)<3)//障碍 白行封顶
     {     
       //samll_Ring_temp=1;
       //if(/*Ring_width>10&&Stop_Flag!=0&&sum_time>1000&&White_Cnt>3&&*/cross_Time==0&&Stop_Flag!=0&&White_Cnt>3&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
@@ -1819,11 +1827,11 @@ void Search_Line(void)
       //else 
         if(ring_num>5/*&&ring_time==0*/&&stopLine_temp==0)
         {
-          if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
+          if(Road_Right[Ring_width_2_Row]-Ring_width_2>Ring_width_1-Road_Left[Ring_width_1_Row])
           {
             Cross_Flag=5;
           }
-          else if(Road_Right[Row_Ptr]-Ring_width_2<Ring_width_1-Road_Left[Row_Ptr])
+          else if(Road_Right[Ring_width_2_Row]-Ring_width_2<Ring_width_1-Road_Left[Ring_width_1_Row])
           {
             Cross_Flag=6;
           }
