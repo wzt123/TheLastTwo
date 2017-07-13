@@ -169,7 +169,7 @@ void  main(void)
     send_data[0] = 0;
     send_data[1] = Cross_Flag*500;
     send_data[2] = 0;
-    //vcan_sendware((uint16_t *)send_data, sizeof(send_data));
+    vcan_sendware((uint16_t *)send_data, sizeof(send_data));
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
