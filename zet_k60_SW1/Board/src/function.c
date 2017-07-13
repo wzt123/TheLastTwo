@@ -162,7 +162,7 @@ void Motor_Out(void)
         
          else if(Status==4)
         {
-          speed_goal=5200;
+          speed_goal=5400;
         }
       }
       
@@ -188,7 +188,7 @@ void Motor_Out(void)
        
        else if(Status==4)
         {
-          speed_goal=5000;
+          speed_goal=4850;
         }
       }     
      
@@ -289,8 +289,8 @@ void Motor_Out(void)
   if(speed_PWM_L>8800)
     speed_PWM_L=8800;
    
-  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2左电机
-  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1右电机
+  ftm_pwm_duty(FTM2,FTM_CH0,speed_PWM_L);//B2左电机
+  ftm_pwm_duty(FTM2,FTM_CH1,speed_PWM_R);//B1右电机
   
 }
 /*

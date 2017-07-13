@@ -183,7 +183,7 @@ void Motor_Out(void)
         
         else if(Status==3)
         {
-          speed_goal=4800;
+          speed_goal=4700;
         }
        
        else if(Status==4)

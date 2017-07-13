@@ -43,7 +43,7 @@ uint8 Change_Flag;
 uint8 CrossRow=0;
 
 
-uint16 Servomiddle=8581;
+uint16 Servomiddle=8590;
 uint32 Servo_max=8745;//往右打
 uint32 Servo_min=8425;//往左打
 float CenterLineSlope=0;
@@ -382,7 +382,7 @@ void Servo_control(void)
   }
   else if(stopLine_temp==0)
   {
-    Servomiddle=8581;
+    Servomiddle=8590;
   }
   
   if(All_Black>2)
@@ -608,25 +608,25 @@ void Servo_control(void)
           if(error<0)
           {
             Kp = 27;
-            Kd = 2;
+            Kd = 5;
           }
           else
           {
             Kp = 27;
-            Kd = 2;
+            Kd = 5;
           }
         }
         else if(All_Black<10)//长直道进弯道
         {
           if(error<0)
           {
-            Kp = 39;
-            Kd = 12;
+            Kp = 40;
+            Kd = 15;
           } 
           else
           {
-            Kp = 39;
-            Kd = 12;
+            Kp = 40;
+            Kd = 15;
           }
         }
         else if(All_Black<17)//直道入弯道或者270度时提前转角
@@ -634,12 +634,12 @@ void Servo_control(void)
           if(error<0)
           {
             Kp = 42;
-            Kd = 12;
+            Kd = 13;
           }
           else
           {
             Kp = 42;
-            Kd=12;
+            Kd = 13;
           }
         }
         else if(All_Black<22)////弯道入直道的时候
@@ -673,12 +673,12 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 36;
+            Kp = 37;
             Kd = 17;
           }
           else
           {
-            Kp = 36;
+            Kp = 37;
             Kd = 17;
           }
         }
@@ -687,12 +687,12 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 54;
+            Kp = 55;
             Kd = 22;
           }
           else
           {
-            Kp = 54;
+            Kp = 55;
             Kd = 22;
           }
         }
