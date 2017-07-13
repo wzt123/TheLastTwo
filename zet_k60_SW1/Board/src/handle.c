@@ -979,7 +979,7 @@ void Find_Middle()
   //else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//×ó×ª
   //if(Cross_Cnt==4)  
   //{
-  if(Cross_Flag_Last!=31&&stopLine_temp==0)
+  if(Cross_Flag_Last!=31&&stopLine_temp==0&&(white_Right_cnt>10||white_Left_cnt>10))
   {
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
