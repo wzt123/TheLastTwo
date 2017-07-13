@@ -569,10 +569,10 @@ void Chaoche_FrontCar(void)
     Search_Line();
     Find_Middle();
     
-    speed_get_L = abs(ftm_quad_get(FTM1));
-    speed_get_R = lptmr_pulse_get();
-    ftm_quad_clean(FTM1);
-    lptmr_pulse_clean();
+//    speed_get_L = abs(ftm_quad_get(FTM1));
+//    speed_get_R = lptmr_pulse_get();
+//    ftm_quad_clean(FTM1);
+//    lptmr_pulse_clean();
 //    if(speed_get_R!=0&&speed_get_L!=0)
 //    {
       time++;
@@ -589,17 +589,17 @@ void Chaoche_FrontCar(void)
       Cross_Flag=0;
     }
     
-    if(speed_get_R<60&&speed_get_L<60)
-    {
-      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, time);
-      OLED_Print_Num1(88, 2, error);
-      OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, error_rember);
-      OLED_Print_Num1(88, 5, errorerror_rember);
-      
-      OLED_Print_Num1(88, 6, Cross_Flag);
-    }
+//    if(speed_get_R<60&&speed_get_L<60)
+//    {
+//      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
+//      OLED_Print_Num1(88, 1, time);
+//      OLED_Print_Num1(88, 2, error);
+//      OLED_Print_Num1(88, 3, errorerror);
+//      OLED_Print_Num1(88, 4, error_rember);
+//      OLED_Print_Num1(88, 5, errorerror_rember);
+//      
+//      OLED_Print_Num1(88, 6, Cross_Flag);
+//    }
   }while(Cross_Flag!=1&&time<500&&(abs(errorerror-errorerror_rember)>4||abs(error-error_rember)>4));
   
   do
@@ -617,21 +617,21 @@ void Chaoche_FrontCar(void)
     Search_Line();
     Find_Middle();
     Servo_control();
-    speed_get_L = abs(ftm_quad_get(FTM1));
-    speed_get_R = lptmr_pulse_get();
-    ftm_quad_clean(FTM1);
-    lptmr_pulse_clean();
-    if(speed_get_R<60&&speed_get_L<60)
-    {
-      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, error);
-      OLED_Print_Num1(88, 2, error_rember);
-      OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, errorerror_rember);
-      OLED_Print_Num1(88, 5, Left_stop);
-      
-      OLED_Print_Num1(88, 6, Right_stop);
-    }
+//    speed_get_L = abs(ftm_quad_get(FTM1));
+//    speed_get_R = lptmr_pulse_get();
+//    ftm_quad_clean(FTM1);
+//    lptmr_pulse_clean();
+//    if(speed_get_R<60&&speed_get_L<60)
+//    {
+//      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
+//      OLED_Print_Num1(88, 1, error);
+//      OLED_Print_Num1(88, 2, error_rember);
+//      OLED_Print_Num1(88, 3, errorerror);
+//      OLED_Print_Num1(88, 4, errorerror_rember);
+//      OLED_Print_Num1(88, 5, Left_stop);
+//      
+//      OLED_Print_Num1(88, 6, Right_stop);
+//    }
   }while(Left_stop>35||Right_stop>35);
   
   gpio_set(PTC3,1);
