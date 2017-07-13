@@ -477,7 +477,7 @@ void Servo_control(void)
     }
     else
     {  
-      if(speed_goal<4500)
+      if(speed_goal<4250)
       {
         if(All_Black==0)
         {
@@ -492,102 +492,72 @@ void Servo_control(void)
             Kd = 12;
           }
         }
-        else if(All_Black<10)//长直道进弯道
+        else if(All_Black<10)
+      {
+        if(error<0)
         {
-          if(error<0)
-          {
-            Kp = 39;
-            Kd = 12;
-          } 
-          else
-          {
-            Kp = 39;
-            Kd = 12;
-          }
+          Kp = 35;
+          Kd = 5;
         }
-        else if(All_Black<17)//直道入弯道或者270度时提前转角
+        else
         {
-          if(error<0)
-          {
-
-            Kp = 40;
-            Kd = 15;
-          }
-          else
-          {
-            Kp = 44;
-            Kd = 15;
-          }
+          Kp = 35;
+          Kd = 5;
         }
-        else if(All_Black<22)////弯道入直道的时候
+      }
+      else if(All_Black<17)
+      {
+        if(error<0)
         {
-          if(error<0)
-          {
-            Kp = 35;
-            Kd = 12;
-          }
-          else
-          {
-            Kp = 38;
-            Kd = 12;
-          }
+          Kp = 35;
+          Kd = 11;
         }
-        else if(All_Black<25)//弯道入直道的时候
+        else
         {
-          if(error<0)     //左转
-          {
-            Kp = 54;
-            Kd = 20;
-          }
-          else
-          {
-            Kp = 54;
-            Kd=20;
-          }
-       }
-        
-        else if(All_Black<27)//弯道内部
-        {
-          if(error<0)
-          {
-            Kp = 36;
-            Kd = 17;
-          }
-          else
-          {
-            Kp = 36;
-            Kd = 17;
-          }
+          Kp = 35;
+          Kd=11;
         }
-        
-        else if(All_Black<32)//靠弯道外边
+      }
+      else if(All_Black<22)
+      {
+        if(error<0)
         {
-          if(error<0)
-          {
-            Kp = 49;
-            Kd = 35;
-          }
-          else
-          {
-            Kp = 49;
-            Kd = 35;
-          }
+          Kp = 45;
+          Kd = 19;
         }
-        
-        else if(All_Black<36)       //靠弯道外边
+        else
         {
-          if(error<0)
-          {
-            Kp = 52;
-            Kd = 29;
-          }
-          else
-          {
-            Kp = 52;
-            Kd = 29;
-          }
+          Kp = 45;
+          Kd=19;
         }
-
+      }
+      else if(All_Black<25)
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=20;
+        }
+        else
+        {
+          Kp=50;
+          Kd =20;
+        }
+      }
+      
+      else if(All_Black<32)
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=25;
+        }
+        else
+        {
+          Kp=50;
+          Kd =25;
+        }
+      }
         else if(All_Black<41)
         {
           if(error<0)
@@ -618,7 +588,7 @@ void Servo_control(void)
 //        }
       }
     
-     else if(speed_goal<5250)
+     else if(speed_goal<4850)
       {
         if(All_Black==0)
         {
