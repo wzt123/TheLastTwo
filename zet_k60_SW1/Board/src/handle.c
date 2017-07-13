@@ -390,6 +390,8 @@ void Servo_control(void)
     Lastline=2;
   }
   
+  if(Cross_Flag==31)
+    Lastline=Ring_First_Row;
   l = 59-Lastline;
 
   for(Row_Ptr=59; Row_Ptr>Lastline; Row_Ptr--)
@@ -438,7 +440,7 @@ void Servo_control(void)
 //          Servo_temp=-Ring_First_Row*100/10-90;
 //        }
       Kp =45;//66
-      Kd = 35;
+      Kd = 28;
       Servo_temp = Kp*error/10+Kd*errorerror/10;
       
     }
@@ -458,130 +460,381 @@ void Servo_control(void)
     }
     else
     {      
-      if(All_Black==0)
-    {
-      if(error<0)               //左转
+      if(speed_goal<4500)
       {
-        Kp = 40;
-        Kd = 12;
-      }
-      else
-      {
-        Kp = 39;
-        Kd = 12;
-      }
-    }
-    else if(All_Black<12)       //长直道进弯道
-    {
-      if(error<0)
-      {
-        Kp = 39;
-        Kd = 8;
-      }
-      else
-      {
-        Kp = 39;
-        Kd = 8;
-      }
-    }
-    else if(All_Black<16)       //直道入弯道或者270度时提前转角
-    {
-      if(error<0)               //左转
-      {
-        Kp = 38;
-        Kd = 14;
-      }
-      else
-      {
-        Kp = 38;
-        Kd = 12;
-      }
-      
-    }
-    else if(All_Black<21)       //弯道入直道的时候
-    {
-      if(error<0)
-      {
-        Kp = 33;
-        Kd = 12;
-      }
-      else   //右转
-      {
-        Kp = 33;
-        Kd = 12;
-      }
-      
-    }
-    else if(All_Black<23)       //弯道入直道的时候
-    {
-      if(error<0)
-      {
-        Kp = 33;
-        Kd = 18;
-      }
-      else
-      {
-        Kp = 33;
-        Kd=18;
-      }
-      
-    }
-    
-    else if(All_Black<25)       //弯道内部
-    {
-      if(error<0)
-      {
-        Kp=44;
-        Kd=20;
-      }
-      else
-      {
-        Kp=44;
-        Kd =20;
-      }
-    }
-    else if(All_Black<32)       //靠弯道外边
-    {
-      if(error<0)
-      {
-        Kp=48;
-        Kd=20;
-      }
-      else
-      {
-        Kp=48;
-        Kd =20;
-      }
-    }
-    else if(All_Black<36)       //靠弯道外边
-    {
-      if(error<0)
-      {
-        Kp = 53;
-        Kd = 29;
-      }
-      else
-      {
-        Kp = 53;
-        Kd = 29;
-      }
-    }
-    else if(All_Black<41)
-    {
-      if(error<0)
-      {
-        Kp = 58;
-        Kd = 30;
-      }
-      else
-      {
-        Kp = 58;
-        Kd = 30;
-      }
-    }
+        if(All_Black==0)
+        {
+          if(error<0)               //左转
+          {
+            Kp = 40;
+            Kd = 12;
+          }
+          else
+          {
+            Kp = 39;
+            Kd = 12;
+          }
+        }
+        else if(All_Black<12)       //长直道进弯道
+        {
+          if(error<0)
+          {
+            Kp = 39;
+            Kd = 8;
+          }
+          else
+          {
+            Kp = 39;
+            Kd = 8;
+          }
+        }
+        else if(All_Black<16)       //直道入弯道或者270度时提前转角
+        {
+          if(error<0)               //左转
+          {
+            Kp = 38;
+            Kd = 14;
+          }
+          else
+          {
+            Kp = 38;
+            Kd = 12;
+          }
+          
+        }
+        else if(All_Black<21)       //弯道入直道的时候
+        {
+          if(error<0)
+          {
+            Kp = 33;
+            Kd = 12;
+          }
+          else   //右转
+          {
+            Kp = 33;
+            Kd = 12;
+          }
+          
+        }
+        else if(All_Black<23)       //弯道入直道的时候
+        {
+          if(error<0)
+          {
+            Kp = 33;
+            Kd = 18;
+          }
+          else
+          {
+            Kp = 33;
+            Kd=18;
+          }
+          
+        }
         
-    else if((All_Black>=41))error_sum += error;
-
+        else if(All_Black<25)       //弯道内部
+        {
+          if(error<0)
+          {
+            Kp=44;
+            Kd=20;
+          }
+          else
+          {
+            Kp=44;
+            Kd =20;
+          }
+        }
+        else if(All_Black<32)       //靠弯道外边
+        {
+          if(error<0)
+          {
+            Kp=48;
+            Kd=20;
+          }
+          else
+          {
+            Kp=48;
+            Kd =20;
+          }
+        }
+        else if(All_Black<36)       //靠弯道外边
+        {
+          if(error<0)
+          {
+            Kp = 53;
+            Kd = 29;
+          }
+          else
+          {
+            Kp = 53;
+            Kd = 29;
+          }
+        }
+        else if(All_Black<41)
+        {
+          if(error<0)
+          {
+            Kp = 58;
+            Kd = 30;
+          }
+          else
+          {
+            Kp = 58;
+            Kd = 30;
+          }
+        }
+        else if((All_Black>=41))error_sum += error;
+      }
+      else if(speed_goal<5000)
+      {
+        if(All_Black==0)
+        {
+          if(error<0)               //左转
+          {
+            Kp = 40;
+            Kd = 12;
+          }
+          else
+          {
+            Kp = 39;
+            Kd = 12;
+          }
+        }
+        else if(All_Black<12)       //长直道进弯道
+        {
+          if(error<0)
+          {
+            Kp = 39;
+            Kd = 8;
+          }
+          else
+          {
+            Kp = 39;
+            Kd = 8;
+          }
+        }
+        else if(All_Black<16)       //直道入弯道或者270度时提前转角
+        {
+          if(error<0)               //左转
+          {
+            Kp = 38;
+            Kd = 14;
+          }
+          else
+          {
+            Kp = 38;
+            Kd = 12;
+          }
+          
+        }
+        else if(All_Black<21)       //弯道入直道的时候
+        {
+          if(error<0)
+          {
+            Kp = 33;
+            Kd = 12;
+          }
+          else   //右转
+          {
+            Kp = 33;
+            Kd = 12;
+          }
+          
+        }
+        else if(All_Black<23)       //弯道入直道的时候
+        {
+          if(error<0)
+          {
+            Kp = 33;
+            Kd = 18;
+          }
+          else
+          {
+            Kp = 33;
+            Kd=18;
+          }
+          
+        }
+        
+        else if(All_Black<25)       //弯道内部
+        {
+          if(error<0)
+          {
+            Kp=44;
+            Kd=20;
+          }
+          else
+          {
+            Kp=44;
+            Kd =20;
+          }
+        }
+        else if(All_Black<32)       //靠弯道外边
+        {
+          if(error<0)
+          {
+            Kp=48;
+            Kd=20;
+          }
+          else
+          {
+            Kp=48;
+            Kd =20;
+          }
+        }
+        else if(All_Black<36)       //靠弯道外边
+        {
+          if(error<0)
+          {
+            Kp = 53;
+            Kd = 29;
+          }
+          else
+          {
+            Kp = 53;
+            Kd = 29;
+          }
+        }
+        else if(All_Black<41)
+        {
+          if(error<0)
+          {
+            Kp = 58;
+            Kd = 30;
+          }
+          else
+          {
+            Kp = 58;
+            Kd = 30;
+          }
+        }
+        else if((All_Black>=41))error_sum += error;
+      }
+      else if(speed_goal<5500)
+      {
+        if(All_Black==0)
+        {
+          if(error<0)               //左转
+          {
+            Kp = 40;
+            Kd = 12;
+          }
+          else
+          {
+            Kp = 39;
+            Kd = 12;
+          }
+        }
+        else if(All_Black<12)       //长直道进弯道
+        {
+          if(error<0)
+          {
+            Kp = 39;
+            Kd = 8;
+          }
+          else
+          {
+            Kp = 39;
+            Kd = 8;
+          }
+        }
+        else if(All_Black<16)       //直道入弯道或者270度时提前转角
+        {
+          if(error<0)               //左转
+          {
+            Kp = 38;
+            Kd = 14;
+          }
+          else
+          {
+            Kp = 38;
+            Kd = 12;
+          }
+          
+        }
+        else if(All_Black<21)       //弯道入直道的时候
+        {
+          if(error<0)
+          {
+            Kp = 33;
+            Kd = 12;
+          }
+          else   //右转
+          {
+            Kp = 33;
+            Kd = 12;
+          }
+          
+        }
+        else if(All_Black<23)       //弯道入直道的时候
+        {
+          if(error<0)
+          {
+            Kp = 33;
+            Kd = 18;
+          }
+          else
+          {
+            Kp = 33;
+            Kd=18;
+          }
+          
+        }
+        
+        else if(All_Black<25)       //弯道内部
+        {
+          if(error<0)
+          {
+            Kp=44;
+            Kd=20;
+          }
+          else
+          {
+            Kp=44;
+            Kd =20;
+          }
+        }
+        else if(All_Black<32)       //靠弯道外边
+        {
+          if(error<0)
+          {
+            Kp=48;
+            Kd=20;
+          }
+          else
+          {
+            Kp=48;
+            Kd =20;
+          }
+        }
+        else if(All_Black<36)       //靠弯道外边
+        {
+          if(error<0)
+          {
+            Kp = 53;
+            Kd = 29;
+          }
+          else
+          {
+            Kp = 53;
+            Kd = 29;
+          }
+        }
+        else if(All_Black<41)
+        {
+          if(error<0)
+          {
+            Kp = 58;
+            Kd = 30;
+          }
+          else
+          {
+            Kp = 58;
+            Kd = 30;
+          }
+        }
+        else if((All_Black>=41))error_sum += error;
+      }
     Servo_temp = Kp*error+Kd*errorerror;
     Servo_temp = Servo_temp/10;
     }
@@ -599,11 +852,13 @@ void Servo_control(void)
       Servo_value = Servomiddle+Servo_temp;
       error_sum = 0;
     }
+    if(stopLine_temp==0)
+    {
     if(error_sum>0)
       Servo_value = Servo_max;
     else if (error_sum<0)
       Servo_value = Servo_min;
-    
+    }
   if(Servo_value<Servo_min)
     Servo_value = Servo_min;
   if(Servo_value>Servo_max)
@@ -724,7 +979,7 @@ void Find_Middle()
   //else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
   //if(Cross_Cnt==4)  
   //{
-  if(Cross_Flag_Last!=31)
+  if(Cross_Flag_Last!=31&&stopLine_temp==0&&(white_Right_cnt>10||white_Left_cnt>10))
   {
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
@@ -766,7 +1021,7 @@ void Find_Middle()
     }
   }
   /////////////////////////////////////////////////////////////
-  if(Cross_Flag_Last==31) //圆环补右线，左转
+  /*if(Cross_Flag_Last==31) //圆环补右线，左转
   {
     if(Right_xian==0) Right_xian=57;
     Right_Slope=1.0*(Road_Right[Right_xian]-End_zuo)/(Right_xian-Ring_First_zuo);
@@ -780,9 +1035,9 @@ void Find_Middle()
       Road_Right[i]=Road_Right[i+1];
       Road_Left[i]=0;
     }
-  }
+  }*/
   //}
-  /*if(Cross_Flag_Last==32) //圆环补左线，右转
+  if(Cross_Flag_Last==31) //圆环补左线，右转
   {
     if(Left_xian==0) Left_xian=57;
     Right_Slope=1.0*(Road_Left[Left_xian]-End_you)/(Left_xian-Ring_First_you);
@@ -796,7 +1051,7 @@ void Find_Middle()
       Road_Left[i]=Road_Left[i+1];
       Road_Right[i]=0;
     }
-  }*/
+  }
   //************************//
   //出圆环判断
   if(Cross_Flag==31)
@@ -974,8 +1229,6 @@ void Find_Middle()
 }
 
 //寻边线
-uint8 a=1,i,j;
-
 void Search_Line(void)
 {
   Cross_Flag_Last=Cross_Flag; 
@@ -1006,13 +1259,14 @@ void Search_Line(void)
   Cross_flag=0;
   Right_xian=0;
   Left_xian=0;
-  a=1;
+  uint8 a=1;
   uint8 b=79;
-  uint8 k;
+  uint8 k,i,j;
   uint8 a_f=0,b_f=0,c_f=0;
   uint8 Left_diu=0;
   uint8 Right_diu=0;
-  
+  uint8 start_line_temp[60]={0};
+  uint8 start_line_temp_num=0;
   Left_Cnt=0;
   Right_Cnt=0;
   Left_cnt=0;
@@ -1045,6 +1299,8 @@ void Search_Line(void)
   stop_line_num = 0;
   Ring_width_1 = 50;
   Ring_width_2 = 30;
+  uint8 Ring_width_1_Row=0;
+  uint8 Ring_width_2_Row=0;
   Ring_width =0;
   Ring_First_Row=0;  
   Ring_Second_Row=0;
@@ -1070,34 +1326,46 @@ void Search_Line(void)
     Road_Right_f[Row_Ptr]=Road_Right[Row_Ptr];
     
     start_line_num[Row_Ptr] = 0;
-      for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
-      {      
-        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 && img[Row_Ptr][Col_Ptr+2]==0&&
-           img[Row_Ptr][Col_Ptr+3]==255&& img[Row_Ptr][Col_Ptr+4]==255&& img[Row_Ptr][Col_Ptr+5]==255)
-        {
-          start_line_num[Row_Ptr] ++;
-        }      
-      }
-      if(start_line_num[Row_Ptr]>4)
+    for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
+    {      
+      if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 && img[Row_Ptr][Col_Ptr+2]==0&&
+         img[Row_Ptr][Col_Ptr+3]==255&& img[Row_Ptr][Col_Ptr+4]==255&& img[Row_Ptr][Col_Ptr+5]==255)
       {
-        stop_line_num++;
-      }
-      if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
+        start_line_num[Row_Ptr] ++;
+      }   
+      if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==255)
       {
-        stopLine_temp=1;
-        if(sum_time>80)
-        {
-          Stop_Flag=2;
-        }
+        start_line_temp[Row_Ptr]++;
       }
-      else if(stop_line_num>=3&&Stop_Flag==0)
+    }
+    if(start_line_num[Row_Ptr]>4)
+    {
+      stop_line_num++;
+    }
+    if(start_line_temp[Row_Ptr]>6)
+    {
+      start_line_temp_num++;
+    }
+    if(start_line_temp_num>=3)
+    {
+      stopLine_temp=1;
+    }
+    if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
+    {
+      stopLine_temp=1;
+      if(sum_time>80)
       {
-        stopLine_temp=1;
-        Stop_Flag=1;
+        Stop_Flag=2;
       }
+    }
+    else if(stop_line_num>=3&&Stop_Flag==0)
+    {
+      stopLine_temp=1;
+      Stop_Flag=1;
+    }
     
     //内层for开始 从中心向左边
-    for(Col_Ptr=60; Col_Ptr>2; Col_Ptr--)
+    for(Col_Ptr=60; Col_Ptr>3; Col_Ptr--)
     {
       if(img[Row_Ptr][Col_Ptr-2]==0 && img[Row_Ptr][Col_Ptr-1]==0&&
          img[Row_Ptr][Col_Ptr]==255&& img[Row_Ptr][Col_Ptr+1]==255)
@@ -1156,18 +1424,30 @@ void Search_Line(void)
     {
       
       start_line_num[Row_Ptr] = 0;
+      start_line_temp[Row_Ptr] = 0;
       for(Col_Ptr=0;Col_Ptr<75;Col_Ptr++)
       {      
         if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==0 &&img[Row_Ptr][Col_Ptr+2]==255 &&img[Row_Ptr][Col_Ptr+3]==255 )
         {
           start_line_num[Row_Ptr] ++;
         }
+        if(img[Row_Ptr][Col_Ptr]==0 &&img[Row_Ptr][Col_Ptr+1]==255)
+        {
+          start_line_temp[Row_Ptr]++;
+        }
       }
       if(start_line_num[Row_Ptr]>4)
       {
         stop_line_num++;
       }
-      
+      if(start_line_temp[Row_Ptr]>6)
+      {
+        start_line_temp_num++;
+      }
+      if(start_line_temp_num>=3)
+      {
+        stopLine_temp=1;
+      }
       if(Car==1)
       {
         if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
@@ -1423,7 +1703,7 @@ void Search_Line(void)
     {
       Cross_Flag_3=1;
     }
-    else if(Row_Ptr<50&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
+    else if(Row_Ptr<45&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
        (Left_Flag[Row_Ptr+7]==3 && Right_Flag[Row_Ptr+7]==3)&&
          (Left_Flag[Row_Ptr+6]==3 && Right_Flag[Row_Ptr+6]==3)&&(
                                                              (Left_Flag[Row_Ptr+5]==1 && Right_Flag[Row_Ptr+5]==1)||
@@ -1431,7 +1711,7 @@ void Search_Line(void)
                                                                  (Left_Flag[Row_Ptr+3]==1 && Right_Flag[Row_Ptr+3]==1)||
                                                                    (Left_Flag[Row_Ptr+2]==1 && Right_Flag[Row_Ptr+2]==1)||
                                                                      (Left_Flag[Row_Ptr+1]==1 && Right_Flag[Row_Ptr+1]==1)||
-                                                                       (Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1))&&Row_Ptr>All_Black)//如果四行后两行丢线前两行重新找到线，十字
+                                                                       (Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1))&&Row_Ptr>All_Black)//如果八行后两行丢线前两行重新找到线，十字
     {
       Cross_Flag=1;
       Cross_flag++;
@@ -1482,7 +1762,10 @@ void Search_Line(void)
       {
         ring_flag=1;///找到黑块左跳变点
         if(Col_Ptr+2<Ring_width_1)
+        {
           Ring_width_1 = Col_Ptr+2;///黑块左边最小的列
+          Ring_width_1_Row = Row_Ptr;
+        }
         a=Col_Ptr+1;///左边界
       }
       else if(ring_flag==1&&img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==255&&img[Row_Ptr][Col_Ptr+3]==255) 
@@ -1491,7 +1774,10 @@ void Search_Line(void)
         ring_flag=2;//找到黑块右跳变点
         ring_num++;//黑块行数加1
         if(Col_Ptr+1>Ring_width_2)
+        {
           Ring_width_2 = Col_Ptr+1;//黑块右边最大的的列
+          Ring_width_2_Row = Row_Ptr;
+        }
         if(ring_num==1) 
         {
           End_zuo=a;
@@ -1531,7 +1817,7 @@ void Search_Line(void)
       }
     }
     uint8 samll_Ring_temp=0;
-    if(abs(Ring_width_2-Col_Ptr)<3)//障碍
+    if(abs(Ring_width_2-Col_Ptr)<3)//障碍 白行封顶
     {     
       //samll_Ring_temp=1;
       //if(/*Ring_width>10&&Stop_Flag!=0&&sum_time>1000&&White_Cnt>3&&*/cross_Time==0&&Stop_Flag!=0&&White_Cnt>3&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
@@ -1539,13 +1825,13 @@ void Search_Line(void)
         //Cross_Flag=3;/////标记为小圆环
       //}
       //else 
-        if(ring_num>5&&ring_time==0&&Road_type==1&&stopLine_temp==0)
+        if(ring_num>5/*&&ring_time==0*/&&stopLine_temp==0)
         {
-          if(Road_Right[Row_Ptr]-Ring_width_2>Ring_width_1-Road_Left[Row_Ptr])
+          if(Road_Right[Ring_width_2_Row]-Ring_width_2>Ring_width_1-Road_Left[Ring_width_1_Row])
           {
             Cross_Flag=5;
           }
-          else if(Road_Right[Row_Ptr]-Ring_width_2<Ring_width_1-Road_Left[Row_Ptr])
+          else if(Road_Right[Ring_width_2_Row]-Ring_width_2<Ring_width_1-Road_Left[Ring_width_1_Row])
           {
             Cross_Flag=6;
           }
@@ -1676,7 +1962,7 @@ void Search_Line(void)
             }
         }
     }*/
-    if(ring_num>1&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>4)
+    if(ring_num>1&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>4&&stopLine_temp!=1)
     {
       for(i=Left_xian;i>Ring_First_Row;i--)
       {
@@ -1701,7 +1987,7 @@ void Search_Line(void)
       Road_Right[Row_Ptr]=Road_Right[Row_Ptr+1];
     }
   }//结束for 行循环
-  if(ring_num>1&&Right_right==1&&Left_left==0&&Right_xian>Ring_First_Row) //you斜入圆环
+  if(ring_num>1&&Right_right==1&&Left_left==0&&Right_xian>Ring_First_Row&&stopLine_temp!=1) //you斜入圆环
   {
     //max_xian=Right_xian;
     
@@ -1723,7 +2009,7 @@ void Search_Line(void)
       }
     }
   }
-  if(ring_num>1&&Right_right==0&&Left_left==1&&Left_xian>Ring_First_Row) //zuo斜入圆环
+  if(ring_num>1&&Right_right==0&&Left_left==1&&Left_xian>Ring_First_Row&&stopLine_temp!=1) //zuo斜入圆环
   {
     //max_xian=Right_xian;
     
