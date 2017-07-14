@@ -152,7 +152,7 @@ void Motor_Out(void)
         }
         else if(Status==2)//直道加速
         {
-          speed_goal=4600;
+          speed_goal=4400;
         }
         
         else if(Status==3)

@@ -476,7 +476,7 @@ void Servo_control(void)
     }
     else
     {      
-      if(speed_goal<4500)
+      if(speed_goal<4200)
       {
         if(All_Black==0)
         {
