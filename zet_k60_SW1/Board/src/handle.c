@@ -1872,7 +1872,7 @@ void Search_Line(void)
     {
       for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
       {
-        if(Road_Left[Col_Ptr]<Road_Left[Col_Ptr+1]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr+1]==0)
+        if(Road_Left[Col_Ptr]<Road_Left[Col_Ptr+1])
         {
           Left_J0++;
           if(Left_J0>1)
@@ -1890,7 +1890,7 @@ void Search_Line(void)
       }
       for(Col_Ptr=Row_Ptr+5;Col_Ptr>Row_Ptr;Col_Ptr--)
       {
-        if(Road_Left[Col_Ptr-1]>Road_Left[Col_Ptr]||Road_Left[Col_Ptr]==0||Road_Left[Col_Ptr-1]==0)
+        if(Road_Left[Col_Ptr-1]>Road_Left[Col_Ptr])
         {
           Left_Y0++;
           if(Left_Y0>1)
@@ -1902,14 +1902,14 @@ void Search_Line(void)
         else if(Road_Left[Col_Ptr-1]<Road_Left[Col_Ptr]) 
         {
           Left_Y1++;
-          if(Left_Y1>1)
+          if(Left_Y1>0)
           {
             Left_Y=1;
-            break;
+            
           }  
         }
       }
-      if(Left_J==1&&Left_Y==1&&(abs(Road_Left[Row_Ptr+5]-Road_Left[Row_Ptr+4]))<11&&(abs(Road_Left[Row_Ptr+5]-Road_Left[Row_Ptr+6]))<11)
+      if(Left_J==1&&Left_Y==1)
       {
         Left_left=1;
         Left_xian=Row_Ptr+5;
@@ -1925,7 +1925,7 @@ void Search_Line(void)
     {
       for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
       {
-        if(Road_Right[Col_Ptr]>Road_Right[Col_Ptr+1]||Road_Right[Col_Ptr]==79||Road_Right[Col_Ptr+1]==79)
+        if(Road_Right[Col_Ptr]>Road_Right[Col_Ptr+1])
         {
           Right_J0++;
           if(Right_J0>1)
@@ -1946,7 +1946,7 @@ void Search_Line(void)
       }
       for(Col_Ptr=Row_Ptr+5;Col_Ptr>Row_Ptr;Col_Ptr--)
       {
-        if(Road_Right[Col_Ptr-1]<Road_Right[Col_Ptr]||Road_Right[Col_Ptr]==79||Road_Right[Col_Ptr-1]==79)
+        if(Road_Right[Col_Ptr-1]<Road_Right[Col_Ptr])
         {
           Right_Y0++;
           if(Right_Y0>1)
@@ -1958,14 +1958,14 @@ void Search_Line(void)
         else if(Road_Right[Col_Ptr-1]>Road_Right[Col_Ptr]) 
         {
           Right_Y1++;
-          if(Right_Y1>1)
+          if(Right_Y1>0)
           {
             Right_Y=1;
-            break;
+            
           }
         }
       }
-      if(Right_J==1&&Right_Y==1&&(abs(Road_Right[Row_Ptr+4]-Road_Right[Row_Ptr+5]))<11&&(abs(Road_Right[Row_Ptr+6]-Road_Right[Row_Ptr+5]))<11)
+      if(Right_J==1&&Right_Y==1)
       {
         Right_right=1;
         Right_xian=Row_Ptr+5;
@@ -1994,7 +1994,7 @@ void Search_Line(void)
         if(img[j][Road_Right[Right_xian]]==0&&img[j+1][Road_Right[Right_xian]]==0) break;
       }
       if(i==Ring_First_Row&&j==Ring_First_Row)
-        Cross_Flag=31;/////标记为大圆环
+        Cross_Flag=31;/////标记为圆环
     }
 
     /*if(samll_Ring_temp==1&&cross_Time==0&&(Right_right==1||Left_left==1)&&Stop_Flag!=0&&sum_time>1000)
