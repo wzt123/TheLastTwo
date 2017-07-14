@@ -2057,7 +2057,132 @@ void Search_Line(void)
       if(i==Ring_First_Row&&j==Ring_First_Row)
         Cross_Flag=31;/////标记为圆环
     }
-
+//****************************************圆环条件放开，可识别大圆环，但可能误判*************//
+    /* Left_J=0;
+    Left_Y=0;
+    Left_J0=0;
+    Left_J1=0;
+    Left_Y0=0;
+    Left_Y1=0;
+    if((abs(Road_Left[Row_Ptr]-Road_Left[Row_Ptr+1]))>10&&(abs(Road_Left[Row_Ptr]-Road_Left[Row_Ptr+2]))>10&&Left_diu==0) Left_diu=Row_Ptr;
+    if((abs(Road_Right[Row_Ptr+2]-Road_Right[Row_Ptr]))>10&&(abs(Road_Right[Row_Ptr+1]-Road_Right[Row_Ptr]))>10&&Right_diu==0) Right_diu=Row_Ptr;
+    if(Left_left!=1&&Row_Ptr<48&&Row_Ptr>(Right_xian-10)&&Row_Ptr>Left_diu) //左拐点确定
+    {
+      for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
+      {
+        if(Road_Left[Col_Ptr]<Road_Left[Col_Ptr+1])
+        {
+          Left_J0++;
+          if(Left_J0>1)
+          {
+            Left_J=0;
+            break;
+          }
+        }
+        else if(Road_Left[Col_Ptr]>Road_Left[Col_Ptr+1])
+        {
+          Left_J1++;
+          if(Left_J1>1)
+              Left_J=1;
+        }
+      }
+      for(Col_Ptr=Row_Ptr+5;Col_Ptr>Row_Ptr;Col_Ptr--)
+      {
+        if(Road_Left[Col_Ptr-1]>Road_Left[Col_Ptr])
+        {
+          Left_Y0++;
+          if(Left_Y0>1)
+          {
+             Left_Y=0;
+             break;
+          }
+        }
+        else if(Road_Left[Col_Ptr-1]<Road_Left[Col_Ptr]) 
+        {
+          Left_Y1++;
+          if(Left_Y1>0)
+          {
+            Left_Y=1;
+            
+          }  
+        }
+      }
+      if(Left_J==1&&Left_Y==1)
+      {
+        Left_left=1;
+        Left_xian=Row_Ptr+5;
+      }
+    }
+    Right_J=0;
+    Right_Y=0;
+    Right_J0=0;
+    Right_J1=0;
+    Right_Y0=0;
+    Right_Y1=0;
+    if(Right_right!=1&&Row_Ptr<48&&Row_Ptr>(Left_xian-10)&&Row_Ptr>Right_diu) //右拐点确定
+    {
+      for(Col_Ptr=Row_Ptr+5;Col_Ptr<Row_Ptr+10;Col_Ptr++)
+      {
+        if(Road_Right[Col_Ptr]>Road_Right[Col_Ptr+1])
+        {
+          Right_J0++;
+          if(Right_J0>1)
+          {
+            Right_J=0;
+            break;
+          }
+          
+        }
+        else if(Road_Right[Col_Ptr]<Road_Right[Col_Ptr+1]) 
+        {
+          Right_J1++;
+          if(Right_J1>1)
+          {
+            Right_J=1;
+          }         
+        }
+      }
+      for(Col_Ptr=Row_Ptr+5;Col_Ptr>Row_Ptr;Col_Ptr--)
+      {
+        if(Road_Right[Col_Ptr-1]<Road_Right[Col_Ptr])
+        {
+          Right_Y0++;
+          if(Right_Y0>1)
+          {
+            Right_Y=0;
+            break;
+          }
+        }
+        else if(Road_Right[Col_Ptr-1]>Road_Right[Col_Ptr]) 
+        {
+          Right_Y1++;
+          if(Right_Y1>0)
+          {
+            Right_Y=1;
+            
+          }
+        }
+      }
+      if(Right_J==1&&Right_Y==1)
+      {
+        Right_right=1;
+        Right_xian=Row_Ptr+5;
+      }
+    }
+    if(ring_num>1&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>4&&stopLine_temp!=1)
+    {
+      for(i=Left_xian;i>Ring_First_Row;i--)
+      {
+        if(img[i][Road_Left[Left_xian]]==0&&img[i+1][Road_Left[Left_xian]]==0) break;
+      }
+      for(j=Right_xian;j>Ring_First_Row;j--)
+      {
+        if(img[j][Road_Right[Right_xian]]==0&&img[j+1][Road_Right[Right_xian]]==0) break;
+      }
+      if(i==Ring_First_Row&&j==Ring_First_Row)
+        Cross_Flag=31;/////标记为圆环
+    }*/
+  //***********************************************************************************//
    /* if(samll_Ring_temp==1&&cross_Time==0&&(Right_right==1||Left_left==1)&&Stop_Flag!=0&&sum_time>1000)
     {
       Cross_Flag=3;
