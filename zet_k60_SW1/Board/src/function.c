@@ -204,9 +204,8 @@ void Motor_Out(void)
           speed_goal = speed_goal+400;
         }
       }     
-      speed_goal_R=speed_goal;
-      speed_goal_L=speed_goal;
-      
+      speed_goal_R=speed_goal-error*abs(error)*13/10;
+      speed_goal_L=speed_goal+error*abs(error)*13/10;
 //      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
 //      {
 ////        if(abs(error)<8&&abs(error)>=4)

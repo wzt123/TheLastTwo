@@ -446,14 +446,14 @@ void Servo_control(void)
     else{
       Ring_First_Row_Compare=17;
     }
-    if(errorerror*error<0/*&&abs(error-errorerror)>15*/&&Cross_Flag==0)
+    if(errorerror*error<0&&abs(error-errorerror)>15&&Cross_Flag==0&&All_Black<8)
     {
 //      errorerror=errorerror*5/10;
 //      error = error*50/10;
-      errorerror= - errorerror*15/2;
+      errorerror= - errorerror*3/5;
       error = error;
     }
-    else if(Cross_Flag==31)
+    if(Cross_Flag==31)
     {
 //        if(Car == 1)
 //        {
@@ -604,7 +604,8 @@ void Servo_control(void)
             Kd = 5;
           }
         }
-        else if(All_Black<10)//长直道进弯道
+        
+        else if(All_Black<7)//长直道进弯道
         {
           if(error<0)
           {
@@ -617,52 +618,46 @@ void Servo_control(void)
             Kd = 15;
           }
         }
-        else if(All_Black<5)
-        {
-          if(error<0)
-          {
-
-            Kp = 42;
-            Kd = 13;
-          }
-          else
-          {
-            Kp = 42;
-            Kd = 13;
-          }
-        }
-        else if(All_Black<10)
-        {
-          if(error<0)
-          {
-            Kp = 35;
-            Kd = 13;
-          }
-          else
-          {
-            Kp = 35;
-            Kd = 13;
-          }
-        }
+//        else if(All_Black<5)
+//        {
+//          if(error<0)
+//          {
+//
+//            Kp = 42;
+//            Kd = 13;
+//          }
+//          else
+//          {
+//            Kp = 42;
+//            Kd = 13;
+//          }
+//        }
+//        else if(All_Black<10)
+//        {
+//          if(error<0)
+//          {
+//            Kp = 35;
+//            Kd = 13;
+//          }
+//          else
+//          {
+//            Kp = 35;
+//            Kd = 13;
+//          }
+//        }
       else if(All_Black<17)
       {
         if(error<0)
         {
-          Kp = 35;
-          Kd = 14;
+          Kp = 37;
+          Kd = 19;
         }
         else
         {
-          if(error<0)
-          {
+          
             Kp = 37;
             Kd = 17;
-          }
-          else
-          {
-            Kp = 37;
-            Kd = 17;
-          }
+          
         }
       }
       else if(All_Black<22)

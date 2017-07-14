@@ -206,8 +206,8 @@ void Motor_Out(void)
 //          }
 //        }
 //      }
-      speed_goal_R=speed_goal;
-      speed_goal_L=speed_goal;      
+      speed_goal_R=speed_goal-error*abs(error)*13/10;
+      speed_goal_L=speed_goal+error*abs(error)*13/10;      
 //      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
 //      {
 ////        if(abs(error)<8&&abs(error)>=4)
@@ -663,18 +663,18 @@ void Chaoche_FrontCar(void)
       DELAY_MS(600);
       Cross_Flag=0;
     }
-    
-    if(speed_get_R<60&&speed_get_L<60)
-    {
-      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, time);
-      OLED_Print_Num1(88, 2, error);
-      OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, error_rember);
-      OLED_Print_Num1(88, 5, errorerror_rember);
-      
-      OLED_Print_Num1(88, 6, Cross_Flag);
-    }
+//    
+//    if(speed_get_R<60&&speed_get_L<60)
+//    {
+//      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
+//      OLED_Print_Num1(88, 1, time);
+//      OLED_Print_Num1(88, 2, error);
+//      OLED_Print_Num1(88, 3, errorerror);
+//      OLED_Print_Num1(88, 4, error_rember);
+//      OLED_Print_Num1(88, 5, errorerror_rember);
+//      
+//      OLED_Print_Num1(88, 6, Cross_Flag);
+//    }
   }while(Cross_Flag!=1&&time<500&&(abs(errorerror-errorerror_rember)>4||abs(error-error_rember)>4));
   
   do
@@ -696,17 +696,17 @@ void Chaoche_FrontCar(void)
     speed_get_R = lptmr_pulse_get();
     ftm_quad_clean(FTM1);
     lptmr_pulse_clean();
-    if(speed_get_R<60&&speed_get_L<60)
-    {
-      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, error);
-      OLED_Print_Num1(88, 2, error_rember);
-      OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, errorerror_rember);
-      OLED_Print_Num1(88, 5, Left_stop);
-      
-      OLED_Print_Num1(88, 6, Right_stop);
-    }
+//    if(speed_get_R<60&&speed_get_L<60)
+//    {
+//      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
+//      OLED_Print_Num1(88, 1, error);
+//      OLED_Print_Num1(88, 2, error_rember);
+//      OLED_Print_Num1(88, 3, errorerror);
+//      OLED_Print_Num1(88, 4, errorerror_rember);
+//      OLED_Print_Num1(88, 5, Left_stop);
+//      
+//      OLED_Print_Num1(88, 6, Right_stop);
+//    }
   }while(Left_stop>35||Right_stop>35);
   
   gpio_set(PTC3,1);
