@@ -175,8 +175,8 @@ void  main(void)
       OLED_Print_Num1(88, 1, All_Black);
       OLED_Print_Num1(88, 2, error);
       OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, Cross_Flag);
-      OLED_Print_Num1(88, 5, speed_get_L);
+      OLED_Print_Num1(88, 4, Kp);
+      OLED_Print_Num1(88, 5, Kd);
 
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);   
       OLED_Print_Num1(88, 6, Servo_temp);

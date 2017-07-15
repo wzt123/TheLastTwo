@@ -25,6 +25,7 @@ int16 speed_err_L_lastlast = 0;
 int16 speed_increment_R;
 int16 speed_increment_L;
 uint8 Status=0;
+uint8 Status_2=0;
 uint16 var;
 uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
@@ -51,6 +52,7 @@ void chaoShenBo_init(void);
 void stopLine_init(void);
 void Switch_Init();
 uint8 Get_Switch(void);
+uint8 Get_Switch_2(void);
 void PIT0_IRQHandler(void)
 {
   if(Cross_Flag==3&&stop_Flag !=1&&stop_Place==1)
@@ -85,6 +87,7 @@ void Init_All(void)
   set_vector_handler(PORTC_VECTORn ,PORTC_IRQHandler);                //设置 PORTE 的中断服务函数为 PORTE_VECTORn
   chaoShenBo_init();
   Status=Get_Switch();
+  Status_2=Get_Switch_2();
   enable_irq(PORTC_IRQn);
   enable_irq (PIT0_IRQn);                                //使能PIT0中断
 }
@@ -152,7 +155,7 @@ void Motor_Out(void)
         }
         else if(Status==2)//直道加速
         {
-          speed_goal=4600;
+          speed_goal=4400;
         }
         
         else if(Status==3)
@@ -178,7 +181,7 @@ void Motor_Out(void)
         }
         else if(Status==2)//入弯减速
         {
-          speed_goal=4300;
+          speed_goal=4400;
         }
         
         else if(Status==3)
@@ -206,7 +209,8 @@ void Motor_Out(void)
       }     
       speed_goal_R=speed_goal;
       speed_goal_L=speed_goal;
-      
+//      speed_goal_R=speed_goal-error*abs(error)*13/10;
+//      speed_goal_L=speed_goal+error*abs(error)*13/10;
 //      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
 //      {
 ////        if(abs(error)<8&&abs(error)>=4)
@@ -246,19 +250,18 @@ void Motor_Out(void)
       stop_time=0;
   }
   
-//  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>10)
-//  {
-//    if(speed_get_L<50)
-//    { 
-//      speed_PWM_L = 0;
-//    }
-//    if(speed_get_R<50)
-//    {
-//      speed_PWM_R = 0;
-//    }
-//  }
-//  else 
-    if(speed_get_R<100||speed_get_L<100)
+  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>10)
+  {
+    if(speed_get_L<50)
+    { 
+      speed_PWM_L = 0;
+    }
+    if(speed_get_R<50)
+    {
+      speed_PWM_R = 0;
+    }
+  }
+  else if(speed_get_R<100||speed_get_L<100)
   {
     if(speed_get_R<100)
       speed_PWM_R = 6800;
@@ -689,15 +692,20 @@ void Switch_Init()
 uint8 Get_Switch(void)
 {
   uint8 Num=0;
-  Num|=gpio_get(PTE4);
-  Num=Num<<1;
-  Num|=gpio_get(PTE3);
-  Num=Num<<1;
-  Num|=gpio_get(PTE2);
-  Num=Num<<1;
   Num|=gpio_get(PTE1);
   Num=Num<<1;
   Num|=gpio_get(PTE0);
+  return Num;
+}
+
+uint8 Get_Switch_2(void)
+{
+  uint8 Num=0;
+//  Num|=gpio_get(PTE4);
+//  Num=Num<<1;
+  Num|=gpio_get(PTE3);
+  Num=Num<<1;
+  Num|=gpio_get(PTE2);
   return Num;
 }
 /*

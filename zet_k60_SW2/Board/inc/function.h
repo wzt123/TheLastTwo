@@ -22,6 +22,7 @@ extern uint16 speed_goal_R;
 extern uint16 speed_goal_L;
 extern uint16 speed_goal;
 extern uint8 Status;
+extern uint8 Status_2;
 extern int16 speed_PWM_R;
 extern int16 speed_PWM_L;
 extern uint8 stop_Flag;

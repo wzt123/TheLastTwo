@@ -25,6 +25,7 @@ int16 speed_err_L_lastlast = 0;
 int16 speed_increment_R;
 int16 speed_increment_L;
 uint8 Status=0;
+uint8 Status_2=0;
 uint16 var;
 uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
@@ -51,6 +52,7 @@ void chaoShenBo_init(void);
 void stopLine_init(void);
 void Switch_Init();
 uint8 Get_Switch(void);
+uint8 Get_Switch_2(void);
 void PIT0_IRQHandler(void)
 {
   if(Cross_Flag==3&&stop_Flag !=1&&stop_Place==1)
@@ -85,6 +87,7 @@ void Init_All(void)
   set_vector_handler(PORTC_VECTORn ,PORTC_IRQHandler);                //设置 PORTE 的中断服务函数为 PORTE_VECTORn
   chaoShenBo_init();
   Status=Get_Switch();
+  Status_2=Get_Switch_2();
   enable_irq(PORTC_IRQn);
   enable_irq (PIT0_IRQn);                                //使能PIT0中断
 }
@@ -663,18 +666,18 @@ void Chaoche_FrontCar(void)
       DELAY_MS(600);
       Cross_Flag=0;
     }
-    
-    if(speed_get_R<60&&speed_get_L<60)
-    {
-      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, time);
-      OLED_Print_Num1(88, 2, error);
-      OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, error_rember);
-      OLED_Print_Num1(88, 5, errorerror_rember);
-      
-      OLED_Print_Num1(88, 6, Cross_Flag);
-    }
+//    
+//    if(speed_get_R<60&&speed_get_L<60)
+//    {
+//      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
+//      OLED_Print_Num1(88, 1, time);
+//      OLED_Print_Num1(88, 2, error);
+//      OLED_Print_Num1(88, 3, errorerror);
+//      OLED_Print_Num1(88, 4, error_rember);
+//      OLED_Print_Num1(88, 5, errorerror_rember);
+//      
+//      OLED_Print_Num1(88, 6, Cross_Flag);
+//    }
   }while(Cross_Flag!=1&&time<500&&(abs(errorerror-errorerror_rember)>4||abs(error-error_rember)>4));
   
   do
@@ -696,17 +699,17 @@ void Chaoche_FrontCar(void)
     speed_get_R = lptmr_pulse_get();
     ftm_quad_clean(FTM1);
     lptmr_pulse_clean();
-    if(speed_get_R<60&&speed_get_L<60)
-    {
-      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, error);
-      OLED_Print_Num1(88, 2, error_rember);
-      OLED_Print_Num1(88, 3, errorerror);
-      OLED_Print_Num1(88, 4, errorerror_rember);
-      OLED_Print_Num1(88, 5, Left_stop);
-      
-      OLED_Print_Num1(88, 6, Right_stop);
-    }
+//    if(speed_get_R<60&&speed_get_L<60)
+//    {
+//      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
+//      OLED_Print_Num1(88, 1, error);
+//      OLED_Print_Num1(88, 2, error_rember);
+//      OLED_Print_Num1(88, 3, errorerror);
+//      OLED_Print_Num1(88, 4, errorerror_rember);
+//      OLED_Print_Num1(88, 5, Left_stop);
+//      
+//      OLED_Print_Num1(88, 6, Right_stop);
+//    }
   }while(Left_stop>35||Right_stop>35);
   
   gpio_set(PTC3,1);
@@ -761,15 +764,20 @@ void Switch_Init()
 uint8 Get_Switch(void)
 {
   uint8 Num=0;
-  Num|=gpio_get(PTE4);
-  Num=Num<<1;
-  Num|=gpio_get(PTE3);
-  Num=Num<<1;
-  Num|=gpio_get(PTE2);
-  Num=Num<<1;
   Num|=gpio_get(PTE1);
   Num=Num<<1;
   Num|=gpio_get(PTE0);
+  return Num;
+}
+
+uint8 Get_Switch_2(void)
+{
+  uint8 Num=0;
+//  Num|=gpio_get(PTE4);
+//  Num=Num<<1;
+  Num|=gpio_get(PTE3);
+  Num=Num<<1;
+  Num|=gpio_get(PTE2);
   return Num;
 }
 /*
