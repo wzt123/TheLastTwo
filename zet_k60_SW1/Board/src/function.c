@@ -181,7 +181,7 @@ void Motor_Out(void)
         }
         else if(Status==2)//»ÎÕ‰ºıÀŸ
         {
-          speed_goal=4300;
+          speed_goal=4400;
         }
         
         else if(Status==3)
@@ -207,8 +207,10 @@ void Motor_Out(void)
           speed_goal = speed_goal+400;
         }
       }     
-      speed_goal_R=speed_goal-error*abs(error)*13/10;
-      speed_goal_L=speed_goal+error*abs(error)*13/10;
+      speed_goal_R=speed_goal;
+      speed_goal_L=speed_goal;
+//      speed_goal_R=speed_goal-error*abs(error)*13/10;
+//      speed_goal_L=speed_goal+error*abs(error)*13/10;
 //      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
 //      {
 ////        if(abs(error)<8&&abs(error)>=4)
@@ -248,19 +250,18 @@ void Motor_Out(void)
       stop_time=0;
   }
   
-//  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>10)
-//  {
-//    if(speed_get_L<50)
-//    { 
-//      speed_PWM_L = 0;
-//    }
-//    if(speed_get_R<50)
-//    {
-//      speed_PWM_R = 0;
-//    }
-//  }
-//  else 
-    if(speed_get_R<100||speed_get_L<100)
+  if((speed_get_L<50||speed_get_R<50)&&Stop_Flag!=0&&sum_time>10)
+  {
+    if(speed_get_L<50)
+    { 
+      speed_PWM_L = 0;
+    }
+    if(speed_get_R<50)
+    {
+      speed_PWM_R = 0;
+    }
+  }
+  else if(speed_get_R<100||speed_get_L<100)
   {
     if(speed_get_R<100)
       speed_PWM_R = 6800;

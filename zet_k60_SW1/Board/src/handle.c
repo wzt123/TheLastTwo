@@ -35,7 +35,7 @@ uint8 White_Ren=0;
 uint8 Right_xian=0;
 uint8 Left_xian=0;
 
-uint16 Servo_value=8808;//舵机输出pwm值
+uint16 Servo_value=8802;//舵机输出pwm值
 uint8 ring_num;
 
 uint8 Hinder_Start=0;
@@ -45,10 +45,10 @@ uint8 Cross_Flag=0;
 uint8 Change_Flag;
 uint8 CrossRow=0;
 
-uint16 Servomiddle=8762;
-uint16 Servomiddle_rember=8762;
-uint16 Servo_max=8938;
-uint16 Servo_min=8612;
+uint16 Servomiddle=8802;
+uint16 Servomiddle_rember=8802;
+uint16 Servo_max=8962;
+uint16 Servo_min=8642;
 float CenterLineSlope=0;
 
 int16 error=0;   //0~40左右
@@ -427,10 +427,10 @@ void Servo_control(void)
     error1 = error1*2/l;
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
-    if(errorerror*error<0/*&&abs(error-errorerror)>15*/&&Cross_Flag==0)
+    if(errorerror*error<0&&abs(error-errorerror)>15&&Cross_Flag==0)
     {
-//      errorerror= - errorerror*19/2;
-//      error = error;
+      errorerror= - errorerror/5;
+      error = error;
     }
     
 //    if(Cross_Flag==2||cross_time>0)
@@ -444,7 +444,7 @@ void Servo_control(void)
 //      Servo_temp=Kp*error/10-110;
 //    }
     //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
-    else if(Cross_Flag==31)
+    if(Cross_Flag==31)
     {
 //        if(Car == 1)
 //        {
