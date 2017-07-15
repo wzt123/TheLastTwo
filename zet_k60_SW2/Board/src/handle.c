@@ -595,98 +595,68 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 27;
-            Kd = 5;
+            Kp = 40;
+            Kd = 12;
           }
           else
           {
-            Kp = 27;
-            Kd = 5;
-          }
-        }
-        else if(All_Black<10)//长直道进弯道
-        {
-          if(error<0)
-          {
             Kp = 40;
-            Kd = 15;
-          } 
-          else
-          {
-            Kp = 40;
-            Kd = 15;
+            Kd = 12;
           }
         }
         else if(All_Black<5)
         {
           if(error<0)
           {
-
-            Kp = 42;
-            Kd = 13;
-          }
-          else
-          {
-            Kp = 42;
-            Kd = 13;
-          }
-        }
-        else if(All_Black<10)
-        {
-          if(error<0)
-          {
             Kp = 35;
-            Kd = 13;
+            Kd = 5;
           }
           else
           {
             Kp = 35;
-            Kd = 13;
+            Kd = 5;
           }
         }
-      else if(All_Black<17)
-      {
-        if(error<0)
-        {
-          Kp = 35;
-          Kd = 14;
-        }
-        else
+        else if(All_Black<12)//长直道进弯道
         {
           if(error<0)
           {
-            Kp = 37;
-            Kd = 17;
+            Kp = 35;
+            Kd = 16;
           }
           else
           {
-            Kp = 37;
-            Kd = 17;
+            Kp = 35;
+            Kd = 16;
           }
         }
-      }
-      else if(All_Black<22)
+      else if(All_Black<17)//直道入弯道或者270度时提前转角
       {
         if(error<0)
         {
-          if(error<0)
-          {
-            Kp = 55;
-            Kd = 22;
-          }
-          else
-          {
-            Kp = 55;
-            Kd = 22;
-          }
+          Kp = 36;
+          Kd = 17;
         }
         else
         {
-          Kp = 45;
-          Kd=19;
+          Kp = 36;
+          Kd = 17;
         }
       }
-      else if(All_Black<25)
+      else if(All_Black<21)//弯道入直道的时候
+      {
+        if(error<0)
+        {
+          Kp = 46;
+          Kd = 19;
+        }
+        else
+        {
+          Kp = 46;
+          Kd = 19;
+        }
+      }
+      else if(All_Black<25) //弯道内部
       {
         if(error<0)
         {
@@ -704,13 +674,13 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp=50;
-          Kd=25;
+          Kp = 51;
+          Kd = 25;
         }
         else
         {
-          Kp=50;
-          Kd =25;
+          Kp = 51;
+          Kd = 25;
         }
       }
         else if(All_Black<41)

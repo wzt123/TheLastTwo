@@ -208,18 +208,18 @@ void Motor_Out(void)
 //      }
       speed_goal_R=speed_goal;
       speed_goal_L=speed_goal;      
-//      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
-//      {
-////        if(abs(error)<8&&abs(error)>=4)
-////          stop1();
-////        else 
-//          if((All_Black>2&&All_Black<15)||Cross_Flag==31)
-//        {
+      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
+      {
+//        if(abs(error)<8&&abs(error)>=4)
 //          stop1();
-//        }
-//          
-//        return;
-//      }
+//        else 
+          if((All_Black>2&&All_Black<15)||Cross_Flag==31)
+        {
+          stop1();
+        }
+          
+        return;
+      }
       speed_err_R_lastlast = speed_err_R_last;
       speed_err_R_last = speed_err_R;
       
