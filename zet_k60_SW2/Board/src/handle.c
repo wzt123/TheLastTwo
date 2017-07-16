@@ -45,11 +45,14 @@ uint8 CrossRow=0;
 
 
 uint16 Servomiddle=8608;
+uint16 Servomiddle_Rember=8608;
 uint32 Servo_max=8768;//往右打
 uint32 Servo_min=8448;//往左打
 float CenterLineSlope=0;
 
 int16 error=0;
+int16 error_last[2]={0};//记录前两次的值error,便于丢线处理
+
 int32 error1=0;
 int32 error2=0;
 int16 errorerror=0;
@@ -379,6 +382,9 @@ void Servo_control(void)
   }
   else if(cross_Time>100)
     cross_Time=0;
+  error_last[0]=error_last[1];
+  error_last[1]=error;
+  
   uint8 Row_Ptr=0;
   error=0;
   error1=0;
@@ -392,15 +398,15 @@ void Servo_control(void)
   ///过障碍
   if(Cross_Flag==5)
   {
-    Servomiddle=8678;
+    Servomiddle=Servomiddle_Rember+70;
   }
   else if(Cross_Flag==6)
   {
-    Servomiddle=8538;
+    Servomiddle=Servomiddle_Rember-70;
   }
   else if(stopLine_temp==0)
   {
-    Servomiddle=8608;
+    Servomiddle=Servomiddle_Rember;
   }
   
   if(All_Black>2)
@@ -450,22 +456,28 @@ void Servo_control(void)
     {
 //      errorerror=errorerror*5/10;
 //      error = error*50/10;
-      errorerror= - errorerror*10/65;
+
+     if(speed_goal<4850)
+       errorerror= - errorerror*1/6;
+     else if(speed_goal<5250)
+       errorerror= - errorerror*10/65;
+
       error = error;
     }
     if(Cross_Flag==31)
     {
-//        if(Car == 1)
-//        {
-//          Servo_temp=-Ring_First_Row*100/10-90;
-//        }
-//        else
-//        {
-//          //Servo_temp=Ring_First_Row*100/10+30;
-//          Servo_temp=-Ring_First_Row*100/10-90;
-//        }
-      Kp =45;//66
-      Kd = 35;
+      if(errorerror*error<0)
+        error=-error;
+      if(speed_goal<4850)
+      {
+        Kp =45;//66
+        Kd = 35;
+      }
+      else
+      {
+        Kp =55;//66
+        Kd = 45;
+      }
       Servo_temp = Kp*error/10+Kd*errorerror/10;
       
     }
@@ -572,24 +584,14 @@ void Servo_control(void)
             Kd = 30;
           }
         }
-        else if((All_Black>=41))error_sum += error;
-//        else
-//        {
-////          if(error<0)
-////          {
-////            Kp=100;
-////            Kd=35;
-////          }
-////          else
-////          {
-////            Kp=100;
-////            Kd =35;
-////      }
-//          Servo_value = Servo_Value_Last;
-//        }
+        
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
+        }
       }
     
-     else if(speed_goal<4850)
+     else if(speed_goal<4450)
       {
         if(All_Black==0)
         {
@@ -713,10 +715,267 @@ void Servo_control(void)
             Kd = 30;
           }
         }
-        else if((All_Black>=41))error_sum += error;
+        
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
+        }
       }
-    
+     else if(speed_goal<4650)
+      {
+        if(All_Black==0)
+        {
+          if(error<0)
+          {
+            Kp = 40;
+            Kd = 12;
+          }
+          else
+          {
+            Kp = 40;
+            Kd = 12;
+          }
+        }
+        else if(All_Black<5)
+        {
+          if(error<0)
+          {
+            Kp = 35;
+            Kd = 10;
+          }
+          else
+          {
+            Kp = 35;
+            Kd = 10;
+          }
+        }
+        else if(All_Black<12)//长直道进弯道
+        {
+          if(error<0)
+          {
+            Kp = 35;
+            Kd = 25;
+          }
+          else
+          {
+            Kp = 35;
+            Kd = 20;
+          }
+        }
+      else if(All_Black<17)//直道入弯道或者270度时提前转角
+      {
+        if(error<0)
+        {
+          Kp = 36;
+          Kd = 18;
+        }
+        else
+        {
+          Kp = 36;
+          Kd = 18;
+
+        }
+      }
+      else if(All_Black<21)//弯道入直道的时候
+      {
+        if(error<0)
+        {
+          Kp = 46;
+          Kd = 19;
+        }
+        else
+        {
+          Kp = 46;
+          Kd = 19;
+        }
+      }
+      else if(All_Black<25) //弯道内部
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=20;
+        }
+        else
+        {
+          Kp=50;
+          Kd =20;
+        }
+      }
       
+
+      else if(All_Black<32)
+      {
+        if(error<0)
+        {
+          Kp = 51;
+          Kd = 25;
+        }
+        else
+        {
+          Kp = 51;
+          Kd = 25;
+        }
+      }
+        else if(All_Black<41)
+        {
+          if(error<0)
+          {
+            Kp = 65;
+            Kd = 30;
+          }
+          else
+          {
+            Kp = 65;
+            Kd = 30;
+          }
+        }
+        
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
+        }
+      }
+     else if(speed_goal<5250)
+      {
+        if(All_Black==0)
+        {
+          if(error<0)
+          {
+            Kp = 27;
+            Kd = 5;
+          }
+          else
+          {
+            Kp = 27;
+            Kd = 5;
+          }
+        }
+        
+//        else if(All_Black<7)//长直道进弯道
+//        {
+//          if(error<0)
+//          {
+//            Kp = 40;
+//            Kd = 15;
+//          } 
+//          else
+//          {
+//            Kp = 40;
+//            Kd = 15;
+//          }
+//        }
+        else if(All_Black<10)
+        {
+          if(error<0)
+          {
+
+            Kp = 42;
+            Kd = 25;
+          }
+          else
+          {
+            Kp = 42;
+            Kd = 25;
+          }
+        }
+//        else if(All_Black<10)
+//        {
+//          if(error<0)
+//          {
+//            Kp = 35;
+//            Kd = 13;
+//          }
+//          else
+//          {
+//            Kp = 35;
+//            Kd = 13;
+//          }
+//        }
+      else if(All_Black<17)
+      {
+        if(error<0)
+        {
+          Kp = 37;
+          Kd = 25;
+        }
+        else
+        {
+          
+            Kp = 37;
+            Kd = 21;
+          
+        }
+      }
+      else if(All_Black<22)
+      {
+        if(error<0)
+        {
+          if(error<0)
+          {
+            Kp = 55;
+            Kd = 22;
+          }
+          else
+          {
+            Kp = 55;
+            Kd = 22;
+          }
+        }
+        else
+        {
+          Kp = 45;
+          Kd=19;
+        }
+      }
+      else if(All_Black<25)
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=20;
+        }
+        else
+        {
+          Kp=50;
+          Kd =20;
+        }
+      }
+      
+      else if(All_Black<32)
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=25;
+        }
+        else
+        {
+          Kp=50;
+          Kd =25;
+        }
+      }
+        else if(All_Black<41)
+        {
+          if(error<0)
+          {
+            Kp = 65;
+            Kd = 30;
+          }
+          else
+          {
+            Kp = 65;
+            Kd = 30;
+          }
+        }
+        
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
+        }
+      }
+     
+
       else if(speed_goal<5450)
       {
          if(All_Black==0)
@@ -841,47 +1100,17 @@ void Servo_control(void)
           }
         }
         
-        else if((All_Black >= 41))error_sum += error;
-//        else if(All_Black<57)
-//        {
-//          if(error<0)
-//          {
-//            Kp=100;
-//            Kd=35;
-//          }
-//          else
-//          {
-//            Kp=100;
-//            Kd =35;
-//          }
-//        }
-//        
-//        else
-//        {
-//          if(error<0)
-//          {
-//            Kp = 130;
-//            Kd = 0;
-//          }
-//          else
-//          {
-//            Kp = 130;
-//            Kd = 0;
-//          }
-//        }
+        
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
+        }
       }
       
       Servo_temp = Kp*error+Kd*errorerror;
       Servo_temp = Servo_temp/10;
     }
     
-    /*if(cross_num>15)
-    {
-      if(error<0)
-        Servo_temp = Servo_temp-cross_num;
-      else
-        Servo_temp = Servo_temp+cross_num;
-    }*/
     
     
 //    Servo_Value_Last = Servo_value;
@@ -1433,7 +1662,7 @@ void Search_Line(void)
     if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
     {
       stopLine_temp=1;
-      if(sum_time>8000)
+      if(sum_time>500)
       {
         Stop_Flag=2;
       }
@@ -1531,7 +1760,7 @@ void Search_Line(void)
         if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
         {
           stopLine_temp=1;
-          if(sum_time>100)
+          if(sum_time>500)
           {
             Stop_Flag=2;
           }
@@ -1550,7 +1779,7 @@ void Search_Line(void)
         if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
         {
           stopLine_temp=1;
-          if(sum_time>100&&Row_Ptr>20)
+          if(sum_time>500&&Row_Ptr>20)
           {
             Stop_Flag=2;
           }
@@ -1694,20 +1923,66 @@ void Search_Line(void)
       if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]]==255&&Road_Right_f[Row_Ptr+1]==79)
       {
         Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1];
-        if(Cross_Flag==31||Cross_Flag==3)
+//        if(Cross_Flag==31||Cross_Flag==3)
+//        {
+//          Road_Right[Row_Ptr]=Road_Right_f[Row_Ptr+1];
+//        }
+//        //Right_Flag[Row_Ptr]=3;
+      }
+      
+      if(abs(Road_Right_f[Row_Ptr]-Road_Right_f[Row_Ptr+1])>25)
+      {
+        if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-1]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-2]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-3]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-4]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-5]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-6]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-7]==255)//上一行往左跳五列在本行是白的
         {
-          Road_Right[Row_Ptr]=Road_Right_f[Row_Ptr+1];
+          if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1];
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-1]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-1;
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-2]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-2;
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-3]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-3;
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-5]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-5;
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-5]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-5;
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-6]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-6;
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-7]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-7;
         }
-        //Right_Flag[Row_Ptr]=3;
       }
       if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]]==255&&Road_Left_f[Row_Ptr+1]==0)
       {
         Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1];
-        if(Cross_Flag==31||Cross_Flag==3)
+//        if(Cross_Flag==31||Cross_Flag==3)
+//        {
+//          Road_Left[Row_Ptr]=Road_Left_f[Row_Ptr+1];
+//        }
+//        //Left_Flag[Row_Ptr]=3;
+      }
+      if(abs(Road_Left_f[Row_Ptr]-Road_Left_f[Row_Ptr+1])>25)
+      {
+        if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+1]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+2]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+3]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+4]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+5]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+6]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+7]==255)//上一行往右跳三列在本行是白的
         {
-          Road_Left[Row_Ptr]=Road_Left_f[Row_Ptr+1];
+          if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1];
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+1]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+1;
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+2]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+2;
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+3]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+3;
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+4]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+4;
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+5]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+5;
+          
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+6]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+6;
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+7]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+7;
         }
-        //Left_Flag[Row_Ptr]=3;
       }
     }
     if(Col_Ptr==REnd && img[Row_Ptr][39] ==0 && img[Row_Ptr][40]==0 && img[Row_Ptr][41]==0) Right_Flag[Row_Ptr]=2;//在搜线范围内没找到_全黑行
@@ -1766,14 +2041,14 @@ void Search_Line(void)
   }///如果在车头连续三行丢线，十字路口另外一种情况
     else*/
     
-    if(Row_Ptr<51&&(Left_Flag[Row_Ptr]==3 && Right_Flag[Row_Ptr]==3)&&
+    /*if(Row_Ptr<51&&(Left_Flag[Row_Ptr]==3 && Right_Flag[Row_Ptr]==3)&&
        (Left_Flag[Row_Ptr+1]==3 && Right_Flag[Row_Ptr+1]==3)&&
            ((Left_Flag[Row_Ptr+2]==1 && Left_Flag[Row_Ptr+3]==1)||
              (Right_Flag[Row_Ptr+2]==1 && Right_Flag[Row_Ptr+3]==1))&&Row_Ptr>All_Black)
     {
       Cross_Flag_3=1;
-    }
-    else if(Row_Ptr<45&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
+    }*/
+    if(Row_Ptr<45&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
        (Left_Flag[Row_Ptr+7]==3 && Right_Flag[Row_Ptr+7]==3)&&
          (Left_Flag[Row_Ptr+6]==3 && Right_Flag[Row_Ptr+6]==3)&&(
                                                              (Left_Flag[Row_Ptr+5]==1 && Right_Flag[Row_Ptr+5]==1)||
@@ -1783,8 +2058,6 @@ void Search_Line(void)
                                                                      (Left_Flag[Row_Ptr+1]==1 && Right_Flag[Row_Ptr+1]==1)||
                                                                        (Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1))&&Row_Ptr>All_Black)//如果八行后两行丢线前两行重新找到线，十字
     {
-      Cross_Flag=1;
-      Cross_flag++;
       // Cross_Flag_Last=Cross_Flag;
       if(Left_Flag[Row_Ptr+5]==1 && Right_Flag[Row_Ptr+5]==1)
         StopRow=Row_Ptr+5;
@@ -1798,6 +2071,11 @@ void Search_Line(void)
         StopRow=Row_Ptr+1;
       else if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
         StopRow=Row_Ptr;
+      if(img[StopRow][40]==255&&img[StopRow+1][40]==255)
+      {
+        Cross_Flag=1;
+        Cross_flag++;
+      }
     }
     else if(Left_Flag[Row_Ptr+4]==3 &&Right_Flag[Row_Ptr+4] ==1&&
             Left_Flag[Row_Ptr+3]==3 &&Right_Flag[Row_Ptr+3] ==1&&

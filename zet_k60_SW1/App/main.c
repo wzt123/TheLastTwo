@@ -153,10 +153,10 @@ void  main(void)
 //        }
       }
     }    
-      if((Stop_Flag>1)&&Car==1&&Car_First_stop<2&&stop_Flag==0)
-        stop_Car1();
-      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
-        stop_Car2();
+//      if((Stop_Flag>1)&&Car==1&&Car_First_stop<2&&stop_Flag==0)
+//        stop_Car1();
+//      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
+//        stop_Car2();
     
       
 //      if(Cross_Flag==1&&((Left_stop>20&&Left_stop<25)||(Right_stop>20&&Right_stop<25))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake==0)
@@ -179,7 +179,7 @@ void  main(void)
       OLED_Print_Num1(88, 5, Kd);
 
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);   
-      OLED_Print_Num1(88, 6, Servo_temp);
+      OLED_Print_Num1(88, 6, sum_time);
     }     
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {
