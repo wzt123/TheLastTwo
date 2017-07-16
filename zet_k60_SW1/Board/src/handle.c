@@ -1736,14 +1736,14 @@ void Search_Line(void)
   }///如果在车头连续三行丢线，十字路口另外一种情况
     else*/
     
-    if(Row_Ptr<51&&(Left_Flag[Row_Ptr]==3 && Right_Flag[Row_Ptr]==3)&&
-       (Left_Flag[Row_Ptr+1]==3 && Right_Flag[Row_Ptr+1]==3)&&
-           ((Left_Flag[Row_Ptr+2]==1 && Left_Flag[Row_Ptr+3]==1)||
-             (Right_Flag[Row_Ptr+2]==1 && Right_Flag[Row_Ptr+3]==1))&&Row_Ptr>All_Black)
-    {
-      Cross_Flag_3=1;
-    }
-    else if(Row_Ptr<45&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
+//    if(Row_Ptr<51&&(Left_Flag[Row_Ptr]==3 && Right_Flag[Row_Ptr]==3)&&
+//       (Left_Flag[Row_Ptr+1]==3 && Right_Flag[Row_Ptr+1]==3)&&
+//           ((Left_Flag[Row_Ptr+2]==1 && Left_Flag[Row_Ptr+3]==1)||
+//             (Right_Flag[Row_Ptr+2]==1 && Right_Flag[Row_Ptr+3]==1))&&Row_Ptr>All_Black)
+//    {
+//      Cross_Flag_3=1;
+//    }
+    if(Row_Ptr<45&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
        (Left_Flag[Row_Ptr+7]==3 && Right_Flag[Row_Ptr+7]==3)&&
          (Left_Flag[Row_Ptr+6]==3 && Right_Flag[Row_Ptr+6]==3)&&(
                                                              (Left_Flag[Row_Ptr+5]==1 && Right_Flag[Row_Ptr+5]==1)||
@@ -1753,8 +1753,6 @@ void Search_Line(void)
                                                                      (Left_Flag[Row_Ptr+1]==1 && Right_Flag[Row_Ptr+1]==1)||
                                                                        (Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1))&&Row_Ptr>All_Black)//如果八行后两行丢线前两行重新找到线，十字
     {
-      Cross_Flag=1;
-      Cross_flag++;
       // Cross_Flag_Last=Cross_Flag;
       if(Left_Flag[Row_Ptr+5]==1 && Right_Flag[Row_Ptr+5]==1)
         StopRow=Row_Ptr+5;
@@ -1768,6 +1766,11 @@ void Search_Line(void)
         StopRow=Row_Ptr+1;
       else if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
         StopRow=Row_Ptr;
+      if(img[StopRow][40]==255&&img[StopRow+1][40]==255)
+      {
+        Cross_Flag=1;
+        Cross_flag++;
+      }
     }
     else if(Left_Flag[Row_Ptr+4]==3 &&Right_Flag[Row_Ptr+4] ==1&&
             Left_Flag[Row_Ptr+3]==3 &&Right_Flag[Row_Ptr+3] ==1&&
