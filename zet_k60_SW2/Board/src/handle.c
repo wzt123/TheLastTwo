@@ -458,7 +458,7 @@ void Servo_control(void)
 //      error = error*50/10;
      
      if(speed_goal<4850)
-       errorerror= - errorerror*2/5;
+       errorerror= - errorerror*1/6;
      else if(speed_goal<5250)
        errorerror= - errorerror*10/65;
       error = error;
@@ -590,7 +590,7 @@ void Servo_control(void)
         }
       }
     
-     else if(speed_goal<4850)
+     else if(speed_goal<4450)
       {
         if(All_Black==0)
         {
@@ -704,7 +704,120 @@ void Servo_control(void)
           error_sum = error_last[0]+error_last[1]+error*5;
         }
       }
-    
+     else if(speed_goal<4650)
+      {
+        if(All_Black==0)
+        {
+          if(error<0)
+          {
+            Kp = 40;
+            Kd = 12;
+          }
+          else
+          {
+            Kp = 40;
+            Kd = 12;
+          }
+        }
+        else if(All_Black<5)
+        {
+          if(error<0)
+          {
+            Kp = 35;
+            Kd = 10;
+          }
+          else
+          {
+            Kp = 35;
+            Kd = 10;
+          }
+        }
+        else if(All_Black<12)//长直道进弯道
+        {
+          if(error<0)
+          {
+            Kp = 35;
+            Kd = 25;
+          }
+          else
+          {
+            Kp = 35;
+            Kd = 20;
+          }
+        }
+      else if(All_Black<17)//直道入弯道或者270度时提前转角
+      {
+        if(error<0)
+        {
+          Kp = 36;
+          Kd = 18;
+        }
+        else
+        {
+          Kp = 36;
+          Kd = 18;
+
+        }
+      }
+      else if(All_Black<21)//弯道入直道的时候
+      {
+        if(error<0)
+        {
+          Kp = 46;
+          Kd = 19;
+        }
+        else
+        {
+          Kp = 46;
+          Kd = 19;
+        }
+      }
+      else if(All_Black<25) //弯道内部
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=20;
+        }
+        else
+        {
+          Kp=50;
+          Kd =20;
+        }
+      }
+      
+      else if(All_Black<32)
+      {
+        if(error<0)
+        {
+          Kp = 51;
+          Kd = 25;
+        }
+        else
+        {
+          Kp = 51;
+          Kd = 25;
+        }
+      }
+        else if(All_Black<41)
+        {
+          if(error<0)
+          {
+            Kp = 65;
+            Kd = 30;
+          }
+          else
+          {
+            Kp = 65;
+            Kd = 30;
+          }
+        }
+        
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
+        }
+      }
      else if(speed_goal<5250)
       {
         if(All_Black==0)
@@ -1909,14 +2022,14 @@ void Search_Line(void)
   }///如果在车头连续三行丢线，十字路口另外一种情况
     else*/
     
-    if(Row_Ptr<51&&(Left_Flag[Row_Ptr]==3 && Right_Flag[Row_Ptr]==3)&&
+    /*if(Row_Ptr<51&&(Left_Flag[Row_Ptr]==3 && Right_Flag[Row_Ptr]==3)&&
        (Left_Flag[Row_Ptr+1]==3 && Right_Flag[Row_Ptr+1]==3)&&
            ((Left_Flag[Row_Ptr+2]==1 && Left_Flag[Row_Ptr+3]==1)||
              (Right_Flag[Row_Ptr+2]==1 && Right_Flag[Row_Ptr+3]==1))&&Row_Ptr>All_Black)
     {
       Cross_Flag_3=1;
-    }
-    else if(Row_Ptr<45&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
+    }*/
+    if(Row_Ptr<45&&(Left_Flag[Row_Ptr+8]==3 && Right_Flag[Row_Ptr+8]==3)&&
        (Left_Flag[Row_Ptr+7]==3 && Right_Flag[Row_Ptr+7]==3)&&
          (Left_Flag[Row_Ptr+6]==3 && Right_Flag[Row_Ptr+6]==3)&&(
                                                              (Left_Flag[Row_Ptr+5]==1 && Right_Flag[Row_Ptr+5]==1)||
@@ -1926,8 +2039,6 @@ void Search_Line(void)
                                                                      (Left_Flag[Row_Ptr+1]==1 && Right_Flag[Row_Ptr+1]==1)||
                                                                        (Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1))&&Row_Ptr>All_Black)//如果八行后两行丢线前两行重新找到线，十字
     {
-      Cross_Flag=1;
-      Cross_flag++;
       // Cross_Flag_Last=Cross_Flag;
       if(Left_Flag[Row_Ptr+5]==1 && Right_Flag[Row_Ptr+5]==1)
         StopRow=Row_Ptr+5;
@@ -1941,6 +2052,11 @@ void Search_Line(void)
         StopRow=Row_Ptr+1;
       else if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
         StopRow=Row_Ptr;
+      if(img[StopRow][40]==255&&img[StopRow+1][40]==255)
+      {
+        Cross_Flag=1;
+        Cross_flag++;
+      }
     }
     else if(Left_Flag[Row_Ptr+4]==3 &&Right_Flag[Row_Ptr+4] ==1&&
             Left_Flag[Row_Ptr+3]==3 &&Right_Flag[Row_Ptr+3] ==1&&
