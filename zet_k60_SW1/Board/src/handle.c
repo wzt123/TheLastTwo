@@ -1664,20 +1664,66 @@ void Search_Line(void)
       if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]]==255&&Road_Right_f[Row_Ptr+1]==79)
       {
         Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1];
-        if(Cross_Flag==31||Cross_Flag==3)
+//        if(Cross_Flag==31||Cross_Flag==3)
+//        {
+//          Road_Right[Row_Ptr]=Road_Right_f[Row_Ptr+1];
+//        }
+//        //Right_Flag[Row_Ptr]=3;
+      }
+      
+      if(abs(Road_Right_f[Row_Ptr]-Road_Right_f[Row_Ptr+1])>25)
+      {
+        if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-1]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-2]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-3]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-4]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-5]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-6]==255||img[Row_Ptr][Road_Right_f[Row_Ptr+1]-7]==255)//上一行往左跳五列在本行是白的
         {
-          Road_Right[Row_Ptr]=Road_Right_f[Row_Ptr+1];
+          if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1];
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-1]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-1;
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-2]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-2;
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-3]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-3;
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-5]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-5;
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-5]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-5;
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-6]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-6;
+          else if(img[Row_Ptr][Road_Right_f[Row_Ptr+1]-7]==255)
+            Road_Right_f[Row_Ptr]=Road_Right_f[Row_Ptr+1]-7;
         }
-        //Right_Flag[Row_Ptr]=3;
       }
       if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]]==255&&Road_Left_f[Row_Ptr+1]==0)
       {
         Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1];
-        if(Cross_Flag==31||Cross_Flag==3)
+//        if(Cross_Flag==31||Cross_Flag==3)
+//        {
+//          Road_Left[Row_Ptr]=Road_Left_f[Row_Ptr+1];
+//        }
+//        //Left_Flag[Row_Ptr]=3;
+      }
+      if(abs(Road_Left_f[Row_Ptr]-Road_Left_f[Row_Ptr+1])>25)
+      {
+        if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+1]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+2]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+3]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+4]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+5]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+6]==255||img[Row_Ptr][Road_Left_f[Row_Ptr+1]+7]==255)//上一行往右跳三列在本行是白的
         {
-          Road_Left[Row_Ptr]=Road_Left_f[Row_Ptr+1];
+          if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1];
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+1]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+1;
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+2]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+2;
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+3]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+3;
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+4]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+4;
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+5]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+5;
+          
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+6]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+6;
+          else if(img[Row_Ptr][Road_Left_f[Row_Ptr+1]+7]==255)
+            Road_Left_f[Row_Ptr]=Road_Left_f[Row_Ptr+1]+7;
         }
-        //Left_Flag[Row_Ptr]=3;
       }
     }
     if(Col_Ptr==REnd && img[Row_Ptr][39] ==0 && img[Row_Ptr][40]==0 && img[Row_Ptr][41]==0) Right_Flag[Row_Ptr]=2;//在搜线范围内没找到_全黑行
