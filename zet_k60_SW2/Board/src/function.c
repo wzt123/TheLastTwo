@@ -186,7 +186,7 @@ void Motor_Out(void)
         
         else if(Status==3)
         {
-          speed_goal=4700;
+          speed_goal=5000;
         }
        
        else if(Status==4)
@@ -209,7 +209,7 @@ void Motor_Out(void)
 //          }
 //        }
 //      }
-      speed_goal_R=speed_goal-error*abs(error)*13/10;
+      speed_goal_R=speed_goal-error*abs(error)*15/10;
       speed_goal_L=speed_goal+error*abs(error)*13/10;      
 //      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
 //      {

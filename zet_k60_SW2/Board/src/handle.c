@@ -45,11 +45,14 @@ uint8 CrossRow=0;
 
 
 uint16 Servomiddle=8608;
+uint16 Servomiddle_Rember=8608;
 uint32 Servo_max=8768;//往右打
 uint32 Servo_min=8448;//往左打
 float CenterLineSlope=0;
 
 int16 error=0;
+int16 error_last[2]={0};//记录前两次的值error,便于丢线处理
+
 int32 error1=0;
 int32 error2=0;
 int16 errorerror=0;
@@ -379,6 +382,9 @@ void Servo_control(void)
   }
   else if(cross_Time>100)
     cross_Time=0;
+  error_last[0]=error_last[1];
+  error_last[1]=error;
+  
   uint8 Row_Ptr=0;
   error=0;
   error1=0;
@@ -392,15 +398,15 @@ void Servo_control(void)
   ///过障碍
   if(Cross_Flag==5)
   {
-    Servomiddle=8678;
+    Servomiddle=Servomiddle_Rember+70;
   }
   else if(Cross_Flag==6)
   {
-    Servomiddle=8538;
+    Servomiddle=Servomiddle_Rember-70;
   }
   else if(stopLine_temp==0)
   {
-    Servomiddle=8608;
+    Servomiddle=Servomiddle_Rember;
   }
   
   if(All_Black>2)
@@ -450,22 +456,27 @@ void Servo_control(void)
     {
 //      errorerror=errorerror*5/10;
 //      error = error*50/10;
-      errorerror= - errorerror*3/5;
+     
+     if(speed_goal<4850)
+       errorerror= - errorerror*2/5;
+     else if(speed_goal<5250)
+       errorerror= - errorerror*10/65;
       error = error;
     }
     if(Cross_Flag==31)
     {
-//        if(Car == 1)
-//        {
-//          Servo_temp=-Ring_First_Row*100/10-90;
-//        }
-//        else
-//        {
-//          //Servo_temp=Ring_First_Row*100/10+30;
-//          Servo_temp=-Ring_First_Row*100/10-90;
-//        }
-      Kp =45;//66
-      Kd = 35;
+      if(errorerror*error<0)
+        error=-error;
+      if(speed_goal<4850)
+      {
+        Kp =45;//66
+        Kd = 35;
+      }
+      else
+      {
+        Kp =55;//66
+        Kd = 45;
+      }
       Servo_temp = Kp*error/10+Kd*errorerror/10;
       
     }
@@ -572,21 +583,11 @@ void Servo_control(void)
             Kd = 30;
           }
         }
-        else if((All_Black>=41))error_sum += error;
-//        else
-//        {
-////          if(error<0)
-////          {
-////            Kp=100;
-////            Kd=35;
-////          }
-////          else
-////          {
-////            Kp=100;
-////            Kd =35;
-////      }
-//          Servo_value = Servo_Value_Last;
-//        }
+        
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
+        }
       }
     
      else if(speed_goal<4850)
@@ -721,11 +722,153 @@ void Servo_control(void)
             Kd = 30;
           }
         }
-        else if((All_Black>=41))error_sum += error;
+        
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
+        }
       }
     
+     else if(speed_goal<5250)
+      {
+        if(All_Black==0)
+        {
+          if(error<0)
+          {
+            Kp = 27;
+            Kd = 5;
+          }
+          else
+          {
+            Kp = 27;
+            Kd = 5;
+          }
+        }
+        
+//        else if(All_Black<7)//长直道进弯道
+//        {
+//          if(error<0)
+//          {
+//            Kp = 40;
+//            Kd = 15;
+//          } 
+//          else
+//          {
+//            Kp = 40;
+//            Kd = 15;
+//          }
+//        }
+        else if(All_Black<10)
+        {
+          if(error<0)
+          {
+
+            Kp = 42;
+            Kd = 25;
+          }
+          else
+          {
+            Kp = 42;
+            Kd = 25;
+          }
+        }
+//        else if(All_Black<10)
+//        {
+//          if(error<0)
+//          {
+//            Kp = 35;
+//            Kd = 13;
+//          }
+//          else
+//          {
+//            Kp = 35;
+//            Kd = 13;
+//          }
+//        }
+      else if(All_Black<17)
+      {
+        if(error<0)
+        {
+          Kp = 37;
+          Kd = 25;
+        }
+        else
+        {
+          
+            Kp = 37;
+            Kd = 21;
+          
+        }
+      }
+      else if(All_Black<22)
+      {
+        if(error<0)
+        {
+          if(error<0)
+          {
+            Kp = 55;
+            Kd = 22;
+          }
+          else
+          {
+            Kp = 55;
+            Kd = 22;
+          }
+        }
+        else
+        {
+          Kp = 45;
+          Kd=19;
+        }
+      }
+      else if(All_Black<25)
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=20;
+        }
+        else
+        {
+          Kp=50;
+          Kd =20;
+        }
+      }
       
-      else if((speed_goal>5300)&&(speed_goal<5450))
+      else if(All_Black<32)
+      {
+        if(error<0)
+        {
+          Kp=50;
+          Kd=25;
+        }
+        else
+        {
+          Kp=50;
+          Kd =25;
+        }
+      }
+        else if(All_Black<41)
+        {
+          if(error<0)
+          {
+            Kp = 65;
+            Kd = 30;
+          }
+          else
+          {
+            Kp = 65;
+            Kd = 30;
+          }
+        }
+        
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
+        }
+      }
+     
+      else if(speed_goal<5450)
       {
          if(All_Black==0)
         {
@@ -849,47 +992,17 @@ void Servo_control(void)
           }
         }
         
-        else if((All_Black >= 41))error_sum += error;
-//        else if(All_Black<57)
-//        {
-//          if(error<0)
-//          {
-//            Kp=100;
-//            Kd=35;
-//          }
-//          else
-//          {
-//            Kp=100;
-//            Kd =35;
-//          }
-//        }
-//        
-//        else
-//        {
-//          if(error<0)
-//          {
-//            Kp = 130;
-//            Kd = 0;
-//          }
-//          else
-//          {
-//            Kp = 130;
-//            Kd = 0;
-//          }
-//        }
+        
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
+        }
       }
       
       Servo_temp = Kp*error+Kd*errorerror;
       Servo_temp = Servo_temp/10;
     }
     
-    /*if(cross_num>15)
-    {
-      if(error<0)
-        Servo_temp = Servo_temp-cross_num;
-      else
-        Servo_temp = Servo_temp+cross_num;
-    }*/
     
     
 //    Servo_Value_Last = Servo_value;
@@ -1441,7 +1554,7 @@ void Search_Line(void)
     if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
     {
       stopLine_temp=1;
-      if(sum_time>8000)
+      if(sum_time>500)
       {
         Stop_Flag=2;
       }
@@ -1539,7 +1652,7 @@ void Search_Line(void)
         if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
         {
           stopLine_temp=1;
-          if(sum_time>100)
+          if(sum_time>500)
           {
             Stop_Flag=2;
           }
@@ -1558,7 +1671,7 @@ void Search_Line(void)
         if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
         {
           stopLine_temp=1;
-          if(sum_time>100&&Row_Ptr>20)
+          if(sum_time>500&&Row_Ptr>20)
           {
             Stop_Flag=2;
           }

@@ -35,7 +35,7 @@ uint8 White_Ren=0;
 uint8 Right_xian=0;
 uint8 Left_xian=0;
 
-uint16 Servo_value=8802;//舵机输出pwm值
+uint16 Servo_value=8553;//舵机输出pwm值
 uint8 ring_num;
 
 uint8 Hinder_Start=0;
@@ -45,13 +45,15 @@ uint8 Cross_Flag=0;
 uint8 Change_Flag;
 uint8 CrossRow=0;
 
-uint16 Servomiddle=8802;
-uint16 Servomiddle_rember=8802;
-uint16 Servo_max=8962;
-uint16 Servo_min=8642;
+uint16 Servomiddle=8552;
+uint16 Servomiddle_rember=8552;
+uint16 Servo_max=8718;
+uint16 Servo_min=8388;
 float CenterLineSlope=0;
 
 int16 error=0;   //0~40左右
+int16 error_last[2]={0};//记录前两次的值error,便于丢线处理
+
 int32 error1=0;  //
 int32 error2=0;  //
 int16 errorerror=0; //0~35左右
@@ -326,6 +328,7 @@ void Calculate_Slope()
 /*
 舵机控制
 */
+
 void Servo_control(void)
 {
   if(Cross_Flag_Last==31&&Cross_Flag!=31)
@@ -373,6 +376,10 @@ void Servo_control(void)
   }
   else if(cross_Time>100)
     cross_Time=0;
+  
+  error_last[0]=error_last[1];
+  error_last[1]=error;
+  
   uint8 Row_Ptr=0;
   error=0;
   error1=0;
@@ -386,11 +393,11 @@ void Servo_control(void)
   ///过障碍
   if(Cross_Flag==5)
   {
-    Servomiddle=8853;
+    Servomiddle=Servomiddle_rember+70;
   }
   else if(Cross_Flag==6)
   {
-    Servomiddle=8690;
+    Servomiddle=Servomiddle_rember-70;
   }
   else if(stopLine_temp==0)
   {
@@ -428,35 +435,28 @@ void Servo_control(void)
     error2 = error2/(59-l/2-Lastline);
     errorerror = error2-error1;
     if(errorerror*error<0&&abs(error-errorerror)>15&&Cross_Flag==0)
-    {
-      errorerror= - errorerror/5;
+    {      
+     if(speed_goal<4850)
+       errorerror= - errorerror*1/5;
+     else if(speed_goal<5250)
+       errorerror= - errorerror*10/65;
       error = error;
     }
     
-//    if(Cross_Flag==2||cross_time>0)
-//    {
-//      Kp =88;
-//      Servo_temp=Kp*error/10+80;
-//    }
-//    else if(Cross_Flag==4||cross_time>0)
-//    {
-//      Kp =88;
-//      Servo_temp=Kp*error/10-110;
-//    }
-    //else if(Cross_Flag==3||Cross_Flag==31||ring_time>0
     if(Cross_Flag==31)
     {
-//        if(Car == 1)
-//        {
-//          Servo_temp=-Ring_First_Row*100/10-90;
-//        }
-//        else
-//        {
-//          //Servo_temp=Ring_First_Row*100/10+30;
-//          Servo_temp=-Ring_First_Row*100/10-90;
-//        }
-      Kp =45;//66
-      Kd = 28;
+      if(errorerror*error<0)
+        error=-error;
+      if(speed_goal<4850)
+      {
+        Kp =45;//66
+        Kd = 28;  
+      }
+      else
+      {
+        Kp =55;//66
+        Kd = 45;
+      }
       Servo_temp = Kp*error/10+Kd*errorerror/10;
       
     }
@@ -467,13 +467,13 @@ void Servo_control(void)
       Servo_temp = Kp*error+Kd*errorerror;
       Servo_temp = Servo_temp/10;
     }
-    else if(Stop_Flag==2||Stop_Flag==21)
-    {
-      Kp =40;
-      Kd = 40;
-      Servo_temp = Kp*error+Kd*errorerror;
-      Servo_temp = Servo_temp/10;
-    }
+//    else if(Stop_Flag==2||Stop_Flag==21)
+//    {
+//      Kp =40;
+//      Kd = 20;
+//      Servo_temp = Kp*error+Kd*errorerror;
+//      Servo_temp = Servo_temp/10;
+//    }
     else
     {      
       if(speed_goal<4200)
@@ -599,7 +599,10 @@ void Servo_control(void)
             Kd = 30;
           }
         }
-        else if((All_Black>=41))error_sum += error;
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
+        }
       }
       else if(speed_goal<5000)
       {
@@ -724,7 +727,10 @@ void Servo_control(void)
             Kd = 30;
           }
         }
-        else if((All_Black>=41))error_sum += error;
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
+        }
       }
       else if(speed_goal<5500)
       {
@@ -848,8 +854,11 @@ void Servo_control(void)
             Kp = 58;
             Kd = 30;
           }
+        }        
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
         }
-        else if((All_Black>=41))error_sum += error;
       }
     Servo_temp = Kp*error+Kd*errorerror;
     Servo_temp = Servo_temp/10;
@@ -1490,7 +1499,7 @@ void Search_Line(void)
             Stop_Flag=21;
           }
           
-          if(sum_time>100&&Stop_Flag!=21)
+          if(sum_time>500&&Stop_Flag!=21)
           {
             Stop_Flag=2;
           }
@@ -1510,7 +1519,7 @@ void Search_Line(void)
         if(stop_line_num>=3&&stop_Flag!=1&&Stop_Flag!=0)
         {
           stopLine_temp=1;
-          if(sum_time>100&&Row_Ptr>20)
+          if(sum_time>500&&Row_Ptr>20)
           {
             Stop_Flag=2;
           }

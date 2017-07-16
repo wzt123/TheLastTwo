@@ -207,8 +207,9 @@ void Motor_Out(void)
           speed_goal = speed_goal+400;
         }
       }     
-      speed_goal_R=speed_goal;
-      speed_goal_L=speed_goal;
+      
+      speed_goal_R=speed_goal-error*abs(error)*15/10;
+      speed_goal_L=speed_goal+error*abs(error)*15/10;
 //      speed_goal_R=speed_goal-error*abs(error)*13/10;
 //      speed_goal_L=speed_goal+error*abs(error)*13/10;
 //      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
@@ -413,17 +414,8 @@ void stop(void){
   uint8 speed_Kp=20;  
   uint8 speed_Kd=5;
   
-  if(All_Black>=50)
-  {
-    speed_PWM_R=0;
-    speed_PWM_L =0;
-    
-  }
-  else
-  { 
-      speed_goal_R=0;//设置速度
-      speed_goal_L=0;
-  }
+  speed_goal_R=0;//设置速度
+  speed_goal_L=0;
   speed_err_R_lastlast = speed_err_R_last;
   speed_err_R_last = speed_err_R;
   
@@ -533,14 +525,15 @@ void Chaoche_FrontCar(void)
   ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
   DELAY_MS(150);
-  gpio_set(PTC3,0);//驱动反向使能
-  gpio_set(PTC2,1);//驱动反向使能
-  gpio_set(PTB17,1);//驱动反向使能
-  gpio_set(PTB16,0);//驱动反向使能
-  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
-  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
-  DELAY_MS(180);
-  
+//  gpio_set(PTC3,0);//驱动反向使能
+//  gpio_set(PTC2,1);//驱动反向使能
+//  gpio_set(PTB17,1);//驱动反向使能
+//  gpio_set(PTB16,0);//驱动反向使能
+//  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+//  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+//  DELAY_MS(180);
+//
+  stop();  
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B
   
@@ -553,6 +546,7 @@ void Chaoche_FrontCar(void)
   gpio_set(PTE24,0);
   Overtake++;
   uint8 time=0;
+  uint8 DaoChe_temp=0;
   do
   {
     
@@ -580,11 +574,17 @@ void Chaoche_FrontCar(void)
 //    {
       time++;
 //    }
-    if(time>1)
+    if(Cross_Flag==1)
     {
       Servo_control();
     }
     else
+    {
+      get_error();
+      ftm_pwm_duty(FTM0, FTM_CH3, Servo_min);
+      DELAY_MS(50);
+    }
+    if(time<2)
     {
       get_error();
       ftm_pwm_duty(FTM0, FTM_CH3, Servo_min);
@@ -603,7 +603,11 @@ void Chaoche_FrontCar(void)
 //      
 //      OLED_Print_Num1(88, 6, Cross_Flag);
 //    }
-  }while(Cross_Flag!=1&&time<500&&(abs(errorerror-errorerror_rember)>4||abs(error-error_rember)>4));
+    if(Cross_Flag==1&&abs(errorerror-errorerror_rember)<4&&abs(error-error_rember)<4)
+    {
+      DaoChe_temp=1;
+    }
+  }while(DaoChe_temp==0&&time<500);
   
   do
   {
