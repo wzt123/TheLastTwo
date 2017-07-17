@@ -456,11 +456,12 @@ void Servo_control(void)
     {
 //      errorerror=errorerror*5/10;
 //      error = error*50/10;
-     
+
      if(speed_goal<4850)
        errorerror= - errorerror*1/6;
      else if(speed_goal<5250)
        errorerror= - errorerror*10/65;
+
       error = error;
     }
     if(Cross_Flag==31)
@@ -509,25 +510,25 @@ void Servo_control(void)
         if(error<0)
         {
           Kp = 35;
-          Kd = 5;
+          Kd = 8;
         }
         else
         {
           Kp = 35;
-          Kd = 5;
+          Kd = 8;
         }
       }
       else if(All_Black<17)
       {
         if(error<0)
         {
-          Kp = 35;
-          Kd = 11;
+          Kp = 34;
+          Kd = 13;
         }
         else
         {
-          Kp = 35;
-          Kd=11;
+          Kp = 34;
+          Kd=13;
         }
       }
       else if(All_Black<22)
@@ -535,12 +536,12 @@ void Servo_control(void)
         if(error<0)
         {
           Kp = 45;
-          Kd = 19;
+          Kd = 21;
         }
         else
         {
           Kp = 45;
-          Kd=19;
+          Kd=2;
         }
       }
       else if(All_Black<25)
@@ -594,15 +595,31 @@ void Servo_control(void)
       {
         if(All_Black==0)
         {
-          if(error<0)
+          if(abs(error)<5)
           {
-            Kp = 40;
-            Kd = 12;
+            if(error<0)
+            {
+              Kp = 40;
+              Kd = 12;
+            }
+            else
+            {
+              Kp = 40;
+              Kd = 12;
+            }
           }
           else
           {
-            Kp = 40;
-            Kd = 12;
+            if(error<0)
+            {
+              Kp = 45;
+              Kd = 20;
+            }
+            else
+            {
+              Kp = 45;
+              Kd = 20;
+            }
           }
         }
         else if(All_Black<5)
@@ -636,12 +653,12 @@ void Servo_control(void)
         if(error<0)
         {
           Kp = 36;
-          Kd = 17;
+          Kd = 15;
         }
         else
         {
           Kp = 36;
-          Kd = 17;
+          Kd = 15;
 
         }
       }
@@ -649,13 +666,13 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp = 46;
-          Kd = 19;
+          Kp = 47;
+          Kd = 22;
         }
         else
         {
-          Kp = 46;
-          Kd = 19;
+          Kp = 47;
+          Kd = 22;
         }
       }
       else if(All_Black<25) //ÍäµÀÄÚ²¿
@@ -786,6 +803,7 @@ void Servo_control(void)
         }
       }
       
+
       else if(All_Black<32)
       {
         if(error<0)
@@ -957,6 +975,7 @@ void Servo_control(void)
         }
       }
      
+
       else if(speed_goal<5450)
       {
          if(All_Black==0)
