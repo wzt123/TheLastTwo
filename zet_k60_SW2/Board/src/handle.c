@@ -1320,8 +1320,8 @@ void Find_Middle()
     {      
       Cross_Cnt=0;
     }
-//  }
-  if(Cross_Flag_Last==31) //圆环补右线，左转
+//
+  if(gpio_get(PTE3)==0&&Cross_Flag_Last==31) //圆环补右线，左转
   {
     if(Right_xian==0) Right_xian=57;
     Right_Slope=1.0*(Road_Right[Right_xian]-End_zuo)/(Right_xian-Ring_First_zuo);
@@ -1337,7 +1337,7 @@ void Find_Middle()
     }
   }
   //}
-  /*if(Cross_Flag_Last==32) //圆环补左线，右转
+  else if(gpio_get(PTE3)==1&&Cross_Flag_Last==31) //圆环补左线，右转
   {
     if(Left_xian==0) Left_xian=57;
     Right_Slope=1.0*(Road_Left[Left_xian]-End_you)/(Left_xian-Ring_First_you);
@@ -1351,7 +1351,7 @@ void Find_Middle()
       Road_Left[i]=Road_Left[i+1];
       Road_Right[i]=0;
     }
-  }*/
+  }
   //************************//
   //出圆环判断
   if(Cross_Flag==31)
