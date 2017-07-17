@@ -99,4 +99,6 @@ extern uint8 Kp;
 extern uint8 Kd;
 //extern float Servo_t;
 extern int8   show_KJ;
+extern uint16 Servo_value;
+extern uint16 Servomiddle_Rember;
 #endif

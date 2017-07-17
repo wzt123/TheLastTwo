@@ -398,11 +398,11 @@ void Servo_control(void)
   ///¹ýÕÏ°­
   if(Cross_Flag==5)
   {
-    Servomiddle=Servomiddle_Rember+70;
+    Servomiddle=Servomiddle_Rember+100;
   }
   else if(Cross_Flag==6)
   {
-    Servomiddle=Servomiddle_Rember-70;
+    Servomiddle=Servomiddle_Rember-100;
   }
   else if(stopLine_temp==0)
   {
