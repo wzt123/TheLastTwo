@@ -24,14 +24,8 @@ uint8 stopline_num = 0;                         ////第一次检测到起跑线不算，第二
 //函数声明
 void PORTA_IRQHandler();
 void DMA0_IRQHandler();
-void zet_motor(void);
-void steer(void);
-void zet_oled();
-void zet_camera();
 //void PIT0_IRQHandler(void);
-void zf_oled(int16 val);
 void PIT1_IRQHandler();
-void wzt_bluetooth(void);
 uint16 speed_rember_R[3] = {0};
 uint16 speed_rember_L[3] = {0};
 //char * int_to_char(int a);

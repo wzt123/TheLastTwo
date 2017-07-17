@@ -42,14 +42,12 @@ uint8 stopline_num = 0;
 uint16 speed_rember_R[3] = {0};
 uint16 speed_rember_L[3] = {0};
 */
-void xx_bluetooth();
 void uart3_handler(void);
 extern uint8 imgbuff[CAMERA_SIZE];
 void PORTC_IRQHandler();
 void xx_bluetooth();
 void uart5_handler(void);
 void chaoShenBo_init(void);
-void stopLine_init(void);
 void Switch_Init();
 uint8 Get_Switch(void);
 uint8 Get_Switch_2(void);
@@ -81,7 +79,6 @@ void Init_All(void)
   lptmr_pulse_init(LPT0_ALT2,0xFFFF,LPT_Rising);
   pit_init_ms(PIT0, 50);                             //初始化PIT0，定时时间为： 1000ms       
   set_vector_handler(PIT0_VECTORn ,PIT0_IRQHandler);       //设置PIT0的中断服务函数为 PIT_IRQHandler
-  stopLine_init();
   Switch_Init();
   while(!nrf_init());
   set_vector_handler(PORTC_VECTORn ,PORTC_IRQHandler);                //设置 PORTE 的中断服务函数为 PORTE_VECTORn
@@ -877,12 +874,4 @@ void chaoShenBo_init(void)
   enable_irq(PORTE_IRQn);
   ChaoShenBo_PitInit(PIT2);  
   NVIC_SetPriority(PIT2_IRQn,3);//这个中断无所谓,
-}
-
-void stopLine_init(void)
-{
-  gpio_init(PTE10,GPI,1);//使用GPIOE的中断，初始化IO口为输入，上拉
-  //port_init(PTE10, IRQ_RISING | PF | ALT1 | PULLUP);
-  gpio_init(PTE9,GPI,1);
-  //port_init(PTE9, IRQ_RISING | PF | ALT1 | PULLUP);
 }
