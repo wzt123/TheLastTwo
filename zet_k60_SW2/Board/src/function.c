@@ -122,7 +122,7 @@ void Motor_Out(void)
 {
   
   speed_PWM=6550;
-  uint8 speed_Ki=5;
+  uint8 speed_Ki=7;
   uint8 speed_Kp=20;  
   uint8 speed_Kd=8;
   gpio_set(PTC3,1);
@@ -144,7 +144,7 @@ void Motor_Out(void)
       {
         if(Status==0)
         {
-          speed_goal=4200;
+          speed_goal=3800;
         }
         else if(Status==1)
         {
@@ -170,7 +170,7 @@ void Motor_Out(void)
       {
        if(Status==0)
         {
-          speed_goal=4200;
+          speed_goal=3800;
         }
         else if(Status==1)
         {
@@ -194,23 +194,31 @@ void Motor_Out(void)
         }
       }     
       
-//      if(Car==2)
-//      {
-//        if(ABDistance>30)
-//        {
-//          if(ABDistance<Distance-50)
-//          {
-//            speed_goal = speed_goal-400;
-//          }
-//          else if(ABDistance>Distance+50)
-//          {
-//            speed_goal = speed_goal+400;
-//          }
-//        }
-//      }
+      if(Car==2)
+      {
+        if(ABDistance>30)
+        {
+          if(ABDistance<Distance-150)
+          {
+            speed_goal = speed_goal-200;
+          }
+          else if(ABDistance>Distance+150)
+          {
+            speed_goal = speed_goal+200;
+          }
+        }
+      }
 
-      speed_goal_R=speed_goal-error*abs(error)*15/10;
-      speed_goal_L=speed_goal+error*abs(error)*13/10;      
+      if(All_Black<17)
+      {
+        speed_goal_R=speed_goal-error*abs(error)*15/10;
+        speed_goal_L=speed_goal+error*abs(error)*15/10;
+      }
+      else
+      {
+        speed_goal_R=speed_goal-error*abs(error)*18/10;
+        speed_goal_L=speed_goal+error*abs(error)*18/10;
+      }
 //      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
 //      {
 ////        if(abs(error)<8&&abs(error)>=4)

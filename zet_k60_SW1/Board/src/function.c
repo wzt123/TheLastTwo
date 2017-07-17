@@ -72,7 +72,7 @@ void PIT0_IRQHandler(void)
 
 void Init_All(void)
 {
-  Car=1;
+  Car=2;
   Motor_Init();
   OLED_Init();
   ov7725_eagle_init(imgbuff);
@@ -197,16 +197,24 @@ void Motor_Out(void)
      
       if(Car==2)
       {
-        if(ABDistance<Distance-50)
+        if(ABDistance>30)
         {
-          speed_goal = speed_goal-400;
+          if(ABDistance<Distance-150)
+          {
+            if(All_Black>10)
+              speed_goal = speed_goal-100;
+            else if(abs(error)<5&&Cross_Flag==0)
+              speed_goal = speed_goal-500;
+          }
+          else if(ABDistance>Distance+150)
+          {
+            if(All_Black>10)
+              speed_goal = speed_goal+100;
+            else if(abs(error)<5&&Cross_Flag==0)
+              speed_goal = speed_goal+800;
+          }
         }
-
-        else if(ABDistance>Distance+50)
-        {
-          speed_goal = speed_goal+400;
-        }
-      }     
+      }
       
       speed_goal_R=speed_goal-error*abs(error)*15/10;
       speed_goal_L=speed_goal+error*abs(error)*15/10;
