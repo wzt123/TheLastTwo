@@ -1004,7 +1004,7 @@ void Find_Middle()
   //else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
   //if(Cross_Cnt==4)  
   //{
-  if(Cross_Flag_Last!=31&&stopLine_temp==0&&(white_Right_cnt>10||white_Left_cnt>10))
+  if(Cross_Flag_Last!=31&&stopLine_temp==0&&(white_Right_cnt>20||white_Left_cnt>20))
   {
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
@@ -1847,7 +1847,7 @@ void Search_Line(void)
     ring_flag=0;
     for(Col_Ptr=Road_Left_f[Row_Ptr]; Col_Ptr<Road_Right_f[Row_Ptr]-3; Col_Ptr++)
     {      
-      if(ring_flag==0&&img[Row_Ptr][Col_Ptr]==255&&img[Row_Ptr][Col_Ptr+1]==255&&img[Row_Ptr][Col_Ptr+2]==0&&img[Row_Ptr][Col_Ptr+3]==0) 
+      if(start_line_num[Row_Ptr]>1&&start_line_num[Row_Ptr]<4&&ring_flag==0&&img[Row_Ptr][Col_Ptr]==255&&img[Row_Ptr][Col_Ptr+1]==255&&img[Row_Ptr][Col_Ptr+2]==0&&img[Row_Ptr][Col_Ptr+3]==0)
       {
         ring_flag=1;///找到黑块左跳变点
         if(Col_Ptr+2<Ring_width_1)
@@ -1857,7 +1857,7 @@ void Search_Line(void)
         }
         a=Col_Ptr+1;///左边界
       }
-      else if(ring_flag==1&&img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==255&&img[Row_Ptr][Col_Ptr+3]==255) 
+      else if(start_line_num[Row_Ptr]>1&&start_line_num[Row_Ptr]<4&&ring_flag==1&&img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==255&&img[Row_Ptr][Col_Ptr+3]==255) 
       {
         b=Col_Ptr+2;//右边界
         ring_flag=2;//找到黑块右跳变点
@@ -1900,13 +1900,13 @@ void Search_Line(void)
       }
     for(Col_Ptr=Ring_width_1;Col_Ptr<Ring_width_2; Col_Ptr++)
     {
-      if(img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==0)
+      if(img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==0&&abs(Col_Ptr-Ring_width_1)>5)
       {
         break;
       }
     }
     uint8 samll_Ring_temp=0;
-    if(abs(Ring_width_2-Col_Ptr)<3)//障碍 白行封顶
+    if(abs(Ring_width_2-Col_Ptr)<6)//障碍
     {     
       //samll_Ring_temp=1;
       //if(/*Ring_width>10&&Stop_Flag!=0&&sum_time>1000&&White_Cnt>3&&*/cross_Time==0&&Stop_Flag!=0&&White_Cnt>3&&sum_time>1000)///经过起跑线才识别圆环，排除起跑线误判，sum_time是经过起跑线才计时
@@ -1914,7 +1914,7 @@ void Search_Line(void)
         //Cross_Flag=3;/////标记为小圆环
       //}
       //else 
-        if(ring_num>5/*&&ring_time==0*/&&stopLine_temp==0)
+        if(ring_num>4/*&&ring_time==0*/&&start_line_num[Ring_width_1_Row]<4&&start_line_num[Ring_width_2_Row]<4)
         {
           if(Road_Right[Ring_width_2_Row]-Ring_width_2>Ring_width_1-Road_Left[Ring_width_1_Row])
           {
