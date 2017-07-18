@@ -1535,7 +1535,6 @@ void Find_Middle()
 //寻边线
 uint8 Ring_width_1_Row=0;
   uint8 Ring_width_2_Row=0;
-  uint8 i,j;
 void Search_Line(void)
 {
   Cross_Flag_Last=Cross_Flag; 
@@ -1575,7 +1574,9 @@ void Search_Line(void)
   uint8 a=1;
   uint8 b=79;
   uint8 k;
+  uint8 i,j;
   uint8 a_f=0,b_f=0,c_f=0;
+  uint8 max=0;
   Right_xian=0;
   Left_xian=0;
   Left_Cnt=0;
@@ -2334,7 +2335,7 @@ void Search_Line(void)
           if(img[j][Road_Right[Right_xian]]==0&&img[j+1][Road_Right[Right_xian]]==0) break;
         }
         if(i==Ring_First_Row&&j==Ring_First_Row)
-          Cross_Flag=31;/////标记为大圆环
+          Cross_Flag=31;/////标记为小圆环
       }
     }
 //****************************************圆环条件放开，可识别大圆环，但可能误判*************//
@@ -2392,7 +2393,11 @@ void Search_Line(void)
         if(Left_J==1&&Left_Y==1)
         {
           Left_left=1;
-          Left_xian=Row_Ptr+5;
+          for(Col_Ptr=Row_Ptr,max=Row_Ptr;Col_Ptr<Row_Ptr+6;Col_Ptr++)
+          {
+            if(Road_Left[max]<Road_Left[Col_Ptr]) max=Col_Ptr;
+          }
+          Left_xian=max;
         }
       }
       Right_J=0;
@@ -2448,7 +2453,11 @@ void Search_Line(void)
         if(Right_J==1&&Right_Y==1)
         {
           Right_right=1;
-          Right_xian=Row_Ptr+5;
+          for(Col_Ptr=Row_Ptr,max=Row_Ptr;Col_Ptr<Row_Ptr+6;Col_Ptr++)
+          {
+            if(Road_Right[max]>Road_Right[Col_Ptr]) max=Col_Ptr;
+          }
+          Right_xian=max;
         }
       }
       if(ring_num>1&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>4&&stopLine_temp!=1)
@@ -2462,7 +2471,7 @@ void Search_Line(void)
           if(img[j][Road_Right[Right_xian]]==0&&img[j+1][Road_Right[Right_xian]]==0) break;
         }
         if(i==Ring_First_Row&&j==Ring_First_Row)
-          Cross_Flag=31;/////标记为圆环
+          Cross_Flag=31;/////标记为大圆环
       }
     }
   //***********************************************************************************//
