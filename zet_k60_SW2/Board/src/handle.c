@@ -452,17 +452,18 @@ void Servo_control(void)
     else{
       Ring_First_Row_Compare=17;
     }
-    if(errorerror*error<0&&abs(error-errorerror)>15&&Cross_Flag==0&&All_Black<8)
+    if(errorerror*error<0&&abs(error-errorerror)>15&&Cross_Flag==0)
     {
-//      errorerror=errorerror*5/10;
-//      error = error*50/10;
+//      errorerror = -errorerror;
+//      error = error;
 
-     if(speed_goal<4850)
-       errorerror= - errorerror*1/6;
-     else if(speed_goal<5250)
-       errorerror= - errorerror*10/65;
-
-      error = error;
+//     if(speed_goal<4850)
+//       errorerror= - errorerror*10/67;
+//     else if(speed_goal<5250)
+//       errorerror= - errorerror*10/69;
+//     else
+//       errorerror= - errorerror*10/75;
+//      error = error;
     }
     if(Cross_Flag==31)
     {
@@ -483,7 +484,7 @@ void Servo_control(void)
     }
     else if(Cross_Flag==1)
     {
-      Kp =66;//66
+      Kp =55;//66
       Kd = 35;
       Servo_temp = Kp*error+Kd*errorerror;
       Servo_temp = Servo_temp/10;
@@ -842,117 +843,94 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 27;
-            Kd = 5;
+            Kp = 40;
+            Kd = 12;
           }
           else
           {
-            Kp = 27;
-            Kd = 5;
+            Kp = 40;
+            Kd = 12;
           }
         }
-        
-//        else if(All_Black<7)//长直道进弯道
-//        {
-//          if(error<0)
-//          {
-//            Kp = 40;
-//            Kd = 15;
-//          } 
-//          else
-//          {
-//            Kp = 40;
-//            Kd = 15;
-//          }
-//        }
-        else if(All_Black<10)
+        else if(All_Black<5)
         {
           if(error<0)
           {
-
-            Kp = 42;
+            Kp = 35;
+            Kd = 10;
+          }
+          else
+          {
+            Kp = 35;
+            Kd = 10;
+          }
+        }
+        else if(All_Black<12)//长直道进弯道
+        {
+          if(error<0)
+          {
+            Kp = 35;
             Kd = 25;
           }
           else
           {
-            Kp = 42;
-            Kd = 25;
+            Kp = 35;
+            Kd = 20;
           }
         }
-//        else if(All_Black<10)
-//        {
-//          if(error<0)
-//          {
-//            Kp = 35;
-//            Kd = 13;
-//          }
-//          else
-//          {
-//            Kp = 35;
-//            Kd = 13;
-//          }
-//        }
-      else if(All_Black<17)
+      else if(All_Black<17)//直道入弯道或者270度时提前转角
       {
         if(error<0)
         {
           Kp = 37;
-          Kd = 25;
+          Kd = 18;
         }
         else
         {
-          
-            Kp = 37;
-            Kd = 21;
-          
+          Kp = 37;
+          Kd = 18;
+
         }
       }
-      else if(All_Black<22)
+      else if(All_Black<21)//弯道入直道的时候
       {
         if(error<0)
         {
-          if(error<0)
-          {
-            Kp = 55;
-            Kd = 22;
-          }
-          else
-          {
-            Kp = 55;
-            Kd = 22;
-          }
+          Kp = 48;
+          Kd = 19;
         }
         else
         {
-          Kp = 45;
-          Kd=19;
+          Kp = 48;
+          Kd = 19;
         }
       }
-      else if(All_Black<25)
+      else if(All_Black<25) //弯道内部
       {
         if(error<0)
         {
-          Kp=50;
-          Kd=20;
+          Kp=51;
+          Kd=22;
         }
         else
         {
-          Kp=50;
-          Kd =20;
+          Kp=51;
+          Kd =22;
         }
       }
       
+
       else if(All_Black<32)
       {
         if(error<0)
         {
-          Kp=50;
-          Kd=25;
+          Kp = 51;
+          Kd = 25;
         }
         else
         {
-          Kp=50;
-          Kd =25;
+          Kp = 51;
+          Kd = 25;
         }
       }
         else if(All_Black<41)
@@ -968,138 +946,6 @@ void Servo_control(void)
             Kd = 30;
           }
         }
-        
-        else if((All_Black>=41))
-        {
-          error_sum = error_last[0]+error_last[1]+error*5;
-        }
-      }
-     
-
-      else if(speed_goal<5450)
-      {
-         if(All_Black==0)
-        {
-          if(error<0)
-          {
-            Kp = 24;
-            Kd = 2;
-          }
-          else
-          {
-            Kp = 24;
-            Kd = 2;
-          }
-        }
-        else if(All_Black<10)//长直道进弯道
-        {
-          if(error<0)
-          {
-            Kp = 39;
-            Kd = 12;
-          } 
-          else
-          {
-            Kp = 39;
-            Kd = 12;
-          }
-        }
-        else if(All_Black<17)//直道入弯道或者270度时提前转角
-        {
-          if(error<0)
-          {
-            Kp = 46;
-            Kd = 14;
-          }
-          else
-          {
-            Kp = 46;
-            Kd = 14;
-          }
-        }
-        else if(All_Black<22)////弯道入直道的时候
-        {
-          if(error<0)
-          {
-            Kp = 35;
-            Kd = 12;
-          }
-          else
-          {
-            Kp = 35;
-            Kd = 12;
-          }
-        }
-        else if(All_Black<25)//弯道入直道的时候
-        {
-          if(error<0)     //左转
-          {
-            Kp = 50;
-            Kd = 20;
-          }
-          else
-          {
-            Kp = 50;
-            Kd = 20;
-          }
-        }
-        
-        else if(All_Black<27)//弯道内部
-        {
-          if(error<0)
-          {
-            Kp=36;
-            Kd=17;
-          }
-          else
-          {
-            Kp=36;
-            Kd =17;
-          }
-        }
-        
-        else if(All_Black<32)//靠弯道外边
-        {
-          if(error<0)
-          {
-            Kp = 55;
-            Kd = 24;
-          }
-          else
-          {
-            Kp = 55;
-            Kd =24;
-          }
-        }
-        
-        else if(All_Black<36)       //靠弯道外边
-        {
-          if(error<0)
-          {
-            Kp = 65;
-            Kd = 30;
-          }
-          else
-          {
-            Kp = 65;
-            Kd = 30;
-          }
-        }
-        
-        else if(All_Black<41)
-        {
-          if(error<0)
-          {
-            Kp = 80;
-            Kd = 30;
-          }
-          else
-          {
-            Kp = 80;
-            Kd = 30;
-          }
-        }
-        
         
         else if((All_Black>=41))
         {
