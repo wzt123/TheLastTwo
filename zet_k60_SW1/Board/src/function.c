@@ -72,7 +72,7 @@ void PIT0_IRQHandler(void)
 
 void Init_All(void)
 {
-  Car=2;
+  Car=1;
   Motor_Init();
   OLED_Init();
   ov7725_eagle_init(imgbuff);
@@ -216,8 +216,19 @@ void Motor_Out(void)
         }
       }
       
-      speed_goal_R=speed_goal-error*abs(error)*15/10;
-      speed_goal_L=speed_goal+error*abs(error)*15/10;
+//      if(speed_goal<4650)
+//      {
+        speed_goal_R=speed_goal-error2*abs(error2)*32/10;
+        speed_goal_L=speed_goal+error2*abs(error2)*32/10;
+//      }
+//      else
+//      {
+//////        speed_goal_R=speed_goal-(10*error/10+423*error1/10+15*error2/10)*15;
+////        speed_goal_L=speed_goal+(10*error/10+423*error1/10+15*error2/10)*15;  
+//        speed_goal_R=speed_goal-(22*error+152*error2+20*error1)*16/10;
+//        speed_goal_L=speed_goal+(22*error+152*error2+20*error1)*16/10;  
+//
+//      }
 //      speed_goal_R=speed_goal-error*abs(error)*13/10;
 //      speed_goal_L=speed_goal+error*abs(error)*13/10;
 //      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
@@ -270,13 +281,13 @@ void Motor_Out(void)
       speed_PWM_R = 0;
     }
   }
-  else if(speed_get_R<100||speed_get_L<100)
-  {
-    if(speed_get_R<100)
-      speed_PWM_R = 6800;
-    if(speed_get_L<100)
-      speed_PWM_L = 6800;
-  }
+//  else if(speed_get_R<100||speed_get_L<100)
+//  {
+//    if(speed_get_R<100)
+//      speed_PWM_R = 6800;
+//    if(speed_get_L<100)
+//      speed_PWM_L = 6800;
+//  }
   
  if(speed_PWM_R<0)
   {

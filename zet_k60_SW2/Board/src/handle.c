@@ -398,11 +398,11 @@ void Servo_control(void)
   ///¹ýÕÏ°­
   if(Cross_Flag==5)
   {
-    Servomiddle=Servomiddle_Rember+100;
+    Servomiddle=Servomiddle_Rember+70;
   }
   else if(Cross_Flag==6)
   {
-    Servomiddle=Servomiddle_Rember-100;
+    Servomiddle=Servomiddle_Rember-70;
   }
   else if(stopLine_temp==0)
   {
@@ -896,13 +896,13 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp = 37;
+          Kp = 38;
           Kd = 25;
         }
         else
         {
           
-            Kp = 37;
+            Kp = 38;
             Kd = 21;
           
         }
@@ -911,22 +911,16 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          if(error<0)
-          {
+          
             Kp = 55;
-            Kd = 22;
-          }
+            Kd = 23;
+          
+        }
           else
           {
             Kp = 55;
-            Kd = 22;
+            Kd = 23;
           }
-        }
-        else
-        {
-          Kp = 45;
-          Kd=19;
-        }
       }
       else if(All_Black<25)
       {

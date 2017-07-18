@@ -180,11 +180,18 @@ void  main(void)
 
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);   
       OLED_Print_Num1(88, 6, sum_time);
-    }     
+    }
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {
       sum_time++; 
     }
+//    if(speed_get_R!=0&&speed_get_L!=0)
+//    {
+//      sum_time++; 
+//    }
+//
+//    if(sum_time>250)
+//      stop_Car2();
     pit_close(PIT1);
     nrf_data = race[1];
   }
