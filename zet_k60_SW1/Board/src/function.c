@@ -181,7 +181,11 @@ void Motor_Out(void)
         }
         else if(Status==2)//»ÎÕ‰ºıÀŸ
         {
+<<<<<<< HEAD
           speed_goal=5000;
+=======
+          speed_goal=4800;
+>>>>>>> 311cb22a9348d4b6d9d87a6684de5c309bb0c658
         }
         
         else if(Status==3)

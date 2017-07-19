@@ -496,12 +496,12 @@ void Servo_control(void)
           if(error<0)
           {
             Kp = 39;
-            Kd = 8;
+            Kd = 10;
           }
           else
           {
             Kp = 39;
-            Kd = 8;
+            Kd = 10;
           }
         }
         else if(All_Black<16)       //直道入弯道或者270度时提前转角
@@ -536,13 +536,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 33;
+            Kp = 34;
             Kd = 18;
           }
           else
           {
-            Kp = 33;
-            Kd=18;
+            Kp = 34;
+            Kd = 18;
           }
           
         }
@@ -604,7 +604,7 @@ void Servo_control(void)
           error_sum = error_last[0]+error_last[1]+error*5;
         }
       }
-      else if(speed_goal<5000)
+      else if(speed_goal<4650)
       {
         if(All_Black==0)
         {
@@ -732,7 +732,7 @@ void Servo_control(void)
           error_sum = error_last[0]+error_last[1]+error*5;
         }
       }
-      else if(speed_goal<5500)
+      else if(speed_goal<5050)
       {
         if(All_Black==0)
         {
