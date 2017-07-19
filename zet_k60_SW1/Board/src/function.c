@@ -181,7 +181,7 @@ void Motor_Out(void)
         }
         else if(Status==2)//ÈëÍä¼õËÙ
         {
-          speed_goal=5000;
+          speed_goal=4800;
         }
         
         else if(Status==3)
