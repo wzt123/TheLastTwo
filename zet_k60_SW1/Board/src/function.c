@@ -29,7 +29,8 @@ uint8 Status_2=0;
 uint16 var;
 uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
-uint32 Distance = 900;
+uint32 Distance = 1200;
+uint8 Distance_temp = 1;
 uint8 stop_time = 0;
 uint8 Car_First_stop=0;
 uint8 Car_Second_stop=0;
@@ -209,6 +210,17 @@ void Motor_Out(void)
            
               speed_goal = speed_goal+600;
           }
+        }
+      }
+      if(Car==1)
+      {
+        if(Distance_temp==2)
+        {
+          speed_goal =speed_goal -600;
+        }
+        else if(Distance_temp==0)
+        {
+          speed_goal =speed_goal+600;
         }
       }
       if(Cross_Flag!=1)
@@ -575,7 +587,7 @@ void Chaoche_FrontCar(void)
   
   NRF_SendData(10002);//告诉后车有十字路口
   
-  DELAY_MS(100);
+  DELAY_MS(300);
   
   Car=2;
   gpio_set(PTE25,0);//关闭超声波

@@ -437,7 +437,7 @@ void Servo_control(void)
     if(errorerror*error<0&&abs(error-errorerror)>15&&Cross_Flag==0)
     {      
      if(speed_goal<4850)
-       errorerror= - errorerror*1/5;
+       errorerror= - errorerror*1/6;
      else if(speed_goal<5250)
        errorerror= - errorerror*10/65;
       error = error;
@@ -496,12 +496,12 @@ void Servo_control(void)
           if(error<0)
           {
             Kp = 39;
-            Kd = 10;
+            Kd = 8;
           }
           else
           {
             Kp = 39;
-            Kd = 10;
+            Kd = 8;
           }
         }
         else if(All_Black<16)       //直道入弯道或者270度时提前转角
@@ -523,12 +523,12 @@ void Servo_control(void)
           if(error<0)
           {
             Kp = 33;
-            Kd = 12;
+            Kd = 14;
           }
           else   //右转
           {
             Kp = 33;
-            Kd = 12;
+            Kd = 14;
           }
           
         }
@@ -536,13 +536,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 34;
-            Kd = 18;
+            Kp = 33;
+            Kd = 19;
           }
           else
           {
-            Kp = 34;
-            Kd = 18;
+            Kp = 33;
+            Kd=19;
           }
           
         }
@@ -552,7 +552,7 @@ void Servo_control(void)
           if(error<0)
           {
             Kp=44;
-            Kd=20;
+            Kd=22;
           }
           else
           {
@@ -586,20 +586,20 @@ void Servo_control(void)
             Kd = 29;
           }
         }
-        else if(All_Black<41)
-        {
-          if(error<0)
-          {
-            Kp = 58;
-            Kd = 30;
-          }
-          else
-          {
-            Kp = 58;
-            Kd = 30;
-          }
-        }
-        else if((All_Black>=41))
+//        else if(All_Black<41)
+//        {
+//          if(error<0)
+//          {
+//            Kp = 58;
+//            Kd = 30;
+//          }
+//          else
+//          {
+//            Kp = 58;
+//            Kd = 30;
+//          }
+//        }
+        else if((All_Black>=36))
         {
           error_sum = error_last[0]+error_last[1]+error*5;
         }
@@ -714,20 +714,20 @@ void Servo_control(void)
             Kd = 29;
           }
         }
-        else if(All_Black<41)
-        {
-          if(error<0)
-          {
-            Kp = 58;
-            Kd = 30;
-          }
-          else
-          {
-            Kp = 58;
-            Kd = 30;
-          }
-        }
-        else if((All_Black>=41))
+//        else if(All_Black<41)
+//        {
+//          if(error<0)
+//          {
+//            Kp = 58;
+//            Kd = 30;
+//          }
+//          else
+//          {
+//            Kp = 58;
+//            Kd = 30;
+//          }
+//        }
+        else if((All_Black>=36))
         {
           error_sum = error_last[0]+error_last[1]+error*5;
         }
@@ -842,20 +842,20 @@ void Servo_control(void)
             Kd = 29;
           }
         }
-        else if(All_Black<41)
-        {
-          if(error<0)
-          {
-            Kp = 58;
-            Kd = 30;
-          }
-          else
-          {
-            Kp = 58;
-            Kd = 30;
-          }
-        }        
-        else if((All_Black>=41))
+//        else if(All_Black<41)
+//        {
+//          if(error<0)
+//          {
+//            Kp = 58;
+//            Kd = 30;
+//          }
+//          else
+//          {
+//            Kp = 58;
+//            Kd = 30;
+//          }
+//        }        
+        else if((All_Black>=36))
         {
           error_sum = error_last[0]+error_last[1]+error*5;
         }
@@ -872,7 +872,7 @@ void Servo_control(void)
         Servo_temp = Servo_temp+cross_num;
     }*/
     
-     if(All_Black<41)
+     if(All_Black<36)
     {
       Servo_value = Servomiddle+Servo_temp;
       error_sum = 0;
@@ -1004,7 +1004,7 @@ void Find_Middle()
   //else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
   //if(Cross_Cnt==4)  
   //{
-  if(Cross_Flag_Last!=31&&stopLine_temp==0&&(white_Right_cnt>20||white_Left_cnt>20))
+  if(Cross_Flag_Last==0&&Cross_Flag==0&&stopLine_temp==0&&(white_Right_cnt>20||white_Left_cnt>20))
   {
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {

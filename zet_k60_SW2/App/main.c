@@ -49,6 +49,7 @@ uint16 speed_rember_L[3] = {0};
 
 void  main(void)
 {
+  
   //zet_bluetooth();
   uint16 send_data[3] = {0};
   uint8 time1=0;
@@ -73,6 +74,7 @@ void  main(void)
   
   //uint8 Chaoche_stop_time=0;
   uint8 Chaoche_start_time=0;
+  uint8 rember_time=0;
   while(a)
   {
     pit_time_start(PIT1);
@@ -102,6 +104,16 @@ void  main(void)
         Cross_Flag=1;
       }
       
+    }
+    if(Car==1)
+    {
+      nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里      
+      if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==1)//距离正常
+        Distance_temp=1;
+      else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==0)
+        Distance_temp=0;
+      else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==2)
+        Distance_temp=2;
     }
     
 //    if(Right_stop>40)
@@ -161,7 +173,7 @@ void  main(void)
         stop_Car2();
     
       
-      if(Cross_Flag==1&&((Left_stop>20&&Left_stop<25)||(Right_stop>20&&Right_stop<25))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake<1)
+      if(gpio_get(PTE4)==1&&Distance_temp==1&&Cross_Flag==1&&((Left_stop>17&&Left_stop<22)||(Right_stop>17&&Right_stop<2))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake<1)
       {
         Chaoche_FrontCar();
       }
@@ -181,12 +193,34 @@ void  main(void)
       OLED_Print_Num1(88, 5, Kd);
 
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);   
-      OLED_Print_Num1(88, 6, Servo_temp);
-    }     
+      OLED_Print_Num1(88, 6, ABDistance);
+    }
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {
-      sum_time++; 
+      sum_time++;
+//      if(sum_time-rember_time==5)
+//      {
+        if(Car==2)
+        {
+          if(abs(ABDistance-Distance)<300)
+            NRF_SendData(20011);
+          else if(ABDistance<Distance-300)
+            NRF_SendData(20010);
+          else 
+            if(ABDistance>Distance+300)
+            NRF_SendData(20012);
+        }
+////      }
+////      else if(sum_time-rember_time==6)
+//        rember_time==sum_time;
     }
+//    if(speed_get_R!=0&&speed_get_L!=0)
+//    {
+//      sum_time++; 
+//    }
+//
+//    if(sum_time>250)
+//      stop_Car2();
     pit_close(PIT1);
     nrf_data = race[1];
   }

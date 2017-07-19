@@ -29,6 +29,7 @@ extern int16 speed_PWM_L;
 extern uint8 stop_Flag;
 extern uint8 stop_Place;
 extern uint32 Distance;
+extern uint8 Distance_temp;
 /////
 extern int16 OutData[4];
 extern uint16 speed_get_R;
