@@ -1136,15 +1136,15 @@ void Find_Middle()
         {
           
           cross_num = Row_Ptr;
-          if(gpio_get(PTE4)==0)//预赛
+//          if(gpio_get(PTE4)==0)//预赛
             All_Black=Row_Ptr;
-          else
-          {
-            if(Ring_not_out==0)
-            {
-              All_Black=Row_Ptr;
-            }
-          }
+//          else
+//          {
+//            if(Ring_not_out==0)
+//            {
+//              All_Black=Row_Ptr;
+//            }
+//          }
           break;
         }
       }
@@ -1160,15 +1160,15 @@ void Find_Middle()
         {
           
           cross_num = Row_Ptr;
-          if(gpio_get(PTE4)==0)//预赛
+//          if(gpio_get(PTE4)==0)//预赛
             All_Black=Row_Ptr;
-          else
-          {
-            if(Ring_not_out==0)
-            {
-              All_Black=Row_Ptr;
-            }
-          }
+//          else
+//          {
+//            if(Ring_not_out==0)
+//            {
+//              All_Black=Row_Ptr;
+//            }
+//          }
           
           break;
         }
@@ -2054,7 +2054,7 @@ void Search_Line(void)
     //{
       //for(i=Row_Ptr)
     //}
-    if(gpio_get(PTE4)==0)//预赛小圆环
+    if(1)//预赛小圆环
     {
       Left_J=0;
       Left_Y=0;

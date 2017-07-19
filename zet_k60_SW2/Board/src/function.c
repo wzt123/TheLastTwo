@@ -765,6 +765,20 @@ void Chaoche_FrontCar(void)
   //ChaoChe_temp=0;
 }
 
+void Ring_Overtake(void)
+{
+  gpio_set(PTC3,0);//驱动反向使能
+  gpio_set(PTC2,1);//驱动反向使能
+  gpio_set(PTB17,1);//驱动反向使能
+  gpio_set(PTB16,0);//驱动反向使能
+  ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
+  DELAY_MS(150);
+  ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,0);//B1  
+  stop_Flag  = 1;
+
+}
 
 
 //NRF

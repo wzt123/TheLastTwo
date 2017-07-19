@@ -174,6 +174,32 @@ void  main(void)
       {
         Chaoche_FrontCar();
       }
+      
+      if(Cross_Flag_Last==31&&Ring_First_Row>25&&Car==1)//距离控制标志位没有加
+      {
+        Ring_Overtake();
+        rember_time=1;
+        
+      }
+      if(rember_time>0)
+      {
+        if(speed_get_R<10&&speed_get_L<10)
+        {
+          DELAY_MS(100);
+          rember_time=0; 
+          stop_Flag=0;
+          Car=2;
+          gpio_set(PTC3,1);//驱动反向使能
+          gpio_set(PTC2,0);//驱动反向使能
+          gpio_set(PTB17,0);//驱动反向使能
+          gpio_set(PTB16,1);//驱动反向使能
+          ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+          ftm_pwm_duty(FTM2,FTM_CH0,8500);//B2
+          ftm_pwm_duty(FTM2,FTM_CH1,8500);//B1
+          DELAY_MS(50);
+          NRF_SendData(10001);
+        }
+      }
     ///蓝牙传送编码器的值
     send_data[0] = 0;
     send_data[1] = Cross_Flag*500;
@@ -183,7 +209,7 @@ void  main(void)
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, All_Black);
+      OLED_Print_Num1(88, 1, Car);
       OLED_Print_Num1(88, 2, error);
       OLED_Print_Num1(88, 3, errorerror);
       OLED_Print_Num1(88, 4, Kp);
