@@ -402,7 +402,7 @@ void Servo_control(void)
   }
   else if(Cross_Flag==6)
   {
-    Servomiddle=Servomiddle_Rember-70;
+    Servomiddle=Servomiddle_Rember-60;
   }
   else if(stopLine_temp==0)
   {
@@ -522,12 +522,12 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp = 34;
+          Kp = 45;
           Kd = 13;
         }
         else
         {
-          Kp = 34;
+          Kp = 45;
           Kd=13;
         }
       }
@@ -541,7 +541,7 @@ void Servo_control(void)
         else
         {
           Kp = 45;
-          Kd=2;
+          Kd=21;
         }
       }
       else if(All_Black<25)
@@ -1208,7 +1208,11 @@ void Edge_Filter()
     }
   }
 }
-
+int8 k1=0;
+  int8 k2=0;
+  int8 k3=0;
+  int8 k4=0;
+  
 //寻中线
 void Find_Middle()
 {
@@ -1223,10 +1227,10 @@ void Find_Middle()
   uint8 Var=0;
   Road_area=0;
   cross_num =0;  
-  int8 k1=0;
-  int8 k2=0;
-  int8 k3=0;
-  int8 k4=0;
+  k1=0;
+  k2=0;
+  k3=0;
+  k4=0;
   uint8 i=0,j=0;
   float Right_Slope=0.0;
   FirstBlackinCenter=0;
@@ -1259,25 +1263,34 @@ void Find_Middle()
   }
 //  if(Cross_Cnt==4)
 //  {
-  if(Cross_Flag_Last!=31&&stopLine_temp==0&&(white_Right_cnt>20||white_Left_cnt>20))
+  
+  if(Cross_Flag_Last!=31&&Cross_Flag!=31&&stopLine_temp==0&&(white_Right_cnt>10||white_Left_cnt>10))
   {
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
       if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr-6]==1&&Left_Flag[Row_Ptr-12]==1)
       {
-        k1 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Left);
-        k2 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Left);
-        
+        if(Cross_Cnt==4)
+        {
+          k1 = Slope_Calculate(Row_Ptr-4,Row_Ptr,(uint8*)Road_Left)*100;
+          k2 = Slope_Calculate(Row_Ptr-8,Row_Ptr-4,(uint8*)Road_Left)*100;
+        }
+        else
+        {
+          k1 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Left);
+          k2 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Left);
+          
+        }
         if(k1*k2<0)
         {
           cross_num = Row_Ptr;
           if(gpio_get(PTE4)==0)//预赛
-            All_Black=Row_Ptr;
+            All_Black=Row_Ptr-9;
           else
           {
             if(Ring_not_out==0)
             {
-              All_Black=Row_Ptr;
+              All_Black=Row_Ptr-9;
             }
           }
           break;
@@ -1289,19 +1302,28 @@ void Find_Middle()
     {
       if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr-6]==1&&Right_Flag[Row_Ptr-12]==1)
       {
-        k3 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Right);
-        k4 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Right);
+        if(Cross_Cnt==4)
+        {
+          k3 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Right)*100;
+          k4 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Right)*100;
+        }
+        else
+        {
+          k3 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Right);
+          k4 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Right);
+          
+        }
         if(k3*k4<0)
         {
           
           cross_num = Row_Ptr;
           if(gpio_get(PTE4)==0)//预赛
-            All_Black=Row_Ptr;
+            All_Black=Row_Ptr-9;
           else
           {
             if(Ring_not_out==0)
             {
-              All_Black=Row_Ptr;
+              All_Black=Row_Ptr-9;
             }
           }
           
