@@ -1263,8 +1263,7 @@ void Find_Middle()
     img[Row_Ptr][40]=0;
     img[Row_Ptr][40+error]=0;
   }
-  //filter_Middle(Road_Center);
-  //结束for_滤中线
+  
 }
 
 //寻边线

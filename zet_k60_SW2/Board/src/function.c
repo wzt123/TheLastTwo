@@ -212,8 +212,8 @@ void Motor_Out(void)
         if(speed_goal<3850)
         {
          
-          speed_goal_R=speed_goal-error*abs(error)*42/10;
-          speed_goal_L=speed_goal+error*abs(error)*42/10;
+          speed_goal_R=speed_goal-error*abs(error)*38/10;
+          speed_goal_L=speed_goal+error*abs(error)*38/10;
         }
         else if(speed_goal<4450)
         {

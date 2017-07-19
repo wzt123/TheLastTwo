@@ -32,7 +32,7 @@ uint8 White_Cnt=0;//全白行计数_所有的
 uint8 White_Ren=0;
 uint8 Right_xian=0;
 uint8 Left_xian=0;
-uint16 Servo_value = 8608;//舵机输出pwm值
+uint16 Servo_value = 8615;//舵机输出pwm值
 uint16 Servo_Value_Last = 0;
 
 uint8 Hinder_Start=0;
@@ -44,10 +44,10 @@ uint8 CrossRow=0;
 
 
 
-uint16 Servomiddle=8608;
-uint16 Servomiddle_Rember=8608;
-uint32 Servo_max=8768;//往右打
-uint32 Servo_min=8448;//往左打
+uint16 Servomiddle=8615;
+uint16 Servomiddle_Rember=8615;
+uint32 Servo_max=8778;//往右打
+uint32 Servo_min=8458;//往左打
 float CenterLineSlope=0;
 
 int16 error=0;
@@ -91,6 +91,7 @@ uint8 Overtake2=0;
 uint16 L_Cnt=0;
 uint8 C=0;
 uint8 Turn_Left=0;
+uint8 Left_IPcnt=0;
 uint8 ring_num=0;
 //////////////////////////
 uint8 Cross_flag =0;
@@ -1216,31 +1217,32 @@ int8 k1=0;
 //寻中线
 void Find_Middle()
 {
+  Row_Ptr=0;
   uint8 Left_J=0;
   uint8 Left_Y=0;
   uint8 Left_left=0;
-  Row_Ptr=0;
   uint8 CutLen=8;
   uint8 Cut=0;
   uint8 Edge[3]= {0};
   uint8 CutPos=0;//中线断开位置
   uint8 Var=0;
   Road_area=0;
-  cross_num =0;  
-  k1=0;
-  k2=0;
-  k3=0;
-  k4=0;
+  cross_num =0;
+  FirstBlackinCenter=0;
+  //Overtake=0;  
+  int8 k1=0;
+  int8 k2=0;
+  int8 k3=0;
+  int8 k4=0;
   uint8 i=0,j=0;
   float Right_Slope=0.0;
-  FirstBlackinCenter=0;
-  //Overtake=0;
   //
   Out_Right=0;
-  Out_Left=0;
+  //Out_Left=0;
   
   Left_stop_find_temp=0;
   Right_stop_find_temp=0;
+  
   /////
   uint8 repair_R[60]= {0}; /////右边丢失的求斜率的数组
   uint8 repair_L[60]= {0}; /////左边丢失的求斜率的数组
@@ -1248,6 +1250,7 @@ void Find_Middle()
   repair_slope_L=0;
   /////
   //filter_Middle(Road_Center);
+  
   //斜入十字判断
   if(Cross_Flag==1&&StopRow>All_Black&&Cross_Flag_Last!=31)
   {
@@ -1260,37 +1263,32 @@ void Find_Middle()
   {
     if(Cross_Cnt==2) Cross_Cnt=3;//第一个十字路口结束
     else if(Cross_Cnt==3) Cross_Cnt=4;
+    //else if(Cross_Cnt==4) Cross_Cnt=5;
   }
-//  if(Cross_Cnt==4)
-//  {
-  
-  if(Cross_Flag_Last!=31&&Cross_Flag!=31&&stopLine_temp==0&&(white_Right_cnt>10||white_Left_cnt>10))
+  //if(Cross_Cnt==5&&error>10) Cross_Cnt=6;//右转
+  //else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
+  //if(Cross_Cnt==4)  
+  //{
+  if(Cross_Flag_Last!=31&&stopLine_temp==0&&(white_Right_cnt>20||white_Left_cnt>20))
   {
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
       if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr-6]==1&&Left_Flag[Row_Ptr-12]==1)
       {
-        if(Cross_Cnt==4)
-        {
-          k1 = Slope_Calculate(Row_Ptr-4,Row_Ptr,(uint8*)Road_Left)*100;
-          k2 = Slope_Calculate(Row_Ptr-8,Row_Ptr-4,(uint8*)Road_Left)*100;
-        }
-        else
-        {
-          k1 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Left);
-          k2 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Left);
-          
-        }
+        k1 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Left);
+        k2 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Left);
+        
         if(k1*k2<0)
         {
+          
           cross_num = Row_Ptr;
           if(gpio_get(PTE4)==0)//预赛
-            All_Black=Row_Ptr-9;
+            All_Black=Row_Ptr;
           else
           {
             if(Ring_not_out==0)
             {
-              All_Black=Row_Ptr-9;
+              All_Black=Row_Ptr;
             }
           }
           break;
@@ -1302,28 +1300,19 @@ void Find_Middle()
     {
       if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr-6]==1&&Right_Flag[Row_Ptr-12]==1)
       {
-        if(Cross_Cnt==4)
-        {
-          k3 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Right)*100;
-          k4 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Right)*100;
-        }
-        else
-        {
-          k3 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Right);
-          k4 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Right);
-          
-        }
+        k3 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Right);
+        k4 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Right);
         if(k3*k4<0)
         {
           
           cross_num = Row_Ptr;
           if(gpio_get(PTE4)==0)//预赛
-            All_Black=Row_Ptr-9;
+            All_Black=Row_Ptr;
           else
           {
             if(Ring_not_out==0)
             {
-              All_Black=Row_Ptr-9;
+              All_Black=Row_Ptr;
             }
           }
           
@@ -1331,12 +1320,12 @@ void Find_Middle()
         }
       }
     }
-  }
     if(Cross_Cnt>0&&All_Black<3)
     {      
       Cross_Cnt=0;
     }
-//
+  }
+  /////////////////////////////////////////////////////////////
   if(gpio_get(PTE3)==0&&Cross_Flag_Last==31) //圆环补右线，左转
   {
     if(Right_xian==0) Right_xian=57;
@@ -1352,7 +1341,6 @@ void Find_Middle()
       Road_Left[i]=0;
     }
   }
-  //}
   else if(gpio_get(PTE3)==1&&Cross_Flag_Last==31) //圆环补左线，右转
   {
     if(Left_xian==0) Left_xian=57;
@@ -1452,15 +1440,19 @@ void Find_Middle()
       }
       if(Left_J==1&&Left_Y==1)
       {
-        
         Left_left=1;
         break;
       }
     }
     if(Left_left==0) 
     {
+      Left_IPcnt++;
+    }
+    if(Left_IPcnt>2)
+    {
       Cross3_Cnt=0;
       Out_Left=1;//出圆环标志
+      Left_IPcnt=0;
     }
   }
   //*******************// 
@@ -1474,30 +1466,22 @@ void Find_Middle()
   
   for(Row_Ptr=56; Row_Ptr>All_Black; Row_Ptr--)
   { 
-    if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
-    {
-      Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
-    }
-    else if(Left_Flag[Row_Ptr]==1)//左边有线
-    {
-      Road_Center[Row_Ptr]=Road_Center[Row_Ptr+1]+(Road_Left[Row_Ptr]-Road_Left[Row_Ptr+1]);
-    }
-    else if(Right_Flag[Row_Ptr]==1)//右边有线左转
-    {
-      Road_Center[Row_Ptr]=Road_Center[Row_Ptr+1]+(Road_Right[Row_Ptr]-Road_Right[Row_Ptr+1]);
-    }
-    
-    /*else if(Left_Flag[Row_Ptr]==3 && Right_Flag[Row_Ptr]==3 &&
-    (Left_Flag[CrossRow+2]==1 || Right_Flag[CrossRow+2]==1)
-    &&(Left_Flag[Row_Ptr-3]!=1 && Right_Flag[Row_Ptr-3]!=1 ))
-    {
-    Road_Center[Row_Ptr]=Road_Center[CrossRow+2];
-  }*/
-    else
-    {
-      Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
-    }
-   
+      if(Left_Flag[Row_Ptr]==1 && Right_Flag[Row_Ptr]==1)
+      {
+        Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
+      }
+      else if(Left_Flag[Row_Ptr]==1)//左边有线
+      {
+        Road_Center[Row_Ptr]=Road_Center[Row_Ptr+1]+(Road_Left[Row_Ptr]-Road_Left[Row_Ptr+1]);
+      }
+      else if(Right_Flag[Row_Ptr]==1)//右边有线左转
+      {
+        Road_Center[Row_Ptr]=Road_Center[Row_Ptr+1]+(Road_Right[Row_Ptr]-Road_Right[Row_Ptr+1]);
+      }
+      else
+      {
+        Road_Center[Row_Ptr]=(Road_Right[Row_Ptr]+Road_Left[Row_Ptr])/2;
+      }
     
     ////排除中线跳变
     if(Road_Center[Row_Ptr]-Road_Center[Row_Ptr+1]>30&&Cross_Flag==0&&error*errorerror<0)
@@ -1540,7 +1524,7 @@ void Find_Middle()
     a=Road_Left[Row_Ptr]+2;
     img[Row_Ptr][a]=0;
     a=Road_Right[Row_Ptr]-2;
-    img[Row_Ptr][a]=0;
+    img[Row_Ptr][a]=0;       
     img[Row_Ptr][40]=0;
     img[Row_Ptr][40+error]=0;
   }
