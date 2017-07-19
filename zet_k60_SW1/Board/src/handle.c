@@ -1846,7 +1846,7 @@ void Search_Line(void)
     ring_flag=0;
     for(Col_Ptr=Road_Left_f[Row_Ptr]; Col_Ptr<Road_Right_f[Row_Ptr]-3; Col_Ptr++)
     {      
-      if(start_line_num[Row_Ptr]>1&&start_line_num[Row_Ptr]<4&&ring_flag==0&&img[Row_Ptr][Col_Ptr]==255&&img[Row_Ptr][Col_Ptr+1]==255&&img[Row_Ptr][Col_Ptr+2]==0&&img[Row_Ptr][Col_Ptr+3]==0)
+      if(start_line_num[Row_Ptr]<4&&ring_flag==0&&img[Row_Ptr][Col_Ptr]==255&&img[Row_Ptr][Col_Ptr+1]==255&&img[Row_Ptr][Col_Ptr+2]==0&&img[Row_Ptr][Col_Ptr+3]==0)
       {
         ring_flag=1;///ÕÒµ½ºÚ¿é×óÌø±äµã
         if(Col_Ptr+2<Ring_width_1)
@@ -1856,7 +1856,7 @@ void Search_Line(void)
         }
         a=Col_Ptr+1;///×ó±ß½ç
       }
-      else if(start_line_num[Row_Ptr]>1&&start_line_num[Row_Ptr]<4&&ring_flag==1&&img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==255&&img[Row_Ptr][Col_Ptr+3]==255) 
+      else if(start_line_num[Row_Ptr]<4&&ring_flag==1&&img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==255&&img[Row_Ptr][Col_Ptr+3]==255) 
       {
         b=Col_Ptr+2;//ÓÒ±ß½ç
         ring_flag=2;//ÕÒµ½ºÚ¿éÓÒÌø±äµã
@@ -1982,7 +1982,11 @@ void Search_Line(void)
         if(Left_J==1&&Left_Y==1&&(abs(Road_Left[Row_Ptr+5]-Road_Left[Row_Ptr+4]))<11&&(abs(Road_Left[Row_Ptr+5]-Road_Left[Row_Ptr+6]))<11)
         {
           Left_left=1;
-          Left_xian=Row_Ptr+5;
+          for(Col_Ptr=Row_Ptr,max=Row_Ptr;Col_Ptr<Row_Ptr+6;Col_Ptr++)
+          {
+            if(Road_Left[max]<Road_Left[Col_Ptr]) max=Col_Ptr;
+          }
+          Left_xian=max;
         }
       }
       Right_J=0;
@@ -2038,7 +2042,11 @@ void Search_Line(void)
         if(Right_J==1&&Right_Y==1&&(abs(Road_Right[Row_Ptr+4]-Road_Right[Row_Ptr+5]))<11&&(abs(Road_Right[Row_Ptr+6]-Road_Right[Row_Ptr+5]))<11)
         {
           Right_right=1;
-          Right_xian=Row_Ptr+5;
+          for(Col_Ptr=Row_Ptr,max=Row_Ptr;Col_Ptr<Row_Ptr+6;Col_Ptr++)
+          {
+            if(Road_Right[max]>Road_Right[Col_Ptr]) max=Col_Ptr;
+          }
+          Right_xian=max;
         }
       }
       
