@@ -1134,9 +1134,10 @@ void Find_Middle()
   //else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//×ó×ª
   //if(Cross_Cnt==4)  
   //{
-  if(Cross_Flag_Last==0&&Cross_Flag==0&&stopLine_temp==0&&(white_Right_cnt>10||white_Left_cnt>10))
+  
+  if(Cross_Flag_Last==0&&Cross_Flag==0&&stopLine_temp==0&&(white_Right_cnt>20||white_Left_cnt>20))
   {
-    if(white_Right_cnt>10&&white_Right_cnt>white_Left_cnt)
+    if(white_Right_cnt>20&&white_Right_cnt>=white_Left_cnt)
     {
       for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
       {
@@ -1163,7 +1164,7 @@ void Find_Middle()
         }
       }
     }
-    if(white_Left_cnt>10&&white_Right_cnt<=white_Left_cnt)
+    if(white_Left_cnt>20&&white_Right_cnt<white_Left_cnt)
     {
       for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
       {
