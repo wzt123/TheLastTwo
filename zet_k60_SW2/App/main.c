@@ -45,11 +45,8 @@ uint16 speed_rember_L[3] = {0};
 */
 
 
-
-
 void  main(void)
 {
-  
   //zet_bluetooth();
   uint16 send_data[3] = {0};
   uint8 time1=0;
@@ -75,6 +72,8 @@ void  main(void)
   //uint8 Chaoche_stop_time=0;
   uint8 Chaoche_start_time=0;
   uint8 rember_time=0;
+  uint32  ABDistance_rember=0;
+  uint8 Distance_temp=0;
   while(a)
   {
     pit_time_start(PIT1);
@@ -89,7 +88,7 @@ void  main(void)
       if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==1)
       {
         Car=1;
-        Overtake++;//十字超车次数加1
+        Overtake++;//超车次数加1
         ABDistance=0;
         ABDistance_last=0;
         gpio_set(PTE25,1);//后车开启超声波
@@ -117,13 +116,22 @@ void  main(void)
     if(Car==1)
     {
       if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==1)//距离正常
+      {
         Distance_temp=1;
+        Distance_temp=Distance_temp;
+      }
       else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==0)//距离过小
+      {
         Distance_temp=0;
+        Distance_temp=Distance_temp;
+      }
       else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==2)//距离过大
+      {
         Distance_temp=2;
-      else
-        Distance_temp=3;//距离无效
+        Distance_temp=Distance_temp;
+      }
+      else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==3)//距离无效
+        Distance_temp=3;
     }
     
 //    if(Right_stop>40)
@@ -151,7 +159,6 @@ void  main(void)
 //        gpio_set(PTE24,0);
 //      }
 //    }
-  
     
     Find_Middle();
     Road_Type();
@@ -182,7 +189,7 @@ void  main(void)
         stop_Car1();
       else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
         stop_Car2();
-    
+//    
       
       if(gpio_get(PTE4)==1&&Distance_temp>1&&Cross_Flag==1&&((Left_stop>17&&Left_stop<22)||(Right_stop>17&&Right_stop<2))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake<1)
       {
@@ -195,7 +202,7 @@ void  main(void)
       rember_time=1;
       
     }
-      if(rember_time>0)
+    if(rember_time>0)
     {
       if(speed_get_R<80&&speed_get_L<80)
       {
@@ -214,7 +221,7 @@ void  main(void)
           if(buff[3]==0&&buff[2]==0&&buff[1]==1&&(buff[0]==1||buff[0]==0))//距离正常或小于
             wait_temp=1;
         }while(wait_temp==0);
-        DELAY_MS(1000);
+        DELAY_MS(1500);
         rember_time=0; 
         stop_Flag=0;
         Car=2;
@@ -249,7 +256,7 @@ void  main(void)
           }
         }while(speed_get_R<380&&speed_get_L<380);
      
-        NRF_SendData(10003);//告诉后车圆环超车成功
+        NRF_SendData(10003);//告诉后车圆环超车
       }
       else 
       {
@@ -271,33 +278,39 @@ void  main(void)
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, Ring_First_Row);
-      OLED_Print_Num1(88, 2, Kp);
-      OLED_Print_Num1(88, 3, Kd);
-      OLED_Print_Num1(88, 4, error);
-      OLED_Print_Num1(88, 5, errorerror);
+        OLED_Print_Num1(88, 1, All_Black);
+      OLED_Print_Num1(88, 2, error);
+      OLED_Print_Num1(88, 3, errorerror);
+      OLED_Print_Num1(88, 4, Kp);
+      OLED_Print_Num1(88, 5, Kd);
 
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);   
-      OLED_Print_Num1(88, 6, ABDistance);
+      OLED_Print_Num1(88, 6, Distance_temp);
     }
     
     if(Car==2)
     {
-      if(abs(ABDistance-Distance)<150)
-        NRF_SendData(20011);
-      else if(ABDistance<Distance-150)
-        NRF_SendData(20010);
-      else 
-        if(ABDistance>Distance+150)
-          NRF_SendData(20012);
+      if(ABDistance_rember!=ABDistance)
+      {
+        ABDistance_rember=ABDistance;
+        if(abs(ABDistance-Distance)<150)
+          NRF_SendData(20011);
+        else if(ABDistance<Distance-150)
+          NRF_SendData(20010);
+        else 
+          if(ABDistance>Distance+150)
+            NRF_SendData(20012);
+      }
+      else
+        NRF_SendData(20013);
     }
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {
       sum_time++;
 //      if(sum_time-rember_time==5)
 //      {
-////      }
-////      else if(sum_time-rember_time==6)
+//      }
+//      else if(sum_time-rember_time==6)
 //        rember_time==sum_time;
     }
 //    if(speed_get_R!=0&&speed_get_L!=0)
