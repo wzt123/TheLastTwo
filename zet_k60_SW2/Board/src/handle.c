@@ -1136,52 +1136,57 @@ void Find_Middle()
   //{
   if(Cross_Flag_Last==0&&Cross_Flag==0&&stopLine_temp==0&&(white_Right_cnt>10||white_Left_cnt>10))
   {
-    for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
+    if(white_Right_cnt>10&&white_Right_cnt>white_Left_cnt)
     {
-      if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr-6]==1&&Left_Flag[Row_Ptr-12]==1)
+      for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
       {
-        k1 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Left);
-        k2 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Left);
-        
-        if(k1*k2<0)
+        if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr-6]==1&&Left_Flag[Row_Ptr-12]==1)
         {
+          k1 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Left);
+          k2 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Left);
           
-          cross_num = Row_Ptr;
-//          if(gpio_get(PTE4)==0)//预赛
+          if(k1*k2<0)
+          {
+            
+            cross_num = Row_Ptr;
+            //          if(gpio_get(PTE4)==0)//预赛
             All_Black=Row_Ptr-6;
-//          else
-//          {
-//            if(Ring_not_out==0)
-//            {
-//              All_Black=Row_Ptr;
-//            }
-//          }
-          break;
+            //          else
+            //          {
+            //            if(Ring_not_out==0)
+            //            {
+            //              All_Black=Row_Ptr;
+            //            }
+            //          }
+            break;
+          }
         }
       }
     }
-    
-    for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
+    if(white_Left_cnt>10&&white_Right_cnt<=white_Left_cnt)
     {
-      if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr-6]==1&&Right_Flag[Row_Ptr-12]==1)
+      for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
       {
-        k3 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Right);
-        k4 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Right);
-        if(k3*k4<0)
+        if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr-6]==1&&Right_Flag[Row_Ptr-12]==1)
         {
-          
-          cross_num = Row_Ptr;
-//          if(gpio_get(PTE4)==0)//预赛
+          k3 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Right);
+          k4 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Right);
+          if(k3*k4<0)
+          {
+            
+            cross_num = Row_Ptr;
+            //          if(gpio_get(PTE4)==0)//预赛
             All_Black=Row_Ptr-6;
-//          else
-//          {
-//            if(Ring_not_out==0)
-//            {
-//              All_Black=Row_Ptr;
-//            }
-//          }
-          
-          break;
+            //          else
+            //          {
+            //            if(Ring_not_out==0)
+            //            {
+            //              All_Black=Row_Ptr;
+            //            }
+            //          }
+            
+            break;
+          }
         }
       }
     }
