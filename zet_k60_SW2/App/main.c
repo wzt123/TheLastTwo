@@ -109,10 +109,12 @@ void  main(void)
     {
       if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==1)//距离正常
         Distance_temp=1;
-      else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==0)
+      else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==0)//距离过小
         Distance_temp=0;
-      else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==2)
+      else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==2)//距离过大
         Distance_temp=2;
+      else
+        Distance_temp=3;//距离无效
     }
     
 //    if(Right_stop>40)
@@ -178,7 +180,7 @@ void  main(void)
         Chaoche_FrontCar();
       }
       
-     if(gpio_get(PTE2)==1&&Cross_Flag_Last==31&&Ring_First_Row>25&&Car==1)//距离控制标志位没有加
+     if(gpio_get(PTE2)==1&&Distance_temp<2&&Cross_Flag_Last==31&&Ring_First_Row>25&&Car==1)//距离控制标志位没有加
       {
         Ring_Overtake();
         rember_time=1;
@@ -222,9 +224,9 @@ void  main(void)
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, buff[3]);
-      OLED_Print_Num1(88, 2, buff[2]);
-      OLED_Print_Num1(88, 3, buff[1]);
+      OLED_Print_Num1(88, 1, Ring_First_Row);
+      OLED_Print_Num1(88, 2, Kp);
+      OLED_Print_Num1(88, 3, Kd);
       OLED_Print_Num1(88, 4, error);
       OLED_Print_Num1(88, 5, errorerror);
 

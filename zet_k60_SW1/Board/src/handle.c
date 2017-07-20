@@ -950,6 +950,10 @@ void Edge_Filter()
   }
 }
 //寻中线
+float k1=0;
+float k2=0;
+float k3=0;
+float k4=0;
 void Find_Middle()
 {
   Row_Ptr=0;
@@ -965,10 +969,10 @@ void Find_Middle()
   cross_num =0;
   FirstBlackinCenter=0;
   //Overtake=0;  
-  int8 k1=0;
-  int8 k2=0;
-  int8 k3=0;
-  int8 k4=0;
+  k1=0;
+  k2=0;
+  k3=0;
+  k4=0;
   uint8 i=0,j=0;
   float Right_Slope=0.0;
   //
@@ -1004,7 +1008,7 @@ void Find_Middle()
   //else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
   //if(Cross_Cnt==4)  
   //{
-  if(Cross_Flag_Last==0&&Cross_Flag==0&&stopLine_temp==0&&(white_Right_cnt>20||white_Left_cnt>20))
+  if(Cross_Flag_Last==0&&Cross_Flag==0&&stopLine_temp==0&&(white_Right_cnt>10||white_Left_cnt>10))
   {
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
@@ -1018,7 +1022,7 @@ void Find_Middle()
           
           cross_num = Row_Ptr;
 //          if(gpio_get(PTE4)==0)//预赛
-            All_Black=Row_Ptr;
+            All_Black=Row_Ptr-6;
 //          else
 //          {
 //            if(Ring_not_out==0)
@@ -1042,7 +1046,7 @@ void Find_Middle()
           
           cross_num = Row_Ptr;
 //          if(gpio_get(PTE4)==0)//预赛
-            All_Black=Row_Ptr;
+            All_Black=Row_Ptr-6;
 //          else
 //          {
 //            if(Ring_not_out==0)

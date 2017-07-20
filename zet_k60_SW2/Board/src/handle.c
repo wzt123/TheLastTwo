@@ -466,20 +466,31 @@ void Servo_control(void)
 //       errorerror= - errorerror*10/75;
 //      error = error;
     }
-    if(Cross_Flag==31&&Ring_First_Row>17)
+    if(Cross_Flag==31)
     {
-      if(errorerror*error<0)
-        error=-error;
-      if(speed_goal<4850)
+      if(Ring_First_Row>17)
       {
-        Kp =45;//66
-        Kd = 35;
+        if(errorerror*error<0)
+          error=-error;
+        if(speed_goal<4850)
+        {
+          Kp =55;//66
+          Kd = 45;
+        }
+        else
+        {
+          Kp =55;//66
+          Kd = 45;
+        }
       }
       else
       {
-        Kp =55;//66
-        Kd = 35;
+        if(errorerror*error<0)
+          error=-error;
+          Kp =25;//66
+          Kd = 5;
       }
+        
       Servo_temp = Kp*error/10+Kd*errorerror/10;
       
     }
@@ -1123,7 +1134,7 @@ void Find_Middle()
   //else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//×ó×ª
   //if(Cross_Cnt==4)  
   //{
-  if(Cross_Flag_Last==0&&Cross_Flag==0&&stopLine_temp==0&&(white_Right_cnt>20||white_Left_cnt>20))
+  if(Cross_Flag_Last==0&&Cross_Flag==0&&stopLine_temp==0&&(white_Right_cnt>10||white_Left_cnt>10))
   {
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
@@ -1137,7 +1148,7 @@ void Find_Middle()
           
           cross_num = Row_Ptr;
 //          if(gpio_get(PTE4)==0)//Ô¤Èü
-            All_Black=Row_Ptr;
+            All_Black=Row_Ptr-6;
 //          else
 //          {
 //            if(Ring_not_out==0)
@@ -1161,7 +1172,7 @@ void Find_Middle()
           
           cross_num = Row_Ptr;
 //          if(gpio_get(PTE4)==0)//Ô¤Èü
-            All_Black=Row_Ptr;
+            All_Black=Row_Ptr-6;
 //          else
 //          {
 //            if(Ring_not_out==0)

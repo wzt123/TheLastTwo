@@ -201,34 +201,34 @@ void Motor_Out(void)
       {
         if(ABDistance>30)
         {
-          if(ABDistance<Distance-200)
+          if(ABDistance<Distance-200&&Stop_Flag==1)
           {
-              speed_goal = speed_goal-600;
+              speed_goal = speed_goal-400;
           }
-          else if(ABDistance>Distance+200)
-          {
-           
-              speed_goal = speed_goal+600;
-          }
+//          else if(ABDistance>Distance+200)
+//          {
+//           
+//              speed_goal = speed_goal+600;
+//          }
         }
       }
-//      if(Car==1)
-//      {
-//        if(Distance_temp==2)
-//        {
-//          speed_goal =speed_goal -600;
-//        }
+      if(Car==1)
+      {
+        if(Distance_temp==2)
+        {
+          speed_goal =speed_goal -400;
+        }
 //        else if(Distance_temp==0)
 //        {
 //          speed_goal =speed_goal+600;
 //        }
-//      }
+      }
       if(Cross_Flag!=1)
       {
         if(speed_goal<3850)
         {
-          speed_goal_R=speed_goal-error*abs(error)*27/10;
-          speed_goal_L=speed_goal+error*abs(error)*27/10;
+          speed_goal_R=speed_goal-error*abs(error)*17/10;
+          speed_goal_L=speed_goal+error*abs(error)*17/10;
         }
         else if(speed_goal<4450)
         {
