@@ -646,7 +646,23 @@ void Chaoche_FrontCar(void)
   
   NRF_SendData(10002);//告诉后车有十字路口
   
-  DELAY_MS(500);
+  do
+  {
+    
+    camera_get_img();                                   //摄像头获取图像
+    img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+    Search_Line();
+    
+    Find_Middle();
+    Road_Type();
+    Servo_control();
+    nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里     
+    if(buff[3]==0&&buff[2]==0&&buff[1]==1&&(buff[0]==1||buff[0]==0))//距离小于
+      wait_temp=1;
+  }while(wait_temp==0);
+  
+  DELAY_MS(100);
+  
   
   Car=2;
   gpio_set(PTE25,0);//关闭超声波
