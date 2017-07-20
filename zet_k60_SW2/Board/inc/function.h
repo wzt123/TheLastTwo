@@ -15,6 +15,7 @@ extern void Switch_Init();
 extern uint8 Get_Switch(void);
 extern void Chaoche_FrontCar(void);
 extern void NRF_SendData(int data);
+extern void Ring_Overtake(void);
 //extern uint16 speed_get;
 extern uint16 var;//∫ÏÕ‚≤‚æ‡£ª
 //extern uint16 speed_goal;
@@ -28,6 +29,7 @@ extern int16 speed_PWM_L;
 extern uint8 stop_Flag;
 extern uint8 stop_Place;
 extern uint32 Distance;
+extern uint8 Distance_temp;
 /////
 extern int16 OutData[4];
 extern uint16 speed_get_R;

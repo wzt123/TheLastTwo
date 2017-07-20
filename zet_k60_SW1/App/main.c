@@ -71,16 +71,17 @@ void  main(void)
   
   //uint8 Chaoche_stop_time=0;
   uint8 Chaoche_start_time=0;
+  uint8 rember_time=0;
   while(a)
   {
     pit_time_start(PIT1);
     camera_get_img();                                   //摄像头获取图像
     img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
     Search_Line();
-    
+    nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里      
+      
     if(Car==2)
     {
-      nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里      
       
       if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==1)
       {
@@ -100,6 +101,15 @@ void  main(void)
         Cross_Flag=1;
       }
       
+    }
+    if(Car==1)
+    {
+      if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==1)//距离正常
+        Distance_temp=1;
+      else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==0)
+        Distance_temp=0;
+      else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==2)
+        Distance_temp=2;
     }
     
 //    if(Right_stop>40)
@@ -157,12 +167,48 @@ void  main(void)
 //        stop_Car1();
 //      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
 //        stop_Car2();
-    
+//    
       
-//      if(Cross_Flag==1&&((Left_stop>20&&Left_stop<25)||(Right_stop>20&&Right_stop<25))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake==0)
-//      {
-//        Chaoche_FrontCar();
-//      }
+      if(gpio_get(PTE4)==1&&Distance_temp==1&&Cross_Flag==1&&((Left_stop>17&&Left_stop<22)||(Right_stop>17&&Right_stop<2))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake<1)
+      {
+        Chaoche_FrontCar();
+      }
+      
+      if(gpio_get(PTE2)==1&&Cross_Flag_Last==31&&Ring_First_Row>25&&Car==1)//距离控制标志位没有加
+      {
+        Ring_Overtake();
+        rember_time=1;
+        
+      }
+      if(rember_time>0)
+      {
+        if(speed_get_R<80&&speed_get_L<80)
+        {
+          DELAY_MS(1000);
+          rember_time=0; 
+          stop_Flag=0;
+          Car=2;
+          gpio_set(PTC3,1);//驱动反向使能
+          gpio_set(PTC2,0);//驱动反向使能
+          gpio_set(PTB17,0);//驱动反向使能
+          gpio_set(PTB16,1);//驱动反向使能
+          ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+          ftm_pwm_duty(FTM2,FTM_CH0,8500);//B2
+          ftm_pwm_duty(FTM2,FTM_CH1,8500);//B1
+          DELAY_MS(50);
+          NRF_SendData(10001);
+        }
+        else
+        {
+          gpio_set(PTC3,0);//驱动反向使能
+          gpio_set(PTC2,1);//驱动反向使能
+          gpio_set(PTB17,1);//驱动反向使能
+          gpio_set(PTB16,0);//驱动反向使能
+          ftm_pwm_duty(FTM2,FTM_CH0,6200);//B2
+          ftm_pwm_duty(FTM2,FTM_CH1,6200);//B1
+          
+        }
+      }
     ///蓝牙传送编码器的值
     send_data[0] = 0;
     send_data[1] = Cross_Flag*500;
@@ -172,18 +218,34 @@ void  main(void)
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-      OLED_Print_Num1(88, 1, All_Black);
+        OLED_Print_Num1(88, 1, All_Black);
       OLED_Print_Num1(88, 2, error);
       OLED_Print_Num1(88, 3, errorerror);
       OLED_Print_Num1(88, 4, Kp);
       OLED_Print_Num1(88, 5, Kd);
 
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);   
-      OLED_Print_Num1(88, 6, sum_time);
+      OLED_Print_Num1(88, 6, Distance_temp);
+    }
+    
+    if(Car==2)
+    {
+      if(abs(ABDistance-Distance)<150)
+        NRF_SendData(20011);
+      else if(ABDistance<Distance-150)
+        NRF_SendData(20010);
+      else 
+        if(ABDistance>Distance+150)
+          NRF_SendData(20012);
     }
     if(Stop_Flag==1&&speed_get_R!=0&&speed_get_L!=0)
     {
-      sum_time++; 
+      sum_time++;
+//      if(sum_time-rember_time==5)
+//      {
+//      }
+//      else if(sum_time-rember_time==6)
+//        rember_time==sum_time;
     }
 //    if(speed_get_R!=0&&speed_get_L!=0)
 //    {

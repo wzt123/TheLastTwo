@@ -35,7 +35,7 @@ uint8 White_Ren=0;
 uint8 Right_xian=0;
 uint8 Left_xian=0;
 
-uint16 Servo_value=8553;//舵机输出pwm值
+uint16 Servo_value=8480;//舵机输出pwm值
 uint8 ring_num;
 
 uint8 Hinder_Start=0;
@@ -45,10 +45,10 @@ uint8 Cross_Flag=0;
 uint8 Change_Flag;
 uint8 CrossRow=0;
 
-uint16 Servomiddle=8552;
-uint16 Servomiddle_rember=8552;
-uint16 Servo_max=8718;
-uint16 Servo_min=8388;
+uint16 Servomiddle=8480;
+uint16 Servomiddle_rember=8480;
+uint16 Servo_max=8645;
+uint16 Servo_min=8315;
 float CenterLineSlope=0;
 
 int16 error=0;   //0~40左右
@@ -437,20 +437,20 @@ void Servo_control(void)
     if(errorerror*error<0&&abs(error-errorerror)>15&&Cross_Flag==0)
     {      
      if(speed_goal<4850)
-       errorerror= - errorerror*1/5;
+       errorerror= - errorerror*1/6;
      else if(speed_goal<5250)
        errorerror= - errorerror*10/65;
       error = error;
     }
     
-    if(Cross_Flag==31)
+    if(Cross_Flag==31&&Ring_First_Row>18)
     {
       if(errorerror*error<0)
         error=-error;
       if(speed_goal<4850)
       {
-        Kp =45;//66
-        Kd = 28;  
+        Kp =55;//66
+        Kd = 40;  
       }
       else
       {
@@ -522,13 +522,13 @@ void Servo_control(void)
         {
           if(error<0)
           {
-            Kp = 33;
-            Kd = 12;
+            Kp = 35;
+            Kd = 16;
           }
           else   //右转
           {
-            Kp = 33;
-            Kd = 12;
+            Kp = 35;
+            Kd = 16;
           }
           
         }
@@ -537,12 +537,12 @@ void Servo_control(void)
           if(error<0)
           {
             Kp = 33;
-            Kd = 18;
+            Kd = 19;
           }
           else
           {
             Kp = 33;
-            Kd=18;
+            Kd=19;
           }
           
         }
@@ -552,7 +552,7 @@ void Servo_control(void)
           if(error<0)
           {
             Kp=44;
-            Kd=20;
+            Kd=22;
           }
           else
           {
@@ -586,26 +586,27 @@ void Servo_control(void)
             Kd = 29;
           }
         }
-        else if(All_Black<41)
-        {
-          if(error<0)
-          {
-            Kp = 58;
-            Kd = 30;
-          }
-          else
-          {
-            Kp = 58;
-            Kd = 30;
-          }
-        }
-        else if((All_Black>=41))
+//        else if(All_Black<41)
+//        {
+//          if(error<0)
+//          {
+//            Kp = 58;
+//            Kd = 30;
+//          }
+//          else
+//          {
+//            Kp = 58;
+//            Kd = 30;
+//          }
+//        }
+        else if((All_Black>=36))
         {
           error_sum = error_last[0]+error_last[1]+error*5;
         }
       }
-      
+
       else if(speed_goal<4400)//新加4400档位
+
       {
         if(All_Black==0)
         {
@@ -715,24 +716,25 @@ void Servo_control(void)
             Kd = 29;
           }
         }
-        else if(All_Black<41)
-        {
-          if(error<0)
-          {
-            Kp = 58;
-            Kd = 30;
-          }
-          else
-          {
-            Kp = 58;
-            Kd = 30;
-          }
-        }
-        else if((All_Black>=41))
+//        else if(All_Black<41)
+//        {
+//          if(error<0)
+//          {
+//            Kp = 58;
+//            Kd = 30;
+//          }
+//          else
+//          {
+//            Kp = 58;
+//            Kd = 30;
+//          }
+//        }
+        else if((All_Black>=36))
         {
           error_sum = error_last[0]+error_last[1]+error*5;
         }
       }
+
       
       else if(speed_goal<5000)
       {
@@ -863,6 +865,7 @@ void Servo_control(void)
         }
       }
       else if(speed_goal<5500)
+
       {
         if(All_Black==0)
         {
@@ -972,20 +975,20 @@ void Servo_control(void)
             Kd = 29;
           }
         }
-        else if(All_Black<41)
-        {
-          if(error<0)
-          {
-            Kp = 58;
-            Kd = 30;
-          }
-          else
-          {
-            Kp = 58;
-            Kd = 30;
-          }
-        }        
-        else if((All_Black>=41))
+//        else if(All_Black<41)
+//        {
+//          if(error<0)
+//          {
+//            Kp = 58;
+//            Kd = 30;
+//          }
+//          else
+//          {
+//            Kp = 58;
+//            Kd = 30;
+//          }
+//        }        
+        else if((All_Black>=36))
         {
           error_sum = error_last[0]+error_last[1]+error*5;
         }
@@ -1002,7 +1005,7 @@ void Servo_control(void)
         Servo_temp = Servo_temp+cross_num;
     }*/
     
-     if(All_Black<41)
+     if(All_Black<36)
     {
       Servo_value = Servomiddle+Servo_temp;
       error_sum = 0;
@@ -1134,7 +1137,7 @@ void Find_Middle()
   //else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
   //if(Cross_Cnt==4)  
   //{
-  if(Cross_Flag_Last!=31&&stopLine_temp==0&&(white_Right_cnt>20||white_Left_cnt>20))
+  if(Cross_Flag_Last==0&&Cross_Flag==0&&stopLine_temp==0&&(white_Right_cnt>20||white_Left_cnt>20))
   {
     for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
     {
@@ -1147,15 +1150,15 @@ void Find_Middle()
         {
           
           cross_num = Row_Ptr;
-          if(gpio_get(PTE4)==0)//预赛
+//          if(gpio_get(PTE4)==0)//预赛
             All_Black=Row_Ptr;
-          else
-          {
-            if(Ring_not_out==0)
-            {
-              All_Black=Row_Ptr;
-            }
-          }
+//          else
+//          {
+//            if(Ring_not_out==0)
+//            {
+//              All_Black=Row_Ptr;
+//            }
+//          }
           break;
         }
       }
@@ -1171,15 +1174,15 @@ void Find_Middle()
         {
           
           cross_num = Row_Ptr;
-          if(gpio_get(PTE4)==0)//预赛
+//          if(gpio_get(PTE4)==0)//预赛
             All_Black=Row_Ptr;
-          else
-          {
-            if(Ring_not_out==0)
-            {
-              All_Black=Row_Ptr;
-            }
-          }
+//          else
+//          {
+//            if(Ring_not_out==0)
+//            {
+//              All_Black=Row_Ptr;
+//            }
+//          }
           
           break;
         }
@@ -1393,8 +1396,7 @@ void Find_Middle()
     img[Row_Ptr][40]=0;
     img[Row_Ptr][40+error]=0;
   }
-  //filter_Middle(Road_Center);
-  //结束for_滤中线
+  
 }
 
 //寻边线
@@ -1436,6 +1438,7 @@ void Search_Line(void)
   uint8 Right_diu=0;
   uint8 start_line_temp[60]={0};
   uint8 start_line_temp_num=0;
+  uint8 max=0;
   Left_Cnt=0;
   Right_Cnt=0;
   Left_cnt=0;
@@ -1976,7 +1979,7 @@ void Search_Line(void)
     ring_flag=0;
     for(Col_Ptr=Road_Left_f[Row_Ptr]; Col_Ptr<Road_Right_f[Row_Ptr]-3; Col_Ptr++)
     {      
-      if(start_line_num[Row_Ptr]>1&&start_line_num[Row_Ptr]<4&&ring_flag==0&&img[Row_Ptr][Col_Ptr]==255&&img[Row_Ptr][Col_Ptr+1]==255&&img[Row_Ptr][Col_Ptr+2]==0&&img[Row_Ptr][Col_Ptr+3]==0)
+      if(start_line_num[Row_Ptr]<4&&ring_flag==0&&img[Row_Ptr][Col_Ptr]==255&&img[Row_Ptr][Col_Ptr+1]==255&&img[Row_Ptr][Col_Ptr+2]==0&&img[Row_Ptr][Col_Ptr+3]==0)
       {
         ring_flag=1;///找到黑块左跳变点
         if(Col_Ptr+2<Ring_width_1)
@@ -1986,7 +1989,7 @@ void Search_Line(void)
         }
         a=Col_Ptr+1;///左边界
       }
-      else if(start_line_num[Row_Ptr]>1&&start_line_num[Row_Ptr]<4&&ring_flag==1&&img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==255&&img[Row_Ptr][Col_Ptr+3]==255) 
+      else if(start_line_num[Row_Ptr]<4&&ring_flag==1&&img[Row_Ptr][Col_Ptr]==0&&img[Row_Ptr][Col_Ptr+1]==0&&img[Row_Ptr][Col_Ptr+2]==255&&img[Row_Ptr][Col_Ptr+3]==255) 
       {
         b=Col_Ptr+2;//右边界
         ring_flag=2;//找到黑块右跳变点
@@ -2058,7 +2061,7 @@ void Search_Line(void)
     }
    //入圆环前两边拐点   
     
-    if(gpio_get(PTE4)==0)//预赛小圆环
+    if(1)//预赛小圆环
     {
       Left_J=0;
       Left_Y=0;
@@ -2112,7 +2115,11 @@ void Search_Line(void)
         if(Left_J==1&&Left_Y==1&&(abs(Road_Left[Row_Ptr+5]-Road_Left[Row_Ptr+4]))<11&&(abs(Road_Left[Row_Ptr+5]-Road_Left[Row_Ptr+6]))<11)
         {
           Left_left=1;
-          Left_xian=Row_Ptr+5;
+          for(Col_Ptr=Row_Ptr,max=Row_Ptr;Col_Ptr<Row_Ptr+6;Col_Ptr++)
+          {
+            if(Road_Left[max]<Road_Left[Col_Ptr]) max=Col_Ptr;
+          }
+          Left_xian=max;
         }
       }
       Right_J=0;
@@ -2168,7 +2175,11 @@ void Search_Line(void)
         if(Right_J==1&&Right_Y==1&&(abs(Road_Right[Row_Ptr+4]-Road_Right[Row_Ptr+5]))<11&&(abs(Road_Right[Row_Ptr+6]-Road_Right[Row_Ptr+5]))<11)
         {
           Right_right=1;
-          Right_xian=Row_Ptr+5;
+          for(Col_Ptr=Row_Ptr,max=Row_Ptr;Col_Ptr<Row_Ptr+6;Col_Ptr++)
+          {
+            if(Road_Right[max]>Road_Right[Col_Ptr]) max=Col_Ptr;
+          }
+          Right_xian=max;
         }
       }
       
@@ -2194,7 +2205,7 @@ void Search_Line(void)
           if(img[j][Road_Right[Right_xian]]==0&&img[j+1][Road_Right[Right_xian]]==0) break;
         }
         if(i==Ring_First_Row&&j==Ring_First_Row)
-          Cross_Flag=31;/////标记为大圆环
+          Cross_Flag=31;/////标记为小圆环
       }
     }
     else//决赛大圆环
@@ -2252,7 +2263,11 @@ void Search_Line(void)
         if(Left_J==1&&Left_Y==1)
         {
           Left_left=1;
-          Left_xian=Row_Ptr+5;
+          for(Col_Ptr=Row_Ptr,max=Row_Ptr;Col_Ptr<Row_Ptr+6;Col_Ptr++)
+          {
+            if(Road_Left[max]<Road_Left[Col_Ptr]) max=Col_Ptr;
+          }
+          Left_xian=max;
         }
       }
       Right_J=0;
@@ -2308,7 +2323,12 @@ void Search_Line(void)
         if(Right_J==1&&Right_Y==1)
         {
           Right_right=1;
-          Right_xian=Row_Ptr+5;
+          for(Col_Ptr=Row_Ptr,max=Row_Ptr;Col_Ptr<Row_Ptr+6;Col_Ptr++)
+          {
+            if(Road_Right[max]>Road_Right[Col_Ptr]) max=Col_Ptr;
+          }
+          Right_xian=max;
+          //Right_xian=Row_Ptr+5;
         }
       }
       if(ring_num>1&&Right_right==1&&Left_left==1&&(abs(Right_xian-Left_xian))<10&&Right_xian>Ring_First_Row&&Left_xian>Ring_First_Row&&Ring_First_Row>4&&stopLine_temp!=1)
@@ -2322,7 +2342,7 @@ void Search_Line(void)
           if(img[j][Road_Right[Right_xian]]==0&&img[j+1][Road_Right[Right_xian]]==0) break;
         }
         if(i==Ring_First_Row&&j==Ring_First_Row)
-          Cross_Flag=31;/////标记为圆环
+          Cross_Flag=31;/////标记为圆大环
       }
     }
   //***********************************************************************************//

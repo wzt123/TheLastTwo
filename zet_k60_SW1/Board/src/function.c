@@ -29,7 +29,8 @@ uint8 Status_2=0;
 uint16 var;
 uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
-uint32 Distance = 900;
+uint32 Distance = 1200;
+uint8 Distance_temp = 1;
 uint8 stop_time = 0;
 uint8 Car_First_stop=0;
 uint8 Car_Second_stop=0;
@@ -155,7 +156,9 @@ void Motor_Out(void)
         }
         else if(Status==2)//直道加速
         {
+
           speed_goal=4800;
+
         }
         
         else if(Status==3)
@@ -177,11 +180,13 @@ void Motor_Out(void)
         }
         else if(Status==1)
         {
-          speed_goal=4100;
+          speed_goal=4400;
         }
         else if(Status==2)//入弯减速
         {
+
           speed_goal=4600;
+
         }
         
         else if(Status==3)
@@ -195,32 +200,56 @@ void Motor_Out(void)
         }
       }     
      
+      
       if(Car==2)
       {
         if(ABDistance>30)
         {
-          if(ABDistance<Distance-150)
+          if(ABDistance<Distance-200)
           {
-            if(All_Black>10)
-              speed_goal = speed_goal-100;
-            else if(abs(error)<5&&Cross_Flag==0)
-              speed_goal = speed_goal-500;
+              speed_goal = speed_goal-600;
           }
-          else if(ABDistance>Distance+150)
+          else if(ABDistance>Distance+200)
           {
-            if(All_Black>10)
-              speed_goal = speed_goal+100;
-            else if(abs(error)<5&&Cross_Flag==0)
-              speed_goal = speed_goal+800;
+           
+              speed_goal = speed_goal+600;
           }
         }
       }
-      
-//      if(speed_goal<4650)
+//      if(Car==1)
 //      {
+
         speed_goal_R=speed_goal-error2*abs(error2)*34/10;//差速？？？32/10
         speed_goal_L=speed_goal+error2*abs(error2)*34/10;
+
+//        if(Distance_temp==2)
+//        {
+//          speed_goal =speed_goal -600;
+//        }
+//        else if(Distance_temp==0)
+//        {
+//          speed_goal =speed_goal+600;
+//        }
+
 //      }
+      if(Cross_Flag!=1)
+      {
+        if(speed_goal<3850)
+        {
+          speed_goal_R=speed_goal-error*abs(error)*27/10;
+          speed_goal_L=speed_goal+error*abs(error)*27/10;
+        }
+        else if(speed_goal<4450)
+        {
+          speed_goal_R=speed_goal-error*abs(error)*44/10;
+          speed_goal_L=speed_goal+error*abs(error)*44/10;
+        }
+        else if(speed_goal<5050)
+        {
+          speed_goal_R=speed_goal-error2*abs(error2)*48/10;
+          speed_goal_L=speed_goal+error2*abs(error2)*48/10;
+        }
+      }
 //      else
 //      {
 //////        speed_goal_R=speed_goal-(10*error/10+423*error1/10+15*error2/10)*15;
@@ -423,6 +452,16 @@ void Distance_stop(void)
 
 
 void stop(void){
+  if(speed_get_L<8&&speed_get_R<8)
+  {
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
+    return;
+  }
   gpio_set(PTC3,1);
   gpio_set(PTC2,0);
   gpio_set(PTB17,0);
@@ -520,7 +559,7 @@ void get_error()
 超车
 */
 void Chaoche_FrontCar(void)
-{
+{ 
   uint8 All_black_rember=All_Black;
   int16 error_rember=error;
   int16 errorerror_rember=errorerror;
@@ -543,29 +582,27 @@ void Chaoche_FrontCar(void)
   //ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
   ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
-  DELAY_MS(150);
-//  gpio_set(PTC3,0);//驱动反向使能
-//  gpio_set(PTC2,1);//驱动反向使能
-//  gpio_set(PTB17,1);//驱动反向使能
-//  gpio_set(PTB16,0);//驱动反向使能
-//  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
-//  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
-//  DELAY_MS(180);
-//
-  stop();  
+  DELAY_MS(100);
+  gpio_set(PTC3,0);//驱动反向使能
+  gpio_set(PTC2,1);//驱动反向使能
+  gpio_set(PTB17,1);//驱动反向使能
+  gpio_set(PTB16,0);//驱动反向使能
+  ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+  DELAY_MS(180);
+  
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B
   
   NRF_SendData(10002);//告诉后车有十字路口
   
-  DELAY_MS(400);
+  DELAY_MS(500);
   
   Car=2;
   gpio_set(PTE25,0);//关闭超声波
   gpio_set(PTE24,0);
   Overtake++;
   uint8 time=0;
-  uint8 DaoChe_temp=0;
   do
   {
     
@@ -585,15 +622,15 @@ void Chaoche_FrontCar(void)
     Search_Line();
     Find_Middle();
     
-//    speed_get_L = abs(ftm_quad_get(FTM1));
-//    speed_get_R = lptmr_pulse_get();
-//    ftm_quad_clean(FTM1);
-//    lptmr_pulse_clean();
+    speed_get_L = abs(ftm_quad_get(FTM1));
+    speed_get_R = lptmr_pulse_get();
+    ftm_quad_clean(FTM1);
+    lptmr_pulse_clean();
 //    if(speed_get_R!=0&&speed_get_L!=0)
 //    {
       time++;
 //    }
-    if(Cross_Flag==1)
+    if(time>1)
     {
       Servo_control();
     }
@@ -601,16 +638,10 @@ void Chaoche_FrontCar(void)
     {
       get_error();
       ftm_pwm_duty(FTM0, FTM_CH3, Servo_min);
-      DELAY_MS(50);
-    }
-    if(time<2)
-    {
-      get_error();
-      ftm_pwm_duty(FTM0, FTM_CH3, Servo_min);
       DELAY_MS(600);
       Cross_Flag=0;
     }
-    
+//    
 //    if(speed_get_R<60&&speed_get_L<60)
 //    {
 //      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
@@ -622,11 +653,7 @@ void Chaoche_FrontCar(void)
 //      
 //      OLED_Print_Num1(88, 6, Cross_Flag);
 //    }
-    if(Cross_Flag==1&&abs(errorerror-errorerror_rember)<4&&abs(error-error_rember)<4)
-    {
-      DaoChe_temp=1;
-    }
-  }while(DaoChe_temp==0&&time<500);
+  }while(Cross_Flag!=1&&time<500&&(abs(errorerror-errorerror_rember)>4||abs(error-error_rember)>4));
   
   do
   {
@@ -643,10 +670,10 @@ void Chaoche_FrontCar(void)
     Search_Line();
     Find_Middle();
     Servo_control();
-//    speed_get_L = abs(ftm_quad_get(FTM1));
-//    speed_get_R = lptmr_pulse_get();
-//    ftm_quad_clean(FTM1);
-//    lptmr_pulse_clean();
+    speed_get_L = abs(ftm_quad_get(FTM1));
+    speed_get_R = lptmr_pulse_get();
+    ftm_quad_clean(FTM1);
+    lptmr_pulse_clean();
 //    if(speed_get_R<60&&speed_get_L<60)
 //    {
 //      dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
@@ -676,7 +703,20 @@ void Chaoche_FrontCar(void)
   //ChaoChe_temp=0;
 }
 
+void Ring_Overtake(void)
+{
+  gpio_set(PTC3,0);//驱动反向使能
+  gpio_set(PTC2,1);//驱动反向使能
+  gpio_set(PTB17,1);//驱动反向使能
+  gpio_set(PTB16,0);//驱动反向使能
+  ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
+  DELAY_MS(150);
+  ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,0);//B1  
+  stop_Flag  = 1;
 
+}
 //NRF
 void NRF_SendData(int data)
 {

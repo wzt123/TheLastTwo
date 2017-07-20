@@ -29,7 +29,8 @@ uint8 Status_2=0;
 uint16 var;
 uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
-uint32 Distance = 900;
+uint32 Distance = 1200;
+uint8 Distance_temp=1;
 uint8 stop_time = 0;
 uint8 Car_First_stop=0;
 uint8 Car_Second_stop=0;
@@ -84,7 +85,7 @@ void Init_All(void)
   set_vector_handler(PORTC_VECTORn ,PORTC_IRQHandler);                //设置 PORTE 的中断服务函数为 PORTE_VECTORn
   chaoShenBo_init();
   Status=Get_Switch();
-  Status_2=Get_Switch_2();
+  //Status_2=Get_Switch_2();
   enable_irq(PORTC_IRQn);
   enable_irq (PIT0_IRQn);                                //使能PIT0中断
 }
@@ -148,11 +149,11 @@ void Motor_Out(void)
         }
         else if(Status==1)
         {
-          speed_goal=4100;
+          speed_goal=4400;
         }
         else if(Status==2)//直道加速
         {
-          speed_goal=4400;
+          speed_goal=5000;
         }
         
         else if(Status==3)
@@ -174,11 +175,11 @@ void Motor_Out(void)
         }
         else if(Status==1)
         {
-          speed_goal=4100;
+          speed_goal=4400;
         }
         else if(Status==2)//入弯减速
         {
-          speed_goal=4400;
+          speed_goal=5000;
         }
         
         else if(Status==3)
@@ -196,36 +197,56 @@ void Motor_Out(void)
       {
         if(ABDistance>30)
         {
-          if(ABDistance<Distance-150)
+          if(ABDistance<Distance-200)
           {
-            if(All_Black>10)
-              speed_goal = speed_goal-100;
-            else if(abs(error)<5&&Cross_Flag==0)
-              speed_goal = speed_goal-500;
+              speed_goal = speed_goal-600;
           }
-          else if(ABDistance>Distance+150)
+          else if(ABDistance>Distance+200)
           {
-            if(All_Black>10)
-              speed_goal = speed_goal+100;
-            else if(abs(error)<5&&Cross_Flag==0)
-              speed_goal = speed_goal+800;
+           
+              speed_goal = speed_goal+600;
           }
         }
       }
+//      if(Car==1)
+//      {
+//        if(Distance_temp==2)
+//        {
+//          speed_goal =speed_goal -600;
+//        }
+//        else if(Distance_temp==0)
+//        {
+//          speed_goal =speed_goal+600;
+//        }
+//      }
       
-      if(speed_goal<4650)
+      if(Cross_Flag!=1)
       {
-        speed_goal_R=speed_goal-error*abs(error)*15/10;
-        speed_goal_L=speed_goal+error*abs(error)*15/10;
+        if(speed_goal<3850)
+        {
+         
+          speed_goal_R=speed_goal-error*abs(error)*17/10;
+          speed_goal_L=speed_goal+error*abs(error)*17/10;
+        }
+        else if(speed_goal<4450)
+        {
+          speed_goal_R=speed_goal-error*abs(error)*42/10;
+          speed_goal_L=speed_goal+error*abs(error)*42/10;
+        }
+        else if(speed_goal<5050)
+        {
+          speed_goal_R=speed_goal-error2*abs(error2)*48/10;
+          speed_goal_L=speed_goal+error2*abs(error2)*48/10;
+        }
       }
-      else
-      {
-////        speed_goal_R=speed_goal-(10*error/10+423*error1/10+15*error2/10)*15;
-//        speed_goal_L=speed_goal+(10*error/10+423*error1/10+15*error2/10)*15;  
-        speed_goal_R=speed_goal-(22*error+152*error2+20*error1)*16/10;
-        speed_goal_L=speed_goal+(22*error+152*error2+20*error1)*16/10;  
-
-      }
+//      else
+//      {
+//////        speed_goal_R=speed_goal-(10*error/10+423*error1/10+15*error2/10)*15;
+////        speed_goal_L=speed_goal+(10*error/10+423*error1/10+15*error2/10)*15;  
+//        speed_goal_R=speed_goal-(22*error+152*error2+20*error1)*16/10;
+//        speed_goal_L=speed_goal+(22*error+152*error2+20*error1)*16/10;  
+//
+//      }
 //      speed_goal_R=speed_goal-error*abs(error)*13/10;
 //      speed_goal_L=speed_goal+error*abs(error)*13/10;
 //      if((abs(error)<8&&abs(error)>=4)||(All_Black>4&&All_Black<8)||Cross_Flag==3)
@@ -623,7 +644,7 @@ void Chaoche_FrontCar(void)
   //ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
   ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
-  DELAY_MS(150);
+  DELAY_MS(100);
   gpio_set(PTC3,0);//驱动反向使能
   gpio_set(PTC2,1);//驱动反向使能
   gpio_set(PTB17,1);//驱动反向使能
@@ -637,7 +658,7 @@ void Chaoche_FrontCar(void)
   
   NRF_SendData(10002);//告诉后车有十字路口
   
-  DELAY_MS(400);
+  DELAY_MS(500);
   
   Car=2;
   gpio_set(PTE25,0);//关闭超声波
@@ -744,6 +765,20 @@ void Chaoche_FrontCar(void)
   //ChaoChe_temp=0;
 }
 
+void Ring_Overtake(void)
+{
+  gpio_set(PTC3,0);//驱动反向使能
+  gpio_set(PTC2,1);//驱动反向使能
+  gpio_set(PTB17,1);//驱动反向使能
+  gpio_set(PTB16,0);//驱动反向使能
+  ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
+  DELAY_MS(150);
+  ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,0);//B1  
+  stop_Flag  = 1;
+
+}
 
 
 //NRF
