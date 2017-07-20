@@ -165,10 +165,10 @@ void  main(void)
 //        }
       }
     }    
-//      if((Stop_Flag>1)&&Car==1&&Car_First_stop<2&&stop_Flag==0)
-//        stop_Car1();
-//      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
-//        stop_Car2();
+      if((Stop_Flag>1)&&Car==1&&Car_First_stop<2&&stop_Flag==0)
+        stop_Car1();
+      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
+        stop_Car2();
 //    
       
     if(gpio_get(PTE2)==1/*&&Distance_temp<2*/&&Cross_Flag_Last==31&&Ring_First_Row>25&&Car==1)//距离控制标志位没有加
@@ -196,7 +196,7 @@ void  main(void)
           if(buff[3]==0&&buff[2]==0&&buff[1]==1&&(buff[0]==1||buff[0]==0))//距离正常或小于
             wait_temp=1;
         }while(wait_temp==0);
-        DELAY_MS(1000);
+        DELAY_MS(1500);
         rember_time=0; 
         stop_Flag=0;
         Car=2;
@@ -233,16 +233,16 @@ void  main(void)
      
         NRF_SendData(10001);
       }
-//      else if(speed_get_R>120&&speed_get_L<120)
-//      {
-//        gpio_set(PTC3,0);//驱动反向使能
-//        gpio_set(PTC2,1);//驱动反向使能
-//        gpio_set(PTB17,1);//驱动反向使能
-//        gpio_set(PTB16,0);//驱动反向使能
-//        ftm_pwm_duty(FTM2,FTM_CH0,6000);//B2
-//        ftm_pwm_duty(FTM2,FTM_CH1,6000);//B1
-//        
-//      }
+      else 
+      {
+        gpio_set(PTC3,0);//驱动反向使能
+        gpio_set(PTC2,1);//驱动反向使能
+        gpio_set(PTB17,1);//驱动反向使能
+        gpio_set(PTB16,0);//驱动反向使能
+        ftm_pwm_duty(FTM2,FTM_CH0,5500);//B2
+        ftm_pwm_duty(FTM2,FTM_CH1,5500);//B1
+        
+      }
     }
     ///蓝牙传送编码器的值
     send_data[0] = 0;

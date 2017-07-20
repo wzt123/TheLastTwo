@@ -387,14 +387,28 @@ void stop2(void)
 */
 void stop_Car2(void)
 { 
-  gpio_set(PTC3,0);//驱动反向使能
-  gpio_set(PTC2,1);//驱动反向使能
-  gpio_set(PTB17,1);//驱动反向使能
-  gpio_set(PTB16,0);//驱动反向使能
-  ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
-  ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
-  ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
-  DELAY_MS(150);
+  do
+  {
+    camera_get_img();                                   //摄像头获取图像
+    img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+    Search_Line();
+    
+    Find_Middle();
+    Road_Type();
+    Servo_control();
+    
+    speed_get_L = abs(ftm_quad_get(FTM1));          
+    speed_get_R = lptmr_pulse_get();
+    ftm_quad_clean(FTM1);
+    lptmr_pulse_clean();
+    
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
+  }while(speed_get_L>100&&speed_get_R>100);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
   
@@ -406,13 +420,38 @@ void stop_Car2(void)
 */
 void stop_Car1()
 {
-  if(speed_get_L<8&&speed_get_R<8)
+  do
   {
-    ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
-    ftm_pwm_duty(FTM2,FTM_CH1,0);//B1  
-    //stop_Flag  = 1;
-    DELAY_MS(1000);//暂时这样用，等以后用NRF通知后车接近再发车
+    camera_get_img();                                   //摄像头获取图像
+    img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+    Search_Line();
     
+    Find_Middle();
+    Road_Type();
+    Servo_control();
+    
+    speed_get_L = abs(ftm_quad_get(FTM1));          
+    speed_get_R = lptmr_pulse_get();
+    ftm_quad_clean(FTM1);
+    lptmr_pulse_clean();
+    
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
+  }while(speed_get_L>100&&speed_get_R>100);
+   
+  if(speed_get_R<10&&speed_get_L<10)
+  {
+    uint8 wait_temp=0;
+    do
+    {
+      nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里     
+      if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==0)//距离正常或小于
+        wait_temp=1;
+    }while(wait_temp==0);
     gpio_set(PTC3,1);
     gpio_set(PTC2,0);
     gpio_set(PTB17,0);
@@ -430,12 +469,18 @@ void stop_Car1()
     ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
     Car_First_stop=2;
     stop_Flag  = 1;
-    return;
   }
-  
-  stop();
+  else 
+  {
+    gpio_set(PTC3,0);//驱动反向使能
+    gpio_set(PTC2,1);//驱动反向使能
+    gpio_set(PTB17,1);//驱动反向使能
+    gpio_set(PTB16,0);//驱动反向使能
+    ftm_pwm_duty(FTM2,FTM_CH0,5500);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,5500);//B1
+    
+  }
 }
-
 /*
 后车检测到小于一定距离就停车
 */
@@ -708,37 +753,16 @@ void Chaoche_FrontCar(void)
   //ChaoChe_temp=0;
 }
 
+
 void Ring_Overtake(void)
 {
- 
-  do
-  {
-    camera_get_img();                                   //摄像头获取图像
-    img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
-    Search_Line();
-    
-    Find_Middle();
-    Road_Type();
-    Servo_control();
-    
-    speed_get_L = abs(ftm_quad_get(FTM1));          
-    speed_get_R = lptmr_pulse_get();
-    ftm_quad_clean(FTM1);
-    lptmr_pulse_clean();
-    
-    gpio_set(PTC3,0);//驱动反向使能
-    gpio_set(PTC2,1);//驱动反向使能
-    gpio_set(PTB17,1);//驱动反向使能
-    gpio_set(PTB16,0);//驱动反向使能
-    ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
-    ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
-  }while(speed_get_L>10&&speed_get_R>10);
-  // DELAY_MS(150);
-  
-    gpio_set(PTC3,1);//驱动反向使能
-    gpio_set(PTC2,0);//驱动反向使能
-    gpio_set(PTB17,0);//驱动反向使能
-    gpio_set(PTB16,1);//驱动反向使能
+  gpio_set(PTC3,0);//驱动反向使能
+  gpio_set(PTC2,1);//驱动反向使能
+  gpio_set(PTB17,1);//驱动反向使能
+  gpio_set(PTB16,0);//驱动反向使能
+  ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
+  ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
+  DELAY_MS(150);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1  
   stop_Flag  = 1;
