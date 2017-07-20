@@ -73,7 +73,6 @@ void  main(void)
   uint8 Chaoche_start_time=0;
   uint8 rember_time=0;
   uint32  ABDistance_rember=0;
-  uint8 Distance_temp=0;
   while(a)
   {
     pit_time_start(PIT1);
@@ -118,17 +117,17 @@ void  main(void)
       if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==1)//距离正常
       {
         Distance_temp=1;
-        Distance_temp=Distance_temp;
+        Distance_temp_rember=Distance_temp;
       }
       else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==0)//距离过小
       {
         Distance_temp=0;
-        Distance_temp=Distance_temp;
+        Distance_temp_rember=Distance_temp;
       }
       else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==2)//距离过大
       {
         Distance_temp=2;
-        Distance_temp=Distance_temp;
+        Distance_temp_rember=Distance_temp;
       }
       else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==3)//距离无效
         Distance_temp=3;

@@ -31,6 +31,7 @@ uint8 stop_Flag = 0;
 uint8 stop_Place = 0;
 uint32 Distance = 1200;
 uint8 Distance_temp = 1;
+uint8 Distance_temp_rember=1;
 uint8 stop_time = 0;
 uint8 Car_First_stop=0;
 uint8 Car_Second_stop=0;
@@ -645,7 +646,7 @@ void Chaoche_FrontCar(void)
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B
   
   NRF_SendData(10002);//告诉后车有十字路口
-  if(Distance_temp>1)
+  if(Distance_temp==2||Distance_temp_rember==2)
   {
     do
     {

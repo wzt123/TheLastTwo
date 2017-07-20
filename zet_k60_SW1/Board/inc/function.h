@@ -31,6 +31,7 @@ extern uint8 stop_Flag;
 extern uint8 stop_Place;
 extern uint32 Distance;
 extern uint8 Distance_temp;
+extern uint8 Distance_temp_rember;
 /////
 extern int16 OutData[4];
 extern uint16 speed_get_R;
