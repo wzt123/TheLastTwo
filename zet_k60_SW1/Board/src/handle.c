@@ -604,7 +604,9 @@ void Servo_control(void)
           error_sum = error_last[0]+error_last[1]+error*5;
         }
       }
-      else if(speed_goal<4650)
+
+      else if(speed_goal<4400)//新加4400档位
+
       {
         if(All_Black==0)
         {
@@ -624,12 +626,12 @@ void Servo_control(void)
           if(error<0)
           {
             Kp = 39;
-            Kd = 8;
+            Kd = 10;
           }
           else
           {
             Kp = 39;
-            Kd = 8;
+            Kd = 10;
           }
         }
         else if(All_Black<16)       //直道入弯道或者270度时提前转角
@@ -637,12 +639,12 @@ void Servo_control(void)
           if(error<0)               //左转
           {
             Kp = 38;
-            Kd = 14;
+            Kd = 16;
           }
           else
           {
             Kp = 38;
-            Kd = 12;
+            Kd = 16;
           }
           
         }
@@ -732,7 +734,138 @@ void Servo_control(void)
           error_sum = error_last[0]+error_last[1]+error*5;
         }
       }
-      else if(speed_goal<5050)
+
+      
+      else if(speed_goal<5000)
+      {
+        if(All_Black==0)
+        {
+          if(error<0)               //左转
+          {
+            Kp = 40;
+            Kd = 12;
+          }
+          else
+          {
+            Kp = 39;
+            Kd = 12;
+          }
+        }
+        else if(All_Black<12)       //长直道进弯道
+        {
+          if(error<0)
+          {
+            Kp = 40;
+            Kd = 8;
+          }
+          else
+          {
+            Kp = 40;
+            Kd = 8;
+          }
+        }
+        else if(All_Black<16)       //直道入弯道或者270度时提前转角
+        {
+          if(error<0)               //左转
+          {
+            Kp = 39;
+            Kd = 14;
+          }
+          else
+          {
+            Kp = 39;
+            Kd = 12;
+          }
+          
+        }
+        else if(All_Black<21)       //弯道入直道的时候
+        {
+          if(error<0)
+          {
+            Kp = 35;
+            Kd = 12;
+          }
+          else   //右转
+          {
+            Kp = 35;
+            Kd = 12;
+          }
+          
+        }
+        else if(All_Black<23)       //弯道入直道的时候
+        {
+          if(error<0)
+          {
+            Kp = 35;
+            Kd = 18;
+          }
+          else
+          {
+            Kp = 35;
+            Kd=18;
+          }
+          
+        }
+        
+        else if(All_Black<25)       //弯道内部
+        {
+          if(error<0)
+          {
+            Kp=44;
+            Kd=20;
+          }
+          else
+          {
+            Kp=44;
+            Kd =20;
+          }
+        }
+        else if(All_Black<32)       //靠弯道外边
+        {
+          if(error<0)
+          {
+            Kp=48;
+            Kd=20;
+          }
+          else
+          {
+            Kp=48;
+            Kd =20;
+          }
+        }
+        else if(All_Black<36)       //靠弯道外边
+        {
+          if(error<0)
+          {
+            Kp = 53;
+            Kd = 29;
+          }
+          else
+          {
+            Kp = 53;
+            Kd = 29;
+          }
+        }
+        else if(All_Black<41)
+        {
+          if(error<0)
+          {
+            Kp = 58;
+            Kd = 30;
+          }
+          else
+          {
+            Kp = 58;
+            Kd = 30;
+          }
+        }
+        else if((All_Black>=41))
+        {
+          error_sum = error_last[0]+error_last[1]+error*5;
+        }
+      }
+      else if(speed_goal<5500)
+
       {
         if(All_Black==0)
         {

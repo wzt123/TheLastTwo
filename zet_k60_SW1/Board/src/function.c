@@ -156,7 +156,9 @@ void Motor_Out(void)
         }
         else if(Status==2)//直道加速
         {
-          speed_goal=5000;
+
+          speed_goal=4800;
+
         }
         
         else if(Status==3)
@@ -182,7 +184,9 @@ void Motor_Out(void)
         }
         else if(Status==2)//入弯减速
         {
-          speed_goal=4800;
+
+          speed_goal=4600;
+
         }
         
         else if(Status==3)
@@ -223,6 +227,8 @@ void Motor_Out(void)
 //          speed_goal =speed_goal+600;
 //        }
       }
+
+//      }
       if(Cross_Flag!=1)
       {
         if(speed_goal<3850)
