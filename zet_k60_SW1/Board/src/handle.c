@@ -605,7 +605,7 @@ void Servo_control(void)
         }
       }
 
-      else if(speed_goal<4400)//新加4400档位
+      else if(speed_goal<4450)//新加4450档位
 
       {
         if(All_Black==0)
@@ -613,12 +613,12 @@ void Servo_control(void)
           if(error<0)               //左转
           {
             Kp = 40;
-            Kd = 12;
+            Kd = 10;
           }
           else
           {
-            Kp = 39;
-            Kd = 12;
+            Kp = 40;
+            Kd = 10;
           }
         }
         else if(All_Black<12)       //长直道进弯道

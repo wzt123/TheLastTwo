@@ -219,8 +219,10 @@ void Motor_Out(void)
 //      if(Car==1)
 //      {
 
-        speed_goal_R=speed_goal-error2*abs(error2)*34/10;//²îËÙ£¿£¿£¿32/10
-        speed_goal_L=speed_goal+error2*abs(error2)*34/10;
+//        speed_goal_R=speed_goal-error2*abs(error2)*34/10;//²îËÙ£¿£¿£¿32/10
+//        speed_goal_L=speed_goal+error2*abs(error2)*34/10;
+      speed_goal_R=speed_goal;
+      speed_goal_L=speed_goal;
 
 //        if(Distance_temp==2)
 //        {
@@ -236,18 +238,24 @@ void Motor_Out(void)
       {
         if(speed_goal<3850)
         {
-          speed_goal_R=speed_goal-error*abs(error)*27/10;
-          speed_goal_L=speed_goal+error*abs(error)*27/10;
+//          speed_goal_R=speed_goal-error*abs(error)*27/10;
+//          speed_goal_L=speed_goal+error*abs(error)*27/10;
+          speed_goal_R=speed_goal;
+          speed_goal_L=speed_goal;
         }
         else if(speed_goal<4450)
         {
-          speed_goal_R=speed_goal-error*abs(error)*44/10;
-          speed_goal_L=speed_goal+error*abs(error)*44/10;
+//          speed_goal_R=speed_goal-error*abs(error)*44/10;
+//          speed_goal_L=speed_goal+error*abs(error)*44/10;
+          speed_goal_R=speed_goal;
+          speed_goal_L=speed_goal;
         }
         else if(speed_goal<5050)
         {
-          speed_goal_R=speed_goal-error2*abs(error2)*48/10;
-          speed_goal_L=speed_goal+error2*abs(error2)*48/10;
+//          speed_goal_R=speed_goal-error2*abs(error2)*48/10;
+//          speed_goal_L=speed_goal+error2*abs(error2)*48/10;
+          speed_goal_R=speed_goal;
+          speed_goal_L=speed_goal;
         }
       }
 //      else
