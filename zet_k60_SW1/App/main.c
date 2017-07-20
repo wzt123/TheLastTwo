@@ -171,46 +171,79 @@ void  main(void)
 //        stop_Car2();
 //    
       
-      if(gpio_get(PTE4)==1&&Distance_temp==1&&Cross_Flag==1&&((Left_stop>17&&Left_stop<22)||(Right_stop>17&&Right_stop<2))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake<1)
-      {
-        Chaoche_FrontCar();
-      }
+    if(gpio_get(PTE2)==1/*&&Distance_temp<2*/&&Cross_Flag_Last==31&&Ring_First_Row>25&&Car==1)//距离控制标志位没有加
+    {
+      Ring_Overtake();
+      rember_time=1;
       
-      if(gpio_get(PTE2)==1&&Distance_temp<2&&Cross_Flag_Last==31&&Ring_First_Row>25&&Car==1)//距离控制标志位没有加
+    }
+    if(rember_time>0)
+    {
+      if(speed_get_R<80&&speed_get_L<80)
       {
-        Ring_Overtake();
-        rember_time=1;
-        
-      }
-      if(rember_time>0)
-      {
-        if(speed_get_R<80&&speed_get_L<80)
+        uint8 wait_temp=0;
+        do
         {
-          DELAY_MS(1000);
-          rember_time=0; 
-          stop_Flag=0;
-          Car=2;
+          
+          camera_get_img();                                   //摄像头获取图像
+          img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+          Search_Line();
+          
+          Find_Middle();
+          Road_Type();
+          Servo_control();
+          nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里     
+          if(buff[3]==0&&buff[2]==0&&buff[1]==1&&(buff[0]==1||buff[0]==0))//距离正常或小于
+            wait_temp=1;
+        }while(wait_temp==0);
+        DELAY_MS(1000);
+        rember_time=0; 
+        stop_Flag=0;
+        Car=2;
+        uint8 t=0;
+        do
+        {
+          
+          camera_get_img();                                   //摄像头获取图像
+          img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+          Search_Line();
+          
+          Find_Middle();
+          Road_Type();
+          Servo_control();
+    
+          speed_get_L = abs(ftm_quad_get(FTM1));          
+          speed_get_R = lptmr_pulse_get();
+          ftm_quad_clean(FTM1);
+          lptmr_pulse_clean();
           gpio_set(PTC3,1);//驱动反向使能
           gpio_set(PTC2,0);//驱动反向使能
           gpio_set(PTB17,0);//驱动反向使能
           gpio_set(PTB16,1);//驱动反向使能
-          ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+          t++;
           ftm_pwm_duty(FTM2,FTM_CH0,8500);//B2
           ftm_pwm_duty(FTM2,FTM_CH1,8500);//B1
-          DELAY_MS(50);
-          NRF_SendData(10001);
-        }
-        else
-        {
-          gpio_set(PTC3,0);//驱动反向使能
-          gpio_set(PTC2,1);//驱动反向使能
-          gpio_set(PTB17,1);//驱动反向使能
-          gpio_set(PTB16,0);//驱动反向使能
-          ftm_pwm_duty(FTM2,FTM_CH0,6000);//B2
-          ftm_pwm_duty(FTM2,FTM_CH1,6000);//B1
-          
-        }
+          if(t==1)
+          {
+            DELAY_MS(100);
+            speed_get_L=570;
+            speed_get_R=570;
+          }
+        }while(speed_get_R<380&&speed_get_L<380);
+     
+        NRF_SendData(10001);
       }
+//      else if(speed_get_R>120&&speed_get_L<120)
+//      {
+//        gpio_set(PTC3,0);//驱动反向使能
+//        gpio_set(PTC2,1);//驱动反向使能
+//        gpio_set(PTB17,1);//驱动反向使能
+//        gpio_set(PTB16,0);//驱动反向使能
+//        ftm_pwm_duty(FTM2,FTM_CH0,6000);//B2
+//        ftm_pwm_duty(FTM2,FTM_CH1,6000);//B1
+//        
+//      }
+    }
     ///蓝牙传送编码器的值
     send_data[0] = 0;
     send_data[1] = Cross_Flag*500;

@@ -352,7 +352,7 @@ void Servo_control(void)
   {
     Ring_not_out = 1;//进入圆环了，不用折点
   }
-  else if(Cross_Flag==1||Cross_Flag==5||Cross_Flag==6||(white_Right_cnt<2&&white_Left_cnt<2))
+  else if(Cross_Flag==1||Cross_Flag==5||Cross_Flag==6||(white_Right_cnt<6&&white_Left_cnt<6))
   {
     if(Cross_Flag==1)
     {
@@ -1141,7 +1141,7 @@ void Find_Middle()
   //else if(Cross_Cnt==5&&error<-10) Cross_Cnt=7;//左转
   //if(Cross_Cnt==4)  
   //{
-  if(Cross_Flag_Last==0&&Cross_Flag==0&&stopLine_temp==0&&(white_Right_cnt>20||white_Left_cnt>20))
+  if(Cross_Flag_Last==0&&Cross_Flag==0&&stopLine_temp==0&&(white_Right_cnt>20||white_Left_cnt>20)&&Ring_not_out==0)
   {
     if(white_Right_cnt>20&&white_Right_cnt>white_Left_cnt)
     {
