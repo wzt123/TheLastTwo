@@ -85,7 +85,7 @@ void Init_All(void)
   set_vector_handler(PORTC_VECTORn ,PORTC_IRQHandler);                //设置 PORTE 的中断服务函数为 PORTE_VECTORn
   chaoShenBo_init();
   Status=Get_Switch();
-  Status_2=Get_Switch_2();
+  //Status_2=Get_Switch_2();
   enable_irq(PORTC_IRQn);
   enable_irq (PIT0_IRQn);                                //使能PIT0中断
 }
@@ -208,25 +208,25 @@ void Motor_Out(void)
           }
         }
       }
-      if(Car==1)
-      {
-        if(Distance_temp==2)
-        {
-          speed_goal =speed_goal -600;
-        }
-        else if(Distance_temp==0)
-        {
-          speed_goal =speed_goal+600;
-        }
-      }
+//      if(Car==1)
+//      {
+//        if(Distance_temp==2)
+//        {
+//          speed_goal =speed_goal -600;
+//        }
+//        else if(Distance_temp==0)
+//        {
+//          speed_goal =speed_goal+600;
+//        }
+//      }
       
       if(Cross_Flag!=1)
       {
         if(speed_goal<3850)
         {
          
-          speed_goal_R=speed_goal-error*abs(error)*38/10;
-          speed_goal_L=speed_goal+error*abs(error)*38/10;
+          speed_goal_R=speed_goal-error*abs(error)*17/10;
+          speed_goal_L=speed_goal+error*abs(error)*17/10;
         }
         else if(speed_goal<4450)
         {

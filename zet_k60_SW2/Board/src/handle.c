@@ -32,7 +32,7 @@ uint8 White_Cnt=0;//全白行计数_所有的
 uint8 White_Ren=0;
 uint8 Right_xian=0;
 uint8 Left_xian=0;
-uint16 Servo_value = 8615;//舵机输出pwm值
+uint16 Servo_value = 8616;//舵机输出pwm值
 uint16 Servo_Value_Last = 0;
 
 uint8 Hinder_Start=0;
@@ -44,8 +44,8 @@ uint8 CrossRow=0;
 
 
 
-uint16 Servomiddle=8615;
-uint16 Servomiddle_Rember=8615;
+uint16 Servomiddle=8622;
+uint16 Servomiddle_Rember=8622;
 uint32 Servo_max=8778;//往右打
 uint32 Servo_min=8458;//往左打
 float CenterLineSlope=0;
@@ -399,11 +399,11 @@ void Servo_control(void)
   ///过障碍
   if(Cross_Flag==5)
   {
-    Servomiddle=Servomiddle_Rember+70;
+    Servomiddle=Servomiddle_Rember+80;
   }
   else if(Cross_Flag==6)
   {
-    Servomiddle=Servomiddle_Rember-60;
+    Servomiddle=Servomiddle_Rember-50;
   }
   else if(stopLine_temp==0)
   {
@@ -466,19 +466,19 @@ void Servo_control(void)
 //       errorerror= - errorerror*10/75;
 //      error = error;
     }
-    if(Cross_Flag==31)
+    if(Cross_Flag==31&&Ring_First_Row>17)
     {
       if(errorerror*error<0)
         error=-error;
       if(speed_goal<4850)
       {
         Kp =45;//66
-        Kd = 55;
+        Kd = 35;
       }
       else
       {
         Kp =55;//66
-        Kd = 55;
+        Kd = 35;
       }
       Servo_temp = Kp*error/10+Kd*errorerror/10;
       
