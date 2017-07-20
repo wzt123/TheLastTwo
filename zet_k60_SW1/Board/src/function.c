@@ -216,12 +216,14 @@ void Motor_Out(void)
 //          }
         }
       }
+
       if(Car==1)
       {
         if(Distance_temp==2)
         {
           speed_goal =speed_goal -400;
         }
+
 //        else if(Distance_temp==0)
 //        {
 //          speed_goal =speed_goal+600;
@@ -233,18 +235,24 @@ void Motor_Out(void)
       {
         if(speed_goal<3850)
         {
+
           speed_goal_R=speed_goal-error*abs(error)*17/10;
           speed_goal_L=speed_goal+error*abs(error)*17/10;
+
         }
         else if(speed_goal<4450)
         {
-          speed_goal_R=speed_goal-error*abs(error)*44/10;
-          speed_goal_L=speed_goal+error*abs(error)*44/10;
+//          speed_goal_R=speed_goal-error*abs(error)*44/10;
+//          speed_goal_L=speed_goal+error*abs(error)*44/10;
+          speed_goal_R=speed_goal;
+          speed_goal_L=speed_goal;
         }
         else if(speed_goal<5050)
         {
-          speed_goal_R=speed_goal-error2*abs(error2)*48/10;
-          speed_goal_L=speed_goal+error2*abs(error2)*48/10;
+//          speed_goal_R=speed_goal-error2*abs(error2)*48/10;
+//          speed_goal_L=speed_goal+error2*abs(error2)*48/10;
+          speed_goal_R=speed_goal;
+          speed_goal_L=speed_goal;
         }
       }
 //      else

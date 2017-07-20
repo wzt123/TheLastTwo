@@ -779,12 +779,12 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp = 36;
+          Kp = 37;
           Kd = 18;
         }
         else
         {
-          Kp = 36;
+          Kp = 37;
           Kd = 18;
 
         }
@@ -806,13 +806,13 @@ void Servo_control(void)
       {
         if(error<0)
         {
-          Kp=50;
-          Kd=20;
+          Kp = 50;
+          Kd = 20;
         }
-        else
+        else 
         {
-          Kp=50;
-          Kd =20;
+          Kp = 50;
+          Kd = 20;
         }
       }
       
