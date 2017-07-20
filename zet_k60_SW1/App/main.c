@@ -93,6 +93,15 @@ void  main(void)
         gpio_set(PTE24,1);
         ChaoChe_Cross_temp=0;
       }
+      if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==3)
+      {
+        Car=1;
+        ABDistance=0;
+        ABDistance_last=0;
+        gpio_set(PTE25,1);//后车开启超声波
+        gpio_set(PTE24,1);
+        ChaoChe_Cross_temp=0;
+      }
       if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==2)
         ChaoChe_Cross_temp=1;
       
@@ -171,6 +180,11 @@ void  main(void)
         stop_Car2();
 //    
       
+      if(gpio_get(PTE4)==1&&Distance_temp>1&&Cross_Flag==1&&((Left_stop>17&&Left_stop<22)||(Right_stop>17&&Right_stop<2))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake<1)
+      {
+        Chaoche_FrontCar();
+      }
+      
     if(gpio_get(PTE2)==1/*&&Distance_temp<2*/&&Cross_Flag_Last==31&&Ring_First_Row>25&&Car==1)//距离控制标志位没有加
     {
       Ring_Overtake();
@@ -231,7 +245,7 @@ void  main(void)
           }
         }while(speed_get_R<380&&speed_get_L<380);
      
-        NRF_SendData(10001);
+        NRF_SendData(10003);//告诉后车圆环超车
       }
       else 
       {
