@@ -536,12 +536,12 @@ void Servo_control(void)
         if(error<0)
         {
           Kp = 45;
-          Kd = 13;
+          Kd = 14;
         }
         else
         {
           Kp = 45;
-          Kd=13;
+          Kd=14;
         }
       }
       else if(All_Black<22)

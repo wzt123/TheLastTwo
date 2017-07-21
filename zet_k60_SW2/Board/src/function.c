@@ -378,28 +378,29 @@ void stop2(void)
 */
 void stop_Car2(void)
 { 
-  do
-  {
-    camera_get_img();                                   //摄像头获取图像
-    img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
-    Search_Line();
-    
-    Find_Middle();
-    Road_Type();
-    Servo_control();
-    
-    speed_get_L = abs(ftm_quad_get(FTM1));          
-    speed_get_R = lptmr_pulse_get();
-    ftm_quad_clean(FTM1);
-    lptmr_pulse_clean();
-    
+//  do
+//  {
+//    camera_get_img();                                   //摄像头获取图像
+//    img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+//    Search_Line();
+//    
+//    Find_Middle();
+//    Road_Type();
+//    Servo_control();
+//    
+//    speed_get_L = abs(ftm_quad_get(FTM1));          
+//    speed_get_R = lptmr_pulse_get();
+//    ftm_quad_clean(FTM1);
+//    lptmr_pulse_clean();
+//    
     gpio_set(PTC3,0);//驱动反向使能
     gpio_set(PTC2,1);//驱动反向使能
     gpio_set(PTB17,1);//驱动反向使能
     gpio_set(PTB16,0);//驱动反向使能
     ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
     ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
-  }while(speed_get_L>100&&speed_get_R>100);
+    DELAY_MS(200);
+//  }while(speed_get_L>100&&speed_get_R>100);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
     ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
   

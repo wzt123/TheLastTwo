@@ -185,11 +185,11 @@ void  main(void)
 //        }
       }
     }    
-//      if((Stop_Flag>1)&&Car==1&&Car_First_stop<2&&stop_Flag==0)
-//        stop_Car1();
-//      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
-//        stop_Car2();
-//    
+      if((Stop_Flag>1)&&Car==1&&stopLine_temp==0&&Car_First_stop<2&&stop_Flag==0)
+        stop_Car2();
+      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
+        stop_Car2();
+    
       
       if(gpio_get(PTE4)==1&&Distance_temp>1&&Cross_Flag==1&&((Left_stop>17&&Left_stop<22)||(Right_stop>17&&Right_stop<2))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake<1)
       {
