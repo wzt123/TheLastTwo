@@ -234,6 +234,8 @@ void Motor_Out(void)
           else
             speed_goal =3800;
         }
+        else if(Distance_temp==3)
+          speed_goal = speed_goal-400;
       }
 
 //      }
@@ -412,8 +414,8 @@ void stop_Car2(void)
     gpio_set(PTC2,1);//驱动反向使能
     gpio_set(PTB17,1);//驱动反向使能
     gpio_set(PTB16,0);//驱动反向使能
-    ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
-    ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
+    ftm_pwm_duty(FTM2,FTM_CH0,8500);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,8500);//B1
   }while(speed_get_L>100&&speed_get_R>100);
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1

@@ -45,10 +45,10 @@ uint8 Cross_Flag=0;
 uint8 Change_Flag;
 uint8 CrossRow=0;
 
-uint16 Servomiddle=8480;
-uint16 Servomiddle_rember=8480;
-uint16 Servo_max=8645;
-uint16 Servo_min=8315;
+uint16 Servomiddle=8531;
+uint16 Servomiddle_rember=8531;
+uint16 Servo_max=8695;
+uint16 Servo_min=8365;
 float CenterLineSlope=0;
 
 int16 error=0;   //0~40×óÓÒ
@@ -437,7 +437,7 @@ void Servo_control(void)
     if(errorerror*error<0&&abs(error-errorerror)>15&&Cross_Flag==0)
     {      
      if(speed_goal<4850)
-       errorerror= - errorerror*1/6;
+       errorerror= - errorerror*10/70;
      else if(speed_goal<5250)
        errorerror= - errorerror*10/65;
       error = error;
@@ -2000,7 +2000,7 @@ void Search_Line(void)
     }
     //if(  (Row_Ptr>All_Black+6)&&(Cross_Flag!=3||Cross_Flag!=4))
     ring_flag=0;
-    for(Col_Ptr=Road_Left_f[Row_Ptr]; Col_Ptr<Road_Right_f[Row_Ptr]-3; Col_Ptr++)
+    for(Col_Ptr=Road_Left_f[Row_Ptr]; Col_Ptr<Road_Right_f[Row_Ptr]-3&&Row_Ptr<51; Col_Ptr++)
     {      
       if(start_line_num[Row_Ptr]<4&&ring_flag==0&&img[Row_Ptr][Col_Ptr]==255&&img[Row_Ptr][Col_Ptr+1]==255&&img[Row_Ptr][Col_Ptr+2]==0&&img[Row_Ptr][Col_Ptr+3]==0)
       {
