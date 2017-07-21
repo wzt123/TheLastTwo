@@ -42,5 +42,6 @@ extern uint8 Car_Second_stop;
 extern uint8 ChaoChe_stop_time;
 extern uint8 ChaoChe_Cross_temp;
 extern uint8 Distance_stop_temp;
+extern uint8 Ring_OverTake;
 ////
 #endif
