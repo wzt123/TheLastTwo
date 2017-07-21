@@ -38,6 +38,7 @@ uint8 Car_Second_stop=0;
 uint8 ChaoChe_stop_time = 0;
 uint8 ChaoChe_Cross_temp = 0;
 uint8 Distance_stop_temp=0;
+uint8 Ring_OverTake=0;
 /*uint8 Edge_R[3]= {0};
 uint8 Edge_L[3]= {0};   
 uint8 stopline_num = 0;
@@ -234,6 +235,8 @@ void Motor_Out(void)
           else
             speed_goal =3800;
         }
+        else if(Distance_temp==3)
+          speed_goal = speed_goal-400;
       }
 
 //      }
@@ -412,10 +415,11 @@ void stop_Car2(void)
     gpio_set(PTC2,1);//驱动反向使能
     gpio_set(PTB17,1);//驱动反向使能
     gpio_set(PTB16,0);//驱动反向使能
+
     ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
     ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
 //  }while(speed_get_L>100&&speed_get_R>100);
-    DELAY_MS(150);
+    DELAY_MS(150);\
   ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
   

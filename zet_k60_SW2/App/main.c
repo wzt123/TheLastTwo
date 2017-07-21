@@ -73,7 +73,6 @@ void  main(void)
   uint8 Chaoche_start_time=0;
   uint8 rember_time=0;
   uint32  ABDistance_rember=0;
-  
   while(a)
   {
     pit_time_start(PIT1);
@@ -98,6 +97,7 @@ void  main(void)
       if(buff[3]==0&&buff[2]==0&&buff[1]==0&&buff[0]==3)
       {
         Car=1;
+        Ring_OverTake++;
         ABDistance=0;
         ABDistance_last=0;
         gpio_set(PTE25,1);//后车开启超声波
@@ -132,6 +132,8 @@ void  main(void)
       }
       else if(buff[3]==0&&buff[2]==0&&buff[1]==1&&buff[0]==3)//距离无效
         Distance_temp=3;
+      else
+        Distance_temp=4;
     }
     
 //    if(Right_stop>40)
@@ -190,13 +192,12 @@ void  main(void)
       else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
         stop_Car2();
     
-      
       if(gpio_get(PTE4)==1&&Distance_temp>1&&Cross_Flag==1&&((Left_stop>17&&Left_stop<22)||(Right_stop>17&&Right_stop<2))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake<1)
       {
         Chaoche_FrontCar();
       }
       
-    if(gpio_get(PTE2)==1/*&&Distance_temp<2*/&&Cross_Flag_Last==31&&Ring_First_Row>22&&Car==1)//距离控制标志位没有加
+    if(gpio_get(PTE2)==1/*&&Distance_temp<2*/&&Cross_Flag_Last==31&&Ring_First_Row>22&&Car==1&&Ring_OverTake==0)//距离控制标志位没有加
     {
       Ring_Overtake();
       rember_time=1;
@@ -215,20 +216,26 @@ void  main(void)
         Servo_control();
         if(gpio_get(PTE3)==1)
         {          
-          ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle_Rember+110);
+          if(Servo_temp>55&&Servo_temp<105)
+            ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle_Rember+Servo_temp);
+          else
+            ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle_Rember+100);
         }
         else
         {
-          ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle_Rember-110);
+          if(Servo_temp>55&&Servo_temp<105)
+            ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle_Rember-Servo_temp);
+          else
+            ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle_Rember-100);
         }
         gpio_set(PTC3,1);
         gpio_set(PTC2,0);
         gpio_set(PTB17,0);
         gpio_set(PTB16,1);
         //ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
-        ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
-        ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
-        DELAY_MS(180);
+        ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
+        ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
+        DELAY_MS(140);
         
         camera_get_img();                                   //摄像头获取图像
         img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
@@ -244,8 +251,14 @@ void  main(void)
         gpio_set(PTB16,0);//驱动反向使能
         ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
         ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
-        DELAY_MS(180);
-        
+        DELAY_MS(130);
+        camera_get_img();                                   //摄像头获取图像
+        img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+        Search_Line();
+        Find_Middle();
+        Road_Type();
+        Servo_control();
+          
         ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
         ftm_pwm_duty(FTM2,FTM_CH1,0);//B
         
@@ -253,7 +266,6 @@ void  main(void)
       if(speed_get_R<80&&speed_get_L<80)
       {
         uint8 wait_temp=0;
-  
         uint8 t_t=0;
         do
         {
@@ -269,42 +281,32 @@ void  main(void)
           if(buff[3]==0&&buff[2]==0&&buff[1]==1&&(buff[0]==1||buff[0]==0)||(Distance_temp_rember==0||Distance_temp_rember==1))//距离正常或小于
             wait_temp=1;
           
-        }while(wait_temp==0||t_t<80);
-        DELAY_MS(1500);
+        }while(wait_temp==0||t_t<45);
+//        if(t_t>=80)
+//          DELAY_MS(300);
+//        else
+//          DELAY_MS(500);
         rember_time=0; 
         stop_Flag=0;
         Car=2;
+        gpio_set(PTE25,0);//关闭超声波
+        gpio_set(PTE24,0);
         uint8 t=0;
-        do
-        {
-          
-          camera_get_img();                                   //摄像头获取图像
-          img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
-          Search_Line();
-          
-          Find_Middle();
-          Road_Type();
-          Servo_control();
-    
-          speed_get_L = abs(ftm_quad_get(FTM1));          
-          speed_get_R = lptmr_pulse_get();
-          ftm_quad_clean(FTM1);
-          lptmr_pulse_clean();
-          gpio_set(PTC3,1);//驱动反向使能
-          gpio_set(PTC2,0);//驱动反向使能
-          gpio_set(PTB17,0);//驱动反向使能
-          gpio_set(PTB16,1);//驱动反向使能
-          t++;
-          ftm_pwm_duty(FTM2,FTM_CH0,8500);//B2
-          ftm_pwm_duty(FTM2,FTM_CH1,8500);//B1
-          if(t==1)
-          {
-            DELAY_MS(100);
-            speed_get_L=570;
-            speed_get_R=570;
-          }
-        }while(speed_get_R<380&&speed_get_L<380);
-     
+        camera_get_img();                                   //摄像头获取图像
+        img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+        Search_Line();
+        
+        Find_Middle();
+        Road_Type();
+        Servo_control();
+        gpio_set(PTC3,1);//驱动反向使能
+        gpio_set(PTC2,0);//驱动反向使能
+        gpio_set(PTB17,0);//驱动反向使能
+        gpio_set(PTB16,1);//驱动反向使能
+        t++;
+        ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
+        ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
+        DELAY_MS(100);
         NRF_SendData(10003);//告诉后车圆环超车
       }
       else 
@@ -327,14 +329,14 @@ void  main(void)
     if(speed_get_R<60&&speed_get_L<60)
     {
       dis_bmp(CAMERA_H,CAMERA_W,(uint8*)img,0x7F); 
-        OLED_Print_Num1(88, 1, All_Black);
+        OLED_Print_Num1(88, 1, Car);
       OLED_Print_Num1(88, 2, error);
       OLED_Print_Num1(88, 3, errorerror);
       OLED_Print_Num1(88, 4, Kp);
       OLED_Print_Num1(88, 5, Kd);
 
       time1 = pit_time_get(PIT1)*1000/(bus_clk_khz*1000);   
-      OLED_Print_Num1(88, 6, Distance_temp);
+      OLED_Print_Num1(88, 6, ABDistance);
     }
     
     if(Car==2)

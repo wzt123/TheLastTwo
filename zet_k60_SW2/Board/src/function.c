@@ -38,6 +38,7 @@ uint8 Car_Second_stop=0;
 uint8 ChaoChe_stop_time = 0;
 uint8 ChaoChe_Cross_temp = 0;
 uint8 Distance_stop_temp=0;
+uint8 Ring_OverTake=0;
 /*uint8 Edge_R[3]= {0};
 uint8 Edge_L[3]= {0};   
 uint8 stopline_num = 0;
@@ -225,6 +226,9 @@ void Motor_Out(void)
           else
             speed_goal =3800;
         }
+        else if(Distance_temp==3)
+          speed_goal = speed_goal-400;
+          
       }
       
       if(Cross_Flag!=1)
