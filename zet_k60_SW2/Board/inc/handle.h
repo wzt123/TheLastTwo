@@ -46,6 +46,7 @@ extern uint8 Overtake_Flag;
 extern uint8 Overtake2;
 extern uint8 C;
 extern uint16 Servomiddle;
+extern uint16  Servomiddle_Rember;
 extern uint32 Servo_min;
 extern uint32 Servo_max;
 extern uint8 Turn_Left;

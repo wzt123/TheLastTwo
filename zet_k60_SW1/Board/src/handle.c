@@ -1147,7 +1147,7 @@ void Find_Middle()
     {
       for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
       {
-        if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr-6]==1&&Left_Flag[Row_Ptr-12]==1)
+        if(Left_Flag[Row_Ptr]==1&&Left_Flag[Row_Ptr-6]==1&&Left_Flag[Row_Ptr-12]==1&&start_line_num[Row_Ptr-6]<7)
         {
           k1 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Left);
           k2 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Left);
@@ -1174,7 +1174,7 @@ void Find_Middle()
     {
       for(Row_Ptr=55;Row_Ptr>All_Black;Row_Ptr--)
       {
-        if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr-6]==1&&Right_Flag[Row_Ptr-12]==1)
+        if(Right_Flag[Row_Ptr]==1&&Right_Flag[Row_Ptr-6]==1&&Right_Flag[Row_Ptr-12]==1&&start_line_num[Row_Ptr-6]<7)
         {
           k3 = Slope_Calculate(Row_Ptr-6,Row_Ptr,(uint8*)Road_Right);
           k4 = Slope_Calculate(Row_Ptr-12,Row_Ptr-6,(uint8*)Road_Right);
@@ -1546,29 +1546,43 @@ void Search_Line(void)
     }
     
     //内层for开始 从中心向左边
-    for(Col_Ptr=60; Col_Ptr>3; Col_Ptr--)
+    if(start_line_num[Row_Ptr]<4)
     {
-      if(img[Row_Ptr][Col_Ptr-2]==0 && img[Row_Ptr][Col_Ptr-1]==0&&
-         img[Row_Ptr][Col_Ptr]==255&& img[Row_Ptr][Col_Ptr+1]==255)
+      for(Col_Ptr=60; Col_Ptr>3; Col_Ptr--)
       {
-        Road_Left[Row_Ptr]=Col_Ptr-1;
-        Left_Flag[Row_Ptr]=1;
-        Left_Cnt++;
-        break;
-      }
-    }//结束内层for
-    //内层for开始从中心向右
-    for(Col_Ptr=20; Col_Ptr<77; Col_Ptr++)
+        if(img[Row_Ptr][Col_Ptr-2]==0 && img[Row_Ptr][Col_Ptr-1]==0&&
+           img[Row_Ptr][Col_Ptr]==255&& img[Row_Ptr][Col_Ptr+1]==255)
+        {
+          Road_Left[Row_Ptr]=Col_Ptr-1;
+          Left_Flag[Row_Ptr]=1;
+          Left_Cnt++;
+          break;
+        }
+      }//结束内层for
+      //内层for开始从中心向右
+      for(Col_Ptr=20; Col_Ptr<77; Col_Ptr++)
+      {
+        if(img[Row_Ptr][Col_Ptr-1]==255 && img[Row_Ptr][Col_Ptr]==255&&
+           img[Row_Ptr][Col_Ptr+1]==0&& img[Row_Ptr][Col_Ptr+2]==0)
+        {
+          Road_Right[Row_Ptr]=Col_Ptr+1;
+          Right_Flag[Row_Ptr]=1;
+          Right_Cnt++;
+          break;
+        }
+      }//结束内层for
+    }
+    else
     {
-      if(img[Row_Ptr][Col_Ptr-1]==255 && img[Row_Ptr][Col_Ptr]==255&&
-         img[Row_Ptr][Col_Ptr+1]==0&& img[Row_Ptr][Col_Ptr+2]==0)
-      {
-        Road_Right[Row_Ptr]=Col_Ptr+1;
-        Right_Flag[Row_Ptr]=1;
-        Right_Cnt++;
-        break;
-      }
-    }//结束内层for
+      
+          Road_Left[Row_Ptr]=1;
+          Left_Flag[Row_Ptr]=1;
+          Left_Cnt++;
+          
+          Road_Right[Row_Ptr]=79;
+          Right_Flag[Row_Ptr]=1;
+          Right_Cnt++;
+    }
     if(Road_Left[Row_Ptr]>Road_Right[Row_Ptr])
     {
       Left_Flag[Row_Ptr]=0;

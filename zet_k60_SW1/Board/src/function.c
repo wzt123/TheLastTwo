@@ -145,7 +145,7 @@ void Motor_Out(void)
   { 
     if(stop_time==0)
     {      
-      if(abs(error)<4)//直道
+      if(abs(error)<10)//直道
       {
         if(Status==0)
         {
@@ -153,7 +153,7 @@ void Motor_Out(void)
         }
         else if(Status==1)
         {
-          speed_goal=4400;
+          speed_goal=3800;
         }
         else if(Status==2)//直道加速
         {
@@ -181,7 +181,7 @@ void Motor_Out(void)
         }
         else if(Status==1)
         {
-          speed_goal=4400;
+          speed_goal=2400;
         }
         else if(Status==2)//入弯减速
         {
@@ -210,25 +210,30 @@ void Motor_Out(void)
           {
               speed_goal = speed_goal-400;
           }
-//          else if(ABDistance>Distance+200)
-//          {
-//           
-//              speed_goal = speed_goal+600;
-//          }
+          else if(ABDistance>Distance+200)
+          {
+            if(speed_goal>3750)
+              speed_goal = speed_goal+600;
+            else
+              speed_goal =3800;
+          }
         }
       }
 
+      
       if(Car==1)
       {
         if(Distance_temp==2)
         {
-          speed_goal =speed_goal -400;
+          speed_goal =2000;
         }
-
-//        else if(Distance_temp==0)
-//        {
-//          speed_goal =speed_goal+600;
-//        }
+        else if(Distance_temp==0)
+        {
+          if(speed_goal>3750)
+            speed_goal = speed_goal+600;
+          else
+            speed_goal =3800;
+        }
       }
 
 //      }
@@ -237,8 +242,8 @@ void Motor_Out(void)
         if(speed_goal<3850)
         {
 
-          speed_goal_R=speed_goal-error*abs(error)*17/10;
-          speed_goal_L=speed_goal+error*abs(error)*17/10;
+          speed_goal_R=speed_goal-error*abs(error)*27/10;
+          speed_goal_L=speed_goal+error*abs(error)*27/10;
 
         }
         else if(speed_goal<4450)
@@ -421,31 +426,50 @@ void stop_Car2(void)
 */
 void stop_Car1()
 {
-  do
-  {
-    camera_get_img();                                   //摄像头获取图像
-    img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
-    Search_Line();
-    
-    Find_Middle();
-    Road_Type();
-    Servo_control();
-    
+//  do
+//  {
+//    camera_get_img();                                   //摄像头获取图像
+//    img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+//    Search_Line();
+//    
+//    Find_Middle();
+//    Road_Type();
+//    Servo_control();
+//    
+//    speed_get_L = abs(ftm_quad_get(FTM1));          
+//    speed_get_R = lptmr_pulse_get();
+//    ftm_quad_clean(FTM1);
+//    lptmr_pulse_clean();
+//    
+//    gpio_set(PTC3,0);//驱动反向使能
+//    gpio_set(PTC2,1);//驱动反向使能
+//    gpio_set(PTB17,1);//驱动反向使能
+//    gpio_set(PTB16,0);//驱动反向使能
+//    ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
+//    ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
+//  }while(speed_get_L>100&&speed_get_R>100);
+//   
+      gpio_set(PTC3,0);//驱动反向使能
+      gpio_set(PTC2,1);//驱动反向使能
+      gpio_set(PTB17,1);//驱动反向使能
+      gpio_set(PTB16,0);//驱动反向使能
+      ftm_pwm_duty(FTM2,FTM_CH0,9500);//B2
+      ftm_pwm_duty(FTM2,FTM_CH1,9500);//B1
+    DELAY_MS(150);
     speed_get_L = abs(ftm_quad_get(FTM1));          
     speed_get_R = lptmr_pulse_get();
     ftm_quad_clean(FTM1);
     lptmr_pulse_clean();
     
-    gpio_set(PTC3,0);//驱动反向使能
-    gpio_set(PTC2,1);//驱动反向使能
-    gpio_set(PTB17,1);//驱动反向使能
-    gpio_set(PTB16,0);//驱动反向使能
-    ftm_pwm_duty(FTM2,FTM_CH0,7500);//B2
-    ftm_pwm_duty(FTM2,FTM_CH1,7500);//B1
-  }while(speed_get_L>100&&speed_get_R>100);
-   
-  if(speed_get_R<10&&speed_get_L<10)
-  {
+//    if(speed_get_L>80||speed_get_R>80)
+//    {
+      ftm_pwm_duty(FTM2,FTM_CH0,6500);//B2
+      ftm_pwm_duty(FTM2,FTM_CH1,6500);//B1
+      DELAY_MS(100);
+//    }
+    ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+    ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
+    
     uint8 wait_temp=0;
     do
     {
@@ -470,17 +494,7 @@ void stop_Car1()
     ftm_pwm_duty(FTM2,FTM_CH1,0);//B1
     Car_First_stop=2;
     stop_Flag  = 1;
-  }
-  else 
-  {
-    gpio_set(PTC3,0);//驱动反向使能
-    gpio_set(PTC2,1);//驱动反向使能
-    gpio_set(PTB17,1);//驱动反向使能
-    gpio_set(PTB16,0);//驱动反向使能
-    ftm_pwm_duty(FTM2,FTM_CH0,5500);//B2
-    ftm_pwm_duty(FTM2,FTM_CH1,5500);//B1
-    
-  }
+  
 }
 /*
 后车检测到小于一定距离就停车
@@ -646,6 +660,7 @@ void Chaoche_FrontCar(void)
   ftm_pwm_duty(FTM2,FTM_CH1,0);//B
   
   NRF_SendData(10002);//告诉后车有十字路口
+  uint8 wait_temp=0;
   if(Distance_temp==2||Distance_temp_rember==2)
   {
     do

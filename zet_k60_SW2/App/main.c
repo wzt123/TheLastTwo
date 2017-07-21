@@ -185,10 +185,10 @@ void  main(void)
 //        }
       }
     }    
-      if((Stop_Flag>1)&&Car==1&&Car_First_stop<2&&stop_Flag==0)
-        stop_Car1();
-      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
-        stop_Car2();
+//      if((Stop_Flag>1)&&Car==1&&Car_First_stop<2&&stop_Flag==0)
+//        stop_Car1();
+//      else if((Stop_Flag>1)&&Car==2&&stopLine_temp==0&&Car_Second_stop==0&&stop_Flag==0)
+//        stop_Car2();
 //    
       
       if(gpio_get(PTE4)==1&&Distance_temp>1&&Cross_Flag==1&&((Left_stop>17&&Left_stop<22)||(Right_stop>17&&Right_stop<2))&&(Right_stop_find_temp==1||Left_stop_find_temp==1)&&Car==1&&Overtake<1)
@@ -196,7 +196,7 @@ void  main(void)
         Chaoche_FrontCar();
       }
       
-    if(gpio_get(PTE2)==1/*&&Distance_temp<2*/&&Cross_Flag_Last==31&&Ring_First_Row>25&&Car==1)//距离控制标志位没有加
+    if(gpio_get(PTE2)==1/*&&Distance_temp<2*/&&Cross_Flag_Last==31&&Ring_First_Row>22&&Car==1)//距离控制标志位没有加
     {
       Ring_Overtake();
       rember_time=1;
@@ -204,23 +204,72 @@ void  main(void)
     }
     if(rember_time>0)
     {
+      if(Ring_First_Row!=0)
+      {
+        camera_get_img();                                   //摄像头获取图像
+        img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+        Search_Line();
+        
+        Find_Middle();
+        Road_Type();
+        Servo_control();
+        if(gpio_get(PTE3)==1)
+        {          
+          ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle_Rember+110);
+        }
+        else
+        {
+          ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle_Rember-110);
+        }
+        gpio_set(PTC3,1);
+        gpio_set(PTC2,0);
+        gpio_set(PTB17,0);
+        gpio_set(PTB16,1);
+        //ftm_pwm_duty(FTM0, FTM_CH3, Servomiddle);
+        ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+        ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+        DELAY_MS(180);
+        
+        camera_get_img();                                   //摄像头获取图像
+        img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
+        Search_Line();
+        
+        Find_Middle();
+        Road_Type();
+        Servo_control();
+        
+        gpio_set(PTC3,0);//驱动反向使能
+        gpio_set(PTC2,1);//驱动反向使能
+        gpio_set(PTB17,1);//驱动反向使能
+        gpio_set(PTB16,0);//驱动反向使能
+        ftm_pwm_duty(FTM2,FTM_CH0,7000);//B2
+        ftm_pwm_duty(FTM2,FTM_CH1,7000);//B1
+        DELAY_MS(180);
+        
+        ftm_pwm_duty(FTM2,FTM_CH0,0);//B2
+        ftm_pwm_duty(FTM2,FTM_CH1,0);//B
+        
+      }
       if(speed_get_R<80&&speed_get_L<80)
       {
         uint8 wait_temp=0;
+  
+        uint8 t_t=0;
         do
         {
           
           camera_get_img();                                   //摄像头获取图像
           img_extract((uint8*)img,imgbuff,CAMERA_SIZE);           //二值化图像
           Search_Line();
-          
+          t_t++;
           Find_Middle();
           Road_Type();
           Servo_control();
           nrf_rx(buff,4);               //等待接收一个数据包，数据存储在buff里     
-          if(buff[3]==0&&buff[2]==0&&buff[1]==1&&(buff[0]==1||buff[0]==0))//距离正常或小于
+          if(buff[3]==0&&buff[2]==0&&buff[1]==1&&(buff[0]==1||buff[0]==0)||(Distance_temp_rember==0||Distance_temp_rember==1))//距离正常或小于
             wait_temp=1;
-        }while(wait_temp==0);
+          
+        }while(wait_temp==0||t_t<80);
         DELAY_MS(1500);
         rember_time=0; 
         stop_Flag=0;

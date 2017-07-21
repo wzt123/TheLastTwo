@@ -142,7 +142,7 @@ void Motor_Out(void)
   { 
     if(stop_time==0)
     {      
-      if(abs(error)<4)//直道
+      if(abs(error)<10)//直道
       {
         if(Status==0)
         {
@@ -150,7 +150,7 @@ void Motor_Out(void)
         }
         else if(Status==1)
         {
-          speed_goal=4400;
+          speed_goal=3800;
         }
         else if(Status==2)//直道加速
         {
@@ -176,7 +176,7 @@ void Motor_Out(void)
         }
         else if(Status==1)
         {
-          speed_goal=4400;
+          speed_goal=2400;
         }
         else if(Status==2)//入弯减速
         {
@@ -202,23 +202,29 @@ void Motor_Out(void)
           {
               speed_goal = speed_goal-400;
           }
-//          else if(ABDistance>Distance+200)
-//          {
-//           
-//              speed_goal = speed_goal+600;
-//          }
+          else if(ABDistance>Distance+200)
+          {
+            if(speed_goal>3750)
+              speed_goal = speed_goal+600;
+            else
+              speed_goal =3800;
+          }
         }
       }
+
       if(Car==1)
       {
         if(Distance_temp==2)
         {
-          speed_goal =speed_goal -400;
+          speed_goal =2000;
         }
-//        else if(Distance_temp==0)
-//        {
-//          speed_goal =speed_goal+600;
-//        }
+        else if(Distance_temp==0)
+        {
+          if(speed_goal>3750)
+            speed_goal = speed_goal+600;
+          else
+            speed_goal =3800;
+        }
       }
       
       if(Cross_Flag!=1)
@@ -226,8 +232,8 @@ void Motor_Out(void)
         if(speed_goal<3850)
         {
          
-          speed_goal_R=speed_goal-error*abs(error)*17/10;
-          speed_goal_L=speed_goal+error*abs(error)*17/10;
+          speed_goal_R=speed_goal-error*abs(error)*27/10;
+          speed_goal_L=speed_goal+error*abs(error)*27/10;
         }
         else if(speed_goal<4450)
         {
