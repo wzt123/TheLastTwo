@@ -437,7 +437,7 @@ void Servo_control(void)
     if(errorerror*error<0&&abs(error-errorerror)>15&&Cross_Flag==0)
     {      
      if(speed_goal<4850)
-       errorerror= - errorerror*1/7;
+       errorerror= - errorerror*1/7;\
      else if(speed_goal<5250)
        errorerror= - errorerror*10/65;
       error = error;
