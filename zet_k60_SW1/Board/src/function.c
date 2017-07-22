@@ -18,6 +18,7 @@ int16 speed_PWM_R = 0;
 int16 speed_PWM_L = 0;
 int16  speed_err_R = 0;
 int16  speed_err_L = 0;
+uint8 Ring_OverTake=0;
 int16 speed_err_R_last = 0;
 int16 speed_err_L_last = 0;
 int16 speed_err_R_lastlast = 0;
